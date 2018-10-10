@@ -376,6 +376,8 @@ namespace AmeisenBotGUI
             labelCPU.Content = GetCPUUsage(Process.GetCurrentProcess());
 
             labelLoadedCombatClass.Content = $"CombatClass: {Path.GetFileName(BotManager.Settings.combatClassPath)}";
+            labelClass.Content = $"{BotManager.Me.Class.ToString()}";
+            labelRace.Content = $"{BotManager.Me.Race.ToString()}";
 
             if (BotManager.Me != null)
             {

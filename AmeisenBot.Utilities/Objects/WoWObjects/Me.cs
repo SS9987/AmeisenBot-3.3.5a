@@ -1,4 +1,5 @@
-﻿using Magic;
+﻿using AmeisenBotUtilities.Enums;
+using Magic;
 using System.Collections.Generic;
 using System.Text;
 
@@ -9,6 +10,8 @@ namespace AmeisenBotUtilities
         public UnitState CurrentState { get; set; }
         public int Exp { get; set; }
         public int MaxExp { get; set; }
+        public WowRace Race { get; set; }
+        public WowClass Class { get; set; }
         public ulong PartyleaderGUID { get; set; }
         public List<ulong> PartymemberGuids { get; set; }
         public uint PlayerBase { get; set; }
@@ -77,6 +80,9 @@ namespace AmeisenBotUtilities
                     PlayerBase = BlackMagicInstance.ReadUInt(PlayerBase + 0x34);
                     PlayerBase = BlackMagicInstance.ReadUInt(PlayerBase + 0x24);
                 }
+
+                Race = (WowRace)BlackMagicInstance.ReadByte(Offsets.playerRace);
+                Class = (WowClass)BlackMagicInstance.ReadByte(Offsets.playerClass);
 
                 Name = BlackMagicInstance.ReadASCIIString(Offsets.playerName, 12);
                 Exp = BlackMagicInstance.ReadInt(PlayerBase + 0x3794);

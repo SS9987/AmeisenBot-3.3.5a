@@ -386,5 +386,15 @@
                 <SolidColorBrush Color="{DynamicResource TextColor}" />
             </Label.Foreground>
         </Label>
+        <Label x:Name="labelRace" Content="Race" HorizontalAlignment="Left" Margin="223,252,0,0" VerticalAlignment="Top">
+            <Label.Foreground>
+                <SolidColorBrush Color="{DynamicResource TextColor}" />
+            </Label.Foreground>
+        </Label>
+        <Label x:Name="labelClass" Content="Class" HorizontalAlignment="Left" Margin="55,250,0,0" VerticalAlignment="Top">
+            <Label.Foreground>
+                <SolidColorBrush Color="{DynamicResource TextColor}" />
+            </Label.Foreground>
+        </Label>
     </Grid>
 </Window>

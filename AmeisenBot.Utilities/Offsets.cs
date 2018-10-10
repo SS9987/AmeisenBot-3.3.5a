@@ -75,6 +75,8 @@
         public static readonly uint playerIsIngame = 0xBD0792;
         public static readonly uint playerIsLoadingscreen = 0xB6AA38;
         public static readonly uint playerName = 0xC79D18;
+        public static readonly uint playerClass = 0xC79E89;
+        public static readonly uint playerRace = 0xC79E88;
         public static readonly uint realmName = 0xC79B9E;
         public static readonly uint sendMovementPacket = 0x7413F0;
         public static readonly uint setFacing = 0x9606E0;
