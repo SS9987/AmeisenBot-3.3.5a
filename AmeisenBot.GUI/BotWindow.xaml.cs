@@ -76,7 +76,7 @@ namespace AmeisenBotGUI
             Application.Current.Resources["ExpColor"] = (Color)ColorConverter.ConvertFromString(BotManager.Settings.expColor);
             Application.Current.Resources["TargetHealthColor"] = (Color)ColorConverter.ConvertFromString(BotManager.Settings.targetHealthColor);
             Application.Current.Resources["TargetEnergyColor"] = (Color)ColorConverter.ConvertFromString(BotManager.Settings.targetEnergyColor);
-            Application.Current.Resources["HoloLogoColor"] = (Color)ColorConverter.ConvertFromString(BotManager.Settings.HoloLogoColor);
+            Application.Current.Resources["holoLogoColor"] = (Color)ColorConverter.ConvertFromString(BotManager.Settings.holoLogoColor);
         }
 
         private void ButtonCobatClassEditor_Click(object sender, RoutedEventArgs e)
@@ -371,9 +371,6 @@ namespace AmeisenBotGUI
 
             Process currentProcess = Process.GetCurrentProcess();
             long memoryUsageMB = currentProcess.WorkingSet64 / 1000000;
-
-            labelRAM.Content = memoryUsageMB;
-            labelCPU.Content = GetCPUUsage(Process.GetCurrentProcess());
 
             labelLoadedCombatClass.Content = $"{Path.GetFileName(BotManager.Settings.combatClassPath)}.cs";
             labelClass.Content = $"{BotManager.Me.Class.ToString()}";
