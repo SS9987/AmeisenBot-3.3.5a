@@ -26,6 +26,6 @@
         <Color x:Key="EXPColor">#FFD4A0FF</Color>
         <Color x:Key="TargetHealthColor">#FFFF6060</Color>
         <Color x:Key="TargetEnergyColor">#FFFFA160</Color>
-        <Color x:Key="ThreadsColor">#FFFFFF60</Color>
+        <Color x:Key="HoloLogoColor">#19FFFFFF</Color>
     </Application.Resources>
 </Application>

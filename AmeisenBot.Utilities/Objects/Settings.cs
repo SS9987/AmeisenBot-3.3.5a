@@ -36,7 +36,7 @@
         public string targetEnergyColor = "#FFFFA160";
         public string targetHealthColor = "#FFFF6060";
         public string textColor = "#FFFFFFFF";
-        public string threadsColor = "#FFFFFF60";
+        public string holoLogoColor = "#19FFFFFF";
         public bool topMost = false;
         public string walkableNodeColorHigh = "#FFA0FFFF";
         public string walkableNodeColorLow = "#FFA0FF00";

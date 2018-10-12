@@ -153,7 +153,7 @@ namespace AmeisenBotGUI
             BotManager.Settings.expColor = ((Color)Application.Current.Resources["ExpColor"]).ToString();
             BotManager.Settings.targetHealthColor = ((Color)Application.Current.Resources["TargetHealthColor"]).ToString();
             BotManager.Settings.targetEnergyColor = ((Color)Application.Current.Resources["TargetEnergyColor"]).ToString();
-            BotManager.Settings.threadsColor = ((Color)Application.Current.Resources["ThreadsColor"]).ToString();
+            BotManager.Settings.HoloLogoColor = ((Color)Application.Current.Resources["HoloLogoColor"]).ToString();
         }
 
         private void SaveMapUISettings()
@@ -304,7 +304,7 @@ namespace AmeisenBotGUI
 
         private void ColorThreads_Click(object sender, RoutedEventArgs e)
         {
-            SelectColor("ThreadsColor");
+            SelectColor("HoloLogoColor");
         }
     }
 }

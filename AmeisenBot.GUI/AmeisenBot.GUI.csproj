@@ -209,7 +209,7 @@
       <Name>AmeisenBot.Logger</Name>
     </ProjectReference>
     <ProjectReference Include="..\AmeisenBot.Manager\AmeisenBot.Manager.csproj">
-      <Project>{6CA2C759-3166-4B71-A56D-E9BA28E72E33}</Project>
+      <Project>{6ca2c759-3166-4b71-a56d-e9ba28e72e33}</Project>
       <Name>AmeisenBot.Manager</Name>
     </ProjectReference>
     <ProjectReference Include="..\AmeisenBot.Mapping\AmeisenBot.Mapping.csproj">

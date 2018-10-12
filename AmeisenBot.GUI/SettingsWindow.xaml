@@ -461,7 +461,7 @@
                 <SolidColorBrush Color="{DynamicResource TargetEnergyColor}" />
             </Button.Background>
         </Button>
-        <Label Content="Threads" HorizontalAlignment="Left" Margin="400,448,0,0" VerticalAlignment="Top" Height="23">
+        <Label Content="Holo Logo:" HorizontalAlignment="Left" Margin="400,448,0,0" VerticalAlignment="Top" Height="23">
             <Label.Foreground>
                 <SolidColorBrush Color="{DynamicResource TextColor}" />
             </Label.Foreground>
@@ -473,7 +473,7 @@
         </Label>
         <Button x:Name="colorThreads" HorizontalAlignment="Left" Height="23" Margin="490,448,0,0" VerticalAlignment="Top" Width="70" Click="ColorThreads_Click">
             <Button.Background>
-                <SolidColorBrush Color="{DynamicResource ThreadsColor}" />
+                <SolidColorBrush Color="{DynamicResource HoloLogoColor}" />
             </Button.Background>
             <Button.BorderBrush>
                 <SolidColorBrush Color="{DynamicResource AccentColor}" />

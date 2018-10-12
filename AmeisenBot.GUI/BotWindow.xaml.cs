@@ -27,7 +27,7 @@ namespace AmeisenBotGUI
                 { UnitTrait.SELL, "💰" },
                 { UnitTrait.REPAIR, "🔧" },
                 { UnitTrait.FOOD, "🍖" },
-                { UnitTrait.DRINK, "🥛" },
+                { UnitTrait.DRINK, "🍹" },
                 { UnitTrait.FLIGHTMASTER, "🛫" },
                 { UnitTrait.AUCTIONMASTER, "💸" },
             };
@@ -76,7 +76,7 @@ namespace AmeisenBotGUI
             Application.Current.Resources["ExpColor"] = (Color)ColorConverter.ConvertFromString(BotManager.Settings.expColor);
             Application.Current.Resources["TargetHealthColor"] = (Color)ColorConverter.ConvertFromString(BotManager.Settings.targetHealthColor);
             Application.Current.Resources["TargetEnergyColor"] = (Color)ColorConverter.ConvertFromString(BotManager.Settings.targetEnergyColor);
-            Application.Current.Resources["ThreadsColor"] = (Color)ColorConverter.ConvertFromString(BotManager.Settings.threadsColor);
+            Application.Current.Resources["HoloLogoColor"] = (Color)ColorConverter.ConvertFromString(BotManager.Settings.HoloLogoColor);
         }
 
         private void ButtonCobatClassEditor_Click(object sender, RoutedEventArgs e)
@@ -358,7 +358,7 @@ namespace AmeisenBotGUI
 
         private void UpdateFSMViews()
         {
-            labelFSMState.Content = $"FSM state: {BotManager.CurrentFSMState}";
+            labelFSMState.Content = $"{BotManager.CurrentFSMState}";
         }
 
         /// <summary>
@@ -375,7 +375,7 @@ namespace AmeisenBotGUI
             labelRAM.Content = memoryUsageMB;
             labelCPU.Content = GetCPUUsage(Process.GetCurrentProcess());
 
-            labelLoadedCombatClass.Content = $"CombatClass: {Path.GetFileName(BotManager.Settings.combatClassPath)}";
+            labelLoadedCombatClass.Content = $"{Path.GetFileName(BotManager.Settings.combatClassPath)}.cs";
             labelClass.Content = $"{BotManager.Me.Class.ToString()}";
             labelRace.Content = $"{BotManager.Me.Race.ToString()}";
 
