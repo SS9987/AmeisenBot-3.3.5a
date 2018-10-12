@@ -56,12 +56,12 @@
                 <SolidColorBrush Color="{DynamicResource BackgroundColor}" />
             </Rectangle.Fill>
         </Rectangle>
-        <ProgressBar x:Name="progressBarHPTarget" HorizontalAlignment="Left" Height="12" Margin="173,204,0,0" VerticalAlignment="Top" Width="120" Foreground="#FFFF6060" FontFamily="Consolas" Background="{x:Null}" BorderThickness="2">
+        <ProgressBar x:Name="progressBarHPTarget" HorizontalAlignment="Left" Height="14" Margin="173,202,0,0" VerticalAlignment="Top" Width="120" Foreground="#FFFF6060" FontFamily="Consolas" Background="{x:Null}" BorderThickness="2">
             <ProgressBar.BorderBrush>
                 <SolidColorBrush Color="{DynamicResource AccentColor}" />
             </ProgressBar.BorderBrush>
         </ProgressBar>
-        <ProgressBar x:Name="progressBarEnergyTarget" HorizontalAlignment="Left" Height="12" Margin="173,221,0,0" VerticalAlignment="Top" Width="120" Background="{x:Null}" FontFamily="Consolas" BorderThickness="2">
+        <ProgressBar x:Name="progressBarEnergyTarget" HorizontalAlignment="Left" Height="14" Margin="173,221,0,0" VerticalAlignment="Top" Width="120" Background="{x:Null}" FontFamily="Consolas" BorderThickness="2">
             <ProgressBar.Foreground>
                 <SolidColorBrush Color="{DynamicResource TargetEnergyColor}" />
             </ProgressBar.Foreground>
@@ -69,7 +69,7 @@
                 <SolidColorBrush Color="{DynamicResource AccentColor}" />
             </ProgressBar.BorderBrush>
         </ProgressBar>
-        <ProgressBar x:Name="progressBarHP" HorizontalAlignment="Left" Height="12" Margin="10,118,0,0" VerticalAlignment="Top" Width="150" FontFamily="Consolas" Background="{x:Null}" BorderThickness="2">
+        <ProgressBar x:Name="progressBarHP" HorizontalAlignment="Left" Height="14" Margin="10,118,0,0" VerticalAlignment="Top" Width="150" FontFamily="Consolas" Background="{x:Null}" BorderThickness="2">
             <ProgressBar.Foreground>
                 <SolidColorBrush Color="{DynamicResource HealthColor}" />
             </ProgressBar.Foreground>
@@ -77,7 +77,7 @@
                 <SolidColorBrush Color="{DynamicResource AccentColor}" />
             </ProgressBar.BorderBrush>
         </ProgressBar>
-        <ProgressBar x:Name="progressBarEnergy" HorizontalAlignment="Left" Height="12" Margin="10,135,0,0" VerticalAlignment="Top" Width="150" Background="{x:Null}" FontFamily="Consolas" BorderThickness="2">
+        <ProgressBar x:Name="progressBarEnergy" HorizontalAlignment="Left" Height="14" Margin="10,137,0,0" VerticalAlignment="Top" Width="150" Background="{x:Null}" FontFamily="Consolas" BorderThickness="2">
             <ProgressBar.Foreground>
                 <SolidColorBrush Color="{DynamicResource EnergyColor}" />
             </ProgressBar.Foreground>
@@ -85,7 +85,7 @@
                 <SolidColorBrush Color="{DynamicResource AccentColor}" />
             </ProgressBar.BorderBrush>
         </ProgressBar>
-        <ProgressBar x:Name="progressBarXP" HorizontalAlignment="Left" Height="12" Margin="10,152,0,0" VerticalAlignment="Top" Width="150" Background="{x:Null}" FontFamily="Consolas" BorderThickness="2">
+        <ProgressBar x:Name="progressBarXP" HorizontalAlignment="Left" Height="14" Margin="10,156,0,0" VerticalAlignment="Top" Width="150" Background="{x:Null}" FontFamily="Consolas" BorderThickness="2">
             <ProgressBar.Foreground>
                 <SolidColorBrush Color="{DynamicResource EXPColor}" />
             </ProgressBar.Foreground>
@@ -113,7 +113,7 @@
                 <SolidColorBrush Color="{DynamicResource AccentColor}" />
             </Button.BorderBrush>
         </Button>
-        <CheckBox x:Name="checkBoxFollowParty" Content="🚀 Follow Group" Margin="346,255,0,0" Background="White" HorizontalAlignment="Left" Width="120" BorderThickness="2" Height="20" VerticalAlignment="Top" Click="CheckBoxFollowMaster_Click" FontSize="11">
+        <CheckBox x:Name="checkBoxFollowParty" Content="🚀 Follow Group" Margin="346,255,0,0" Background="White" HorizontalAlignment="Left" Width="120" BorderThickness="2" Height="20" VerticalAlignment="Top" Click="CheckBoxFollowMaster_Click">
             <CheckBox.Foreground>
                 <SolidColorBrush Color="{DynamicResource TextColor}" />
             </CheckBox.Foreground>
@@ -153,7 +153,7 @@
                 <SolidColorBrush Color="{DynamicResource TextColor}" />
             </Button.Foreground>
         </Button>
-        <CheckBox x:Name="checkBoxAssistPartyAttack" Content="⚔ Attack" Margin="172,338,0,0" Background="White" HorizontalAlignment="Left" Width="70" BorderThickness="2" Height="20" VerticalAlignment="Top" Click="CheckBoxAssistPartyAttack_Click" FontSize="11">
+        <CheckBox x:Name="checkBoxAssistPartyAttack" Content="⚔ Attack" Margin="172,338,0,0" Background="White" HorizontalAlignment="Left" Width="80" BorderThickness="2" Height="20" VerticalAlignment="Top" Click="CheckBoxAssistPartyAttack_Click">
             <CheckBox.Foreground>
                 <SolidColorBrush Color="{DynamicResource TextColor}" />
             </CheckBox.Foreground>
@@ -161,7 +161,7 @@
                 <SolidColorBrush Color="{DynamicResource AccentColor}" />
             </CheckBox.BorderBrush>
         </CheckBox>
-        <CheckBox x:Name="checkBoxAssistPartyHeal" Content="⛨ Heal" Margin="172,321,0,0" Background="White" HorizontalAlignment="Left" Width="70" BorderThickness="2" Height="20" VerticalAlignment="Top" Click="CheckBoxAssistPartyHeal_Click" FontSize="11">
+        <CheckBox x:Name="checkBoxAssistPartyHeal" Content="⛨ Heal" Margin="172,321,0,0" Background="White" HorizontalAlignment="Left" Width="70" BorderThickness="2" Height="20" VerticalAlignment="Top" Click="CheckBoxAssistPartyHeal_Click">
             <CheckBox.Foreground>
                 <SolidColorBrush Color="{DynamicResource TextColor}" />
             </CheckBox.Foreground>
@@ -169,7 +169,7 @@
                 <SolidColorBrush Color="{DynamicResource AccentColor}" />
             </CheckBox.BorderBrush>
         </CheckBox>
-        <CheckBox x:Name="checkBoxAssistPartyTank" Content="🛡️ Tank" Margin="172,304,0,0" Background="White" HorizontalAlignment="Left" Width="70" BorderThickness="2" Height="20" VerticalAlignment="Top" Click="CheckBoxAssistPartyTank_Click" FontSize="11">
+        <CheckBox x:Name="checkBoxAssistPartyTank" Content="🛡️ Tank" Margin="172,304,0,0" Background="White" HorizontalAlignment="Left" Width="70" BorderThickness="2" Height="20" VerticalAlignment="Top" Click="CheckBoxAssistPartyTank_Click">
             <CheckBox.Foreground>
                 <SolidColorBrush Color="{DynamicResource TextColor}" />
             </CheckBox.Foreground>
@@ -235,32 +235,32 @@
                 <SolidColorBrush Color="{DynamicResource TextColor}" />
             </Label.Foreground>
         </Label>
-        <Label x:Name="labelHP" Content="HP 0/0" HorizontalAlignment="Left" Margin="8,113,0,0" VerticalAlignment="Top" FontSize="8">
+        <Label x:Name="labelHP" Content="HP 0/0" HorizontalAlignment="Left" Margin="8,113,0,0" VerticalAlignment="Top" FontFamily="Arial">
             <Label.Foreground>
                 <SolidColorBrush Color="{DynamicResource TextColor}" />
             </Label.Foreground>
         </Label>
-        <Label x:Name="labelEnergy" Content="Energy 0/0" HorizontalAlignment="Left" Margin="8,130,0,0" VerticalAlignment="Top" FontSize="8">
+        <Label x:Name="labelEnergy" Content="Energy 0/0" HorizontalAlignment="Left" Margin="8,132,0,0" VerticalAlignment="Top" FontFamily="Arial">
             <Label.Foreground>
                 <SolidColorBrush Color="{DynamicResource TextColor}" />
             </Label.Foreground>
         </Label>
-        <Label x:Name="labelExp" Content="EXP 0/0" HorizontalAlignment="Left" Margin="8,147,0,0" VerticalAlignment="Top" FontSize="8">
+        <Label x:Name="labelExp" Content="EXP 0/0" HorizontalAlignment="Left" Margin="8,151,0,0" VerticalAlignment="Top" FontFamily="Arial">
             <Label.Foreground>
                 <SolidColorBrush Color="{DynamicResource TextColor}" />
             </Label.Foreground>
         </Label>
-        <Label x:Name="labelTargetHP" Content="HP 0/0" HorizontalAlignment="Left" Margin="171,199,0,0" VerticalAlignment="Top" FontSize="8">
+        <Label x:Name="labelTargetHP" Content="HP 0/0" HorizontalAlignment="Left" Margin="171,197,0,0" VerticalAlignment="Top" FontFamily="Arial">
             <Label.Foreground>
                 <SolidColorBrush Color="{DynamicResource TextColor}" />
             </Label.Foreground>
         </Label>
-        <Label x:Name="labelTargetEnergy" Content="Energy 0/0" HorizontalAlignment="Left" Margin="171,216,0,0" VerticalAlignment="Top" FontSize="8">
+        <Label x:Name="labelTargetEnergy" Content="Energy 0/0" HorizontalAlignment="Left" Margin="171,216,0,0" VerticalAlignment="Top" FontFamily="Arial">
             <Label.Foreground>
                 <SolidColorBrush Color="{DynamicResource TextColor}" />
             </Label.Foreground>
         </Label>
-        <CheckBox x:Name="checkBoxAssistPartyBuff" Content="💪 Buff" Margin="247,304,0,0" Background="White" HorizontalAlignment="Left" Width="60" BorderThickness="2" Height="20" VerticalAlignment="Top" Click="CheckBoxAssistPartyBuff_Click" FontSize="11">
+        <CheckBox x:Name="checkBoxAssistPartyBuff" Content="💪 Buff" Margin="257,304,0,0" Background="White" HorizontalAlignment="Left" Width="66" BorderThickness="2" Height="20" VerticalAlignment="Top" Click="CheckBoxAssistPartyBuff_Click">
             <CheckBox.Foreground>
                 <SolidColorBrush Color="{DynamicResource TextColor}" />
             </CheckBox.Foreground>
@@ -268,7 +268,7 @@
                 <SolidColorBrush Color="{DynamicResource AccentColor}" />
             </CheckBox.BorderBrush>
         </CheckBox>
-        <CheckBox x:Name="checkBoxAssistGroup" Content="🤝 Assist Group" Margin="346,272,0,0" Background="White" HorizontalAlignment="Left" Width="120" BorderThickness="2" Height="20" VerticalAlignment="Top" Click="CheckBoxAssistGroup_Click" FontSize="11">
+        <CheckBox x:Name="checkBoxAssistGroup" Content="🤝 Assist Group" Margin="346,272,0,0" Background="White" HorizontalAlignment="Left" Width="120" BorderThickness="2" Height="20" VerticalAlignment="Top" Click="CheckBoxAssistGroup_Click">
             <CheckBox.Foreground>
                 <SolidColorBrush Color="{DynamicResource TextColor}" />
             </CheckBox.Foreground>
@@ -276,7 +276,7 @@
                 <SolidColorBrush Color="{DynamicResource AccentColor}" />
             </CheckBox.BorderBrush>
         </CheckBox>
-        <CheckBox x:Name="checkBoxReleaseSpirit" Content="👻 Release Spirit" Margin="346,289,0,0" Background="White" HorizontalAlignment="Left" Width="129" BorderThickness="2" Height="20" VerticalAlignment="Top" Click="CheckBoxReleaseSpirit_Click" FontSize="11">
+        <CheckBox x:Name="checkBoxReleaseSpirit" Content="👻 Release Spirit" Margin="346,289,0,0" Background="White" HorizontalAlignment="Left" Width="129" BorderThickness="2" Height="20" VerticalAlignment="Top" Click="CheckBoxReleaseSpirit_Click">
             <CheckBox.Foreground>
                 <SolidColorBrush Color="{DynamicResource TextColor}" />
             </CheckBox.Foreground>
@@ -284,7 +284,7 @@
                 <SolidColorBrush Color="{DynamicResource AccentColor}" />
             </CheckBox.BorderBrush>
         </CheckBox>
-        <CheckBox x:Name="checkBoxRevive" Content="💀 Revive" Margin="346,306,0,0" Background="White" HorizontalAlignment="Left" Width="129" BorderThickness="2" Height="20" VerticalAlignment="Top" Click="CheckBoxReleaseSpirit_Copy_Click" FontSize="11">
+        <CheckBox x:Name="checkBoxRevive" Content="💀 Revive" Margin="346,306,0,0" Background="White" HorizontalAlignment="Left" Width="129" BorderThickness="2" Height="20" VerticalAlignment="Top" Click="CheckBoxReleaseSpirit_Copy_Click">
             <CheckBox.Foreground>
                 <SolidColorBrush Color="{DynamicResource TextColor}" />
             </CheckBox.Foreground>
@@ -303,7 +303,7 @@
                 <SolidColorBrush Color="{DynamicResource AccentColor}" />
             </Rectangle.Stroke>
         </Rectangle>
-        <CheckBox x:Name="checkBoxRandomEmotes" Content="🤷 Emotes" Margin="346,323,0,0" Background="White" HorizontalAlignment="Left" Width="129" BorderThickness="2" Height="20" VerticalAlignment="Top" Click="CheckBoxAssistPartyBuff_Click" FontSize="11">
+        <CheckBox x:Name="checkBoxRandomEmotes" Content="🤷 Emotes" Margin="346,323,0,0" Background="White" HorizontalAlignment="Left" Width="129" BorderThickness="2" Height="20" VerticalAlignment="Top" Click="CheckBoxAssistPartyBuff_Click">
             <CheckBox.Foreground>
                 <SolidColorBrush Color="{DynamicResource TextColor}" />
             </CheckBox.Foreground>
@@ -311,7 +311,7 @@
                 <SolidColorBrush Color="{DynamicResource AccentColor}" />
             </CheckBox.BorderBrush>
         </CheckBox>
-        <CheckBox x:Name="checkBoxDoBotStuff" Content="👾 Do own stuff" Margin="346,340,0,-8" Background="White" HorizontalAlignment="Left" Width="129" BorderThickness="2" Height="20" VerticalAlignment="Top" Click="CheckBoxAssistPartyBuff_Click" FontSize="11">
+        <CheckBox x:Name="checkBoxDoBotStuff" Content="👾 Do own stuff" Margin="346,340,0,-8" Background="White" HorizontalAlignment="Left" Width="129" BorderThickness="2" Height="20" VerticalAlignment="Top" Click="CheckBoxAssistPartyBuff_Click">
             <CheckBox.Foreground>
                 <SolidColorBrush Color="{DynamicResource TextColor}" />
             </CheckBox.Foreground>
