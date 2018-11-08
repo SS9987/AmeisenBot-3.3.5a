@@ -342,16 +342,21 @@
                 <SolidColorBrush Color="{DynamicResource TextColor}" />
             </Label.Foreground>
         </Label>
-        <Label x:Name="labelRace" Content="Race" HorizontalAlignment="Left" Margin="0,202,0,0" VerticalAlignment="Top" FontSize="11">
+        <Label x:Name="labelRace" Content="Race" HorizontalAlignment="Left" Margin="0,194,0,0" VerticalAlignment="Top" FontSize="11">
             <Label.Foreground>
                 <SolidColorBrush Color="{DynamicResource TextColor}" />
             </Label.Foreground>
         </Label>
-        <Label x:Name="labelClass" Content="Class" HorizontalAlignment="Left" Margin="0,225,0,0" VerticalAlignment="Top" FontSize="11">
+        <Label x:Name="labelClass" Content="Class" HorizontalAlignment="Left" Margin="0,209,0,0" VerticalAlignment="Top" FontSize="11">
             <Label.Foreground>
                 <SolidColorBrush Color="{DynamicResource TextColor}" />
             </Label.Foreground>
         </Label>
         <Label Content="💭" HorizontalAlignment="Left" Margin="426,308,0,0" VerticalAlignment="Top" FontSize="30" RenderTransformOrigin="4.267,0.515" Height="50" Width="50" Foreground="#19FFFFFF"/>
+        <Label x:Name="labelMoney" Content="0 g 0 s 0 c" HorizontalAlignment="Left" Margin="0,223,0,0" VerticalAlignment="Top" FontSize="11">
+            <Label.Foreground>
+                <SolidColorBrush Color="{DynamicResource TextColor}" />
+            </Label.Foreground>
+        </Label>
     </Grid>
 </Window>

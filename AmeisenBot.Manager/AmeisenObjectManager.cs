@@ -98,11 +98,15 @@ namespace AmeisenBotManager
                 }
             }
 
+            // Timer to update the objects from memory
             objectUpdateTimer = new System.Timers.Timer(AmeisenDataHolder.Settings.dataRefreshRate);
             objectUpdateTimer.Elapsed += ObjectUpdateTimer;
             objectUpdateThread = new Thread(new ThreadStart(StartTimer));
             objectUpdateThread.Start();
 
+            // Timer to update odes in the DB, 
+            // keep in mind this needs performance at the DB side
+            // but will increse mapping details!
             nodeDBUpdateTimer = new System.Timers.Timer(AmeisenDataHolder.Settings.dataRefreshRate);
             nodeDBUpdateTimer.Elapsed += NodeDBUpdateTimer;
             nodeDBUpdateTimer.Start();

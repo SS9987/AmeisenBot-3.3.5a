@@ -32,7 +32,7 @@ namespace AmeisenBotManager
         public AmeisenClient(AmeisenDataHolder ameisenDataHolder)
         {
             AmeisenDataHolder = ameisenDataHolder;
-            AmeisenDataHolder = ameisenDataHolder;
+            ameisenDataHolder.IsConnectedToServer = false;
 
             botUpdateTimer = new System.Timers.Timer(1000);
             botUpdateTimer.Elapsed += UpdateBot;
@@ -41,66 +41,82 @@ namespace AmeisenBotManager
             botListUpdateTimer.Elapsed += UpdateBotList;
         }
 
-        public void Register(Me me, IPAddress ip, int port = 16200)
+        public bool Register(Me me, IPAddress ip, int port = 16200)
         {
-            IRestResponse response = SendRequest(me, ip, port, HttpMethod.Post, true);
-            if (response.StatusCode == HttpStatusCode.Created
-                || response.StatusCode == HttpStatusCode.OK)
+            if (!AmeisenDataHolder.IsConnectedToServer)
             {
-                IsRegistered = true;
-                NetworkBot responseBot = JsonConvert.DeserializeObject<NetworkBot>(response.Content);
-                BotID = responseBot.id;
+                IRestResponse response = SendRequest(me, ip, port, HttpMethod.Post, true);
+                if (response.StatusCode == HttpStatusCode.Created
+                    || response.StatusCode == HttpStatusCode.OK)
+                {
+                    IsRegistered = true;
+                    NetworkBot responseBot = JsonConvert.DeserializeObject<NetworkBot>(response.Content);
+                    BotID = responseBot.id;
 
-                ConnectedIP = ip;
-                ConnectedPort = port;
+                    ConnectedIP = ip;
+                    ConnectedPort = port;
+                    AmeisenDataHolder.IsConnectedToServer = true;
 
-                botUpdateTimer.Start();
-                botListUpdateTimer.Start();
+                    botUpdateTimer.Start();
+                    botListUpdateTimer.Start();
+
+                    return true;
+                }
+                return false;
             }
+            else { return true; }
         }
 
         private IRestResponse SendRequest(Me me, IPAddress ip, int port, HttpMethod post, bool sendPicture = false)
         {
-            SendableMe meSendable = new SendableMe().ConvertFromMe(me);
-            string meSendableJSON = JsonConvert.SerializeObject(meSendable);
-
-            string base64Image = "";
-            if (sendPicture && AmeisenDataHolder.Settings.picturePath.Length > 0)
+            if (AmeisenDataHolder.IsConnectedToServer)
             {
-                base64Image = Convert.ToBase64String(
-                        Utils.ImageToByte(
-                            new Bitmap(AmeisenDataHolder.Settings.picturePath)));
+                SendableMe meSendable = new SendableMe().ConvertFromMe(me);
+                string meSendableJSON = JsonConvert.SerializeObject(meSendable);
+
+                string base64Image = "";
+                if (sendPicture && AmeisenDataHolder.Settings.picturePath.Length > 0)
+                {
+                    base64Image = Convert.ToBase64String(
+                            Utils.ImageToByte(
+                                new Bitmap(AmeisenDataHolder.Settings.picturePath)));
+                }
+
+                RestClient client = new RestClient($"http://{ip}:{port}");
+                // client.Authenticator = new HttpBasicAuthenticator(username, password);
+
+                RestRequest request = new RestRequest("bot/{name}", Method.PUT)
+                {
+                    RequestFormat = DataFormat.Json
+                };
+                request.AddUrlSegment("name", AmeisenDataHolder.Settings.ameisenServerName);
+                request.AddParameter("id", 0);
+                request.AddParameter("ip", "0.0.0.0");
+                request.AddParameter("lastActive", Environment.TickCount);
+                request.AddParameter("name", AmeisenDataHolder.Settings.ameisenServerName);
+                request.AddParameter("me", meSendableJSON);
+                request.AddParameter("picture", base64Image);
+
+                return client.Execute(request);
             }
-
-            RestClient client = new RestClient($"http://{ip}:{port}");
-            // client.Authenticator = new HttpBasicAuthenticator(username, password);
-
-            RestRequest request = new RestRequest("bot/{name}", Method.PUT)
-            {
-                RequestFormat = DataFormat.Json
-            };
-            request.AddUrlSegment("name", AmeisenDataHolder.Settings.ameisenServerName);
-            request.AddParameter("id", 0);
-            request.AddParameter("ip", "0.0.0.0");
-            request.AddParameter("lastActive", Environment.TickCount);
-            request.AddParameter("name", AmeisenDataHolder.Settings.ameisenServerName);
-            request.AddParameter("me", meSendableJSON);
-            request.AddParameter("picture", base64Image);
-
-            return client.Execute(request);
+            return null;
         }
 
         public void Unregister(Me me, IPAddress ip, int port = 5000)
         {
-            IRestResponse response = SendRequest(me, ip, port, HttpMethod.Delete);
-            if (response.StatusCode == HttpStatusCode.OK)
+            if (AmeisenDataHolder.IsConnectedToServer)
             {
-                IsRegistered = false;
-                NetworkBot responseBot = JsonConvert.DeserializeObject<NetworkBot>(response.Content);
-                BotID = responseBot.id;
+                IRestResponse response = SendRequest(me, ip, port, HttpMethod.Delete);
+                if (response.StatusCode == HttpStatusCode.OK)
+                {
+                    IsRegistered = false;
+                    NetworkBot responseBot = JsonConvert.DeserializeObject<NetworkBot>(response.Content);
+                    BotID = responseBot.id;
 
-                botUpdateTimer.Close();
-                botListUpdateTimer.Close();
+                    botUpdateTimer.Close();
+                    botListUpdateTimer.Close();
+                }
+                AmeisenDataHolder.IsConnectedToServer = false;
             }
         }
 
@@ -122,29 +138,39 @@ namespace AmeisenBotManager
 
         private void UpdateBot(object source, ElapsedEventArgs e)
         {
-            IRestResponse response = SendRequest(AmeisenDataHolder.Me, ConnectedIP, ConnectedPort, HttpMethod.Put);
-            if (response.StatusCode == HttpStatusCode.OK)
+            if (AmeisenDataHolder.IsConnectedToServer)
             {
-                NetworkBot responseBot = JsonConvert.DeserializeObject<NetworkBot>(response.Content);
-                BotID = responseBot.id;
+                IRestResponse response = SendRequest(AmeisenDataHolder.Me, ConnectedIP, ConnectedPort, HttpMethod.Put);
+                if (response.StatusCode == HttpStatusCode.OK)
+                {
+                    NetworkBot responseBot = JsonConvert.DeserializeObject<NetworkBot>(response.Content);
+                    BotID = responseBot.id;
+                }
             }
         }
 
         private void UpdateBotList(object source, ElapsedEventArgs e)
         {
-            IRestResponse response = GetAllBots(ConnectedIP, ConnectedPort);
-            if (response.StatusCode == HttpStatusCode.OK)
+            if (AmeisenDataHolder.IsConnectedToServer)
             {
-                Bots = JsonConvert.DeserializeObject<List<NetworkBot>>(response.Content);
+                IRestResponse response = GetAllBots(ConnectedIP, ConnectedPort);
+                if (response.StatusCode == HttpStatusCode.OK)
+                {
+                    Bots = JsonConvert.DeserializeObject<List<NetworkBot>>(response.Content);
+                }
             }
         }
 
         private IRestResponse GetAllBots(IPAddress ip, int port)
         {
-            RestClient client = new RestClient($"http://{ip}:{port}");
-            // client.Authenticator = new HttpBasicAuthenticator(username, password);
-            RestRequest request = new RestRequest("allbots/", Method.GET);
-            return client.Execute(request);
+            if (AmeisenDataHolder.IsConnectedToServer)
+            {
+                RestClient client = new RestClient($"http://{ip}:{port}");
+                // client.Authenticator = new HttpBasicAuthenticator(username, password);
+                RestRequest request = new RestRequest("allbots/", Method.GET);
+                return client.Execute(request);
+            }
+            return null;
         }
     }
 }

@@ -91,22 +91,16 @@ namespace AmeisenBotFSM.Actions
 
                 if (WaypointQueue.Count < 2 && Utils.GetDistance(initialPosition, targetPosition) >= AmeisenDataHolder.Settings.PathfindingUsageThreshold)
                 {
-                    List<Node> path = FindWayToNode(initialPosition, targetPosition);
-
-                    if (path != null)
+                    if (AmeisenDataHolder.Settings.usePathfinding
+                        && AmeisenDataHolder.IsConnectedToDB)
                     {
-                        ProcessPath(path);
+                        UsePathfinding(initialPosition, targetPosition);
                     }
                     else
                     {
-                        // retry with thicker path
-                        path = FindWayToNode(initialPosition, targetPosition, true);
-
-                        if (path != null)
-                        {
-                            ProcessPath(path);
-                        }
+                        MoveToNode(targetPosition);
                     }
+
                 }
                 else
                 {
@@ -116,8 +110,28 @@ namespace AmeisenBotFSM.Actions
             else { }
         }
 
+        private void UsePathfinding(Vector3 initialPosition, Vector3 targetPosition)
+        {
+            List<Node> path = FindWayToNode(initialPosition, targetPosition);
+
+            if (path != null)
+            {
+                ProcessPath(path);
+            }
+            else
+            {
+                // retry with thicker path
+                path = FindWayToNode(initialPosition, targetPosition, true);
+
+                if (path != null)
+                {
+                    ProcessPath(path);
+                }
+            }
+        }
+
         /// <summary>
-        /// Process a path by adding all nodes to the QaypointQueue
+        /// Process a path by adding all nodes to the WaypointQueue
         /// 
         /// will set PathCalculated to true
         /// </summary>

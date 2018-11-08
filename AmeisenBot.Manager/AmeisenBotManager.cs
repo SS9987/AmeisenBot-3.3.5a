@@ -93,6 +93,18 @@ namespace AmeisenBotManager
             set { AmeisenDataHolder.IsAllowedToRevive = value; }
         }
 
+        public bool IsConnectedToDB
+        {
+            get { return AmeisenDataHolder.IsConnectedToDB; }
+            set { AmeisenDataHolder.IsConnectedToDB = value; }
+        }
+
+        public bool IsConnectedToServer
+        {
+            get { return AmeisenDataHolder.IsConnectedToServer; }
+            set { AmeisenDataHolder.IsConnectedToServer = value; }
+        }
+
         public bool IsBlackmagicAttached { get; private set; }
         public bool IsEndsceneHooked { get; private set; }
         public Me Me { get { return AmeisenDataHolder.Me; } }
@@ -152,7 +164,7 @@ namespace AmeisenBotManager
             AmeisenDataHolder = new AmeisenDataHolder();
             AmeisenSettings = new AmeisenSettings(AmeisenDataHolder);
             AmeisenClient = new AmeisenClient(AmeisenDataHolder);
-            AmeisenDBManager = new AmeisenDBManager();
+            AmeisenDBManager = new AmeisenDBManager(AmeisenDataHolder);
         }
 
         /// <summary>
@@ -215,14 +227,7 @@ namespace AmeisenBotManager
             // Connect to DB
             if (AmeisenSettings.Settings.databaseAutoConnect)
             {
-                AmeisenDBManager.ConnectToMySQL(
-                string.Format(sqlConnectionString,
-                    AmeisenSettings.Settings.databaseIP,
-                    AmeisenSettings.Settings.databasePort,
-                    AmeisenSettings.Settings.databaseName,
-                    AmeisenSettings.Settings.databaseUsername,
-                    AmeisenSettings.Settings.databasePasswort)
-                );
+                ConnectToDB();
             }
 
             // Attach to Proccess
@@ -249,7 +254,7 @@ namespace AmeisenBotManager
             // Load the combatclass
             IAmeisenCombatClass combatClass = CompileAndLoadCombatClass(AmeisenSettings.Settings.combatClassPath);
 
-            // Init our MovementEngine to hposition ourself according to our formation
+            // Init our MovementEngine to position ourself according to our formation
             AmeisenMovementEngine = new AmeisenMovementEngine(new DefaultFormation())
             {
                 MemberCount = 40
@@ -261,6 +266,7 @@ namespace AmeisenBotManager
                 AmeisenDBManager,
                 AmeisenMovementEngine,
                 combatClass);
+
             // Deafult Idle state
             AmeisenStateMachineManager.StateMachine.PushAction(BotState.Idle);
             AmeisenStateMachineManager.Start();
@@ -268,11 +274,28 @@ namespace AmeisenBotManager
             // Connect to Server
             if (Settings.serverAutoConnect)
             {
-                AmeisenClient.Register(
-                    Me,
-                    IPAddress.Parse(AmeisenSettings.Settings.ameisenServerIP),
-                    AmeisenSettings.Settings.ameisenServerPort);
+                ConnectToServer();
             }
+        }
+
+        private bool ConnectToServer()
+        {
+            return AmeisenClient.Register(
+                       Me,
+                       IPAddress.Parse(AmeisenSettings.Settings.ameisenServerIP),
+                       AmeisenSettings.Settings.ameisenServerPort);
+        }
+
+        private bool ConnectToDB()
+        {
+            return AmeisenDBManager.ConnectToMySQL(
+                        string.Format(sqlConnectionString,
+                        AmeisenSettings.Settings.databaseIP,
+                        AmeisenSettings.Settings.databasePort,
+                        AmeisenSettings.Settings.databaseName,
+                        AmeisenSettings.Settings.databaseUsername,
+                        AmeisenSettings.Settings.databasePasswort)
+                    );
         }
 
         /// <summary>
