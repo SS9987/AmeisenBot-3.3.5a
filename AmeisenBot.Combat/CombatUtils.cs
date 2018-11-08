@@ -12,7 +12,7 @@ namespace AmeisenBotCombat
         {
             SpellInfo spellInfo = GetSpellInfo(name, onMyself);
 
-            if(!onMyself && !AmeisenCore.IsSpellInRage(name))
+            if(!onMyself && !AmeisenCore.IsSpellUseable(name))
             {
                 MoveToPos(me, target);
             }

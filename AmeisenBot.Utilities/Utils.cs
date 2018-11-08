@@ -222,12 +222,9 @@ namespace AmeisenBotUtilities
         {
             using (MemoryStream memoryStream = new MemoryStream())
             {
-                using (MemoryStream byteStream = new MemoryStream(compressedBytes))
+                using (GZipStream gzipStream = new GZipStream(memoryStream, CompressionMode.Decompress))
                 {
-                    using (GZipStream gzipStream = new GZipStream(byteStream, CompressionMode.Decompress))
-                    {
-                        gzipStream.CopyTo(memoryStream);
-                    }
+                    gzipStream.CopyTo(memoryStream);
                 }
                 return memoryStream.ToArray();
             }
