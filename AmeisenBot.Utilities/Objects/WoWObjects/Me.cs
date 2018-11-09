@@ -18,7 +18,7 @@ namespace AmeisenBotUtilities
 
         public Me(uint baseAddress, BlackMagic blackMagic) : base(baseAddress, blackMagic)
         {
-            Update();
+            base.Update();
         }
 
         public override string ToString()

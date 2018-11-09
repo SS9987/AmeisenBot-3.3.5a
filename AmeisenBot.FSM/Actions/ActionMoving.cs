@@ -292,73 +292,7 @@ namespace AmeisenBotFSM.Actions
                 return RebasePath(path, offsetX, offsetY);
             }
         }
-
-        private void WriteMapToFile(Node[,] map, Vector3 initialPosition, Vector3 targetPosition)
-        {
-            string debugFilepath = AppDomain.CurrentDomain.BaseDirectory + "debug_map.txt";
-
-            if (File.Exists(debugFilepath))
-            {
-                File.WriteAllText(debugFilepath, "");
-            }
-
-            FileStream debugMapOutputStream = File.OpenWrite(debugFilepath);
-            StreamWriter sw = new StreamWriter(debugMapOutputStream)
-            {
-                AutoFlush = true
-            };
-
-            for (int x = 0; x < map.GetLength(0); x++)
-            {
-                for (int y = 0; y < map.GetLength(1); y++)
-                {
-                    if (map[x, y].IsBlocked)
-                    {
-                        if (x == initialPosition.X && y == initialPosition.Y)
-                        {
-                            sw.Write("X");
-                            initialPosition.X = map[x, y].Position.X;
-                            initialPosition.Y = map[x, y].Position.Y;
-                        }
-                        else if (x == targetPosition.X && y == targetPosition.Y)
-                        {
-                            sw.Write("Y");
-                            targetPosition.X = map[x, y].Position.X;
-                            targetPosition.Y = map[x, y].Position.Y;
-                        }
-                        else
-                        {
-                            sw.Write("█");
-                        }
-                    }
-                    else
-                    {
-                        if (x == initialPosition.X && y == initialPosition.Y)
-                        {
-                            sw.Write("A");
-                            initialPosition.X = map[x, y].Position.X;
-                            initialPosition.Y = map[x, y].Position.Y;
-                        }
-                        else if (x == targetPosition.X && y == targetPosition.Y)
-                        {
-                            sw.Write("B");
-                            targetPosition.X = map[x, y].Position.X;
-                            targetPosition.Y = map[x, y].Position.Y;
-                        }
-                        else
-                        {
-                            sw.Write(" ");
-                        }
-                    }
-                }
-
-                sw.WriteLine();
-            }
-
-            sw.Close();
-            debugMapOutputStream.Close();
-        }
-
+                
         /// <summary>
         /// Init a map with all fields blocked
         /// </summary>

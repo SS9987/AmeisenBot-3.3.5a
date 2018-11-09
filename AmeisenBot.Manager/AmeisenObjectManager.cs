@@ -141,6 +141,7 @@ namespace AmeisenBotManager
             if (disposing)
             {
                 ((IDisposable)objectUpdateTimer).Dispose();
+                ((IDisposable)nodeDBUpdateTimer).Dispose();
             }
         }
 
