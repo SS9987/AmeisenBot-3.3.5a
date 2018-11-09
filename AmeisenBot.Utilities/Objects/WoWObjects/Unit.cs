@@ -9,16 +9,16 @@ namespace AmeisenBotUtilities
         public BitVector32 DynamicUFlags { get; set; }
         public int Energy { get; set; }
         public int Health { get; set; }
-        public int HealthPercentage { get { return (Health / MaxHealth) * 100; } }
-        public int EnergyPercentage { get { return (Energy / MaxEnergy) * 100; } }
-        public bool InCombat { get { return UFlags[(int)UnitFlags.COMBAT]; } }
+        public int HealthPercentage => (Health / MaxHealth) * 100;
+        public int EnergyPercentage => (Energy / MaxEnergy) * 100;
+        public bool InCombat => UFlags[(int)UnitFlags.COMBAT];
         public bool IsCasting { get; set; }
         public bool IsDead { get; set; }
-        public bool IsLootable { get { return UFlags[(int)DynamicUnitFlags.LOOTABLE]; } }
+        public bool IsLootable => UFlags[(int)DynamicUnitFlags.LOOTABLE];
         public int Level { get; set; }
         public int MaxEnergy { get; set; }
         public int MaxHealth { get; set; }
-        public bool NeedToRevive { get { return Health == 0; } }
+        public bool NeedToRevive => Health == 0;
         public ulong TargetGuid { get; set; }
         public BitVector32 UFlags { get; set; }
         public BitVector32 UFlags2 { get; set; }

@@ -7,9 +7,6 @@ namespace AmeisenBotUtilities
         public string characterName;
         public Process process;
 
-        public override string ToString()
-        {
-            return $"{process.Id.ToString()} - {characterName}";
-        }
+        public override string ToString() => $"{process.Id.ToString()} - {characterName}";
     }
 }

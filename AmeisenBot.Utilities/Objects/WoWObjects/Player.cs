@@ -5,9 +5,7 @@ namespace AmeisenBotUtilities
 {
     public class Player : Unit
     {
-        public Player(uint baseAddress, BlackMagic blackMagic) : base(baseAddress, blackMagic)
-        {
-        }
+        public Player(uint baseAddress, BlackMagic blackMagic) : base(baseAddress, blackMagic) { }
 
         /// <summary>
         /// Get a player's name from its GUID

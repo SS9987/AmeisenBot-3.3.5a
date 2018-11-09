@@ -5,9 +5,7 @@ namespace AmeisenBotUtilities
 {
     public class DynObject : WowObject
     {
-        public DynObject(uint baseAddress, BlackMagic blackMagic) : base(baseAddress, blackMagic)
-        {
-        }
+        public DynObject(uint baseAddress, BlackMagic blackMagic) : base(baseAddress, blackMagic) { }
 
         public override string ToString()
         {
