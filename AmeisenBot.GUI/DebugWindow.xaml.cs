@@ -24,24 +24,16 @@ namespace AmeisenBotGUI
         }
 
         private void ButtonExit_Click(object sender, RoutedEventArgs e)
-        {
-            Close();
-        }
+            => Close();
 
         private void ButtonMinimize_Click(object sender, RoutedEventArgs e)
-        {
-            WindowState = WindowState.Minimized;
-        }
+            => WindowState = WindowState.Minimized;
 
         private void DebugUI_Loaded(object sender, RoutedEventArgs e)
-        {
-            StartUIUpdatTimer();
-        }
+            => StartUIUpdatTimer();
 
         private void DebugUI_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            DragMove();
-        }
+            => DragMove();
 
         private void ListboxObjects_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -62,38 +54,61 @@ namespace AmeisenBotGUI
                     {
                         break;
                     }
-
-                    if (obj.GetType() == typeof(WowObject) && checkboxFilterWOWOBJECT.IsChecked == true)
+                    else if (obj.GetType() == typeof(WowObject)
+                            && checkboxFilterWOWOBJECT.IsChecked == true)
                     {
-                        listboxObjects.Items.Add(new DataItem(obj.ToString(), new SolidColorBrush((Color)Application.Current.Resources["WoWObjectColor"])));
+                        listboxObjects.Items.Add(
+                            new DataItem(obj.ToString(),
+                            new SolidColorBrush(GetColorFromResources("WoWObjectColor"))));
                     }
-                    else if (obj.GetType() == typeof(GameObject) && checkboxFilterGAMEOBJECT.IsChecked == true)
+                    else if (obj.GetType() == typeof(GameObject)
+                            && checkboxFilterGAMEOBJECT.IsChecked == true)
                     {
-                        listboxObjects.Items.Add(new DataItem(obj.ToString(), new SolidColorBrush((Color)Application.Current.Resources["GameObjectColor"])));
+                        listboxObjects.Items.Add(
+                            new DataItem(obj.ToString(),
+                            new SolidColorBrush(GetColorFromResources("GameObjectColor"))));
                     }
-                    else if (obj.GetType() == typeof(DynObject) && checkboxFilterDYNOBJECT.IsChecked == true)
+                    else if (obj.GetType() == typeof(DynObject)
+                            && checkboxFilterDYNOBJECT.IsChecked == true)
                     {
-                        listboxObjects.Items.Add(new DataItem(obj.ToString(), new SolidColorBrush((Color)Application.Current.Resources["DynObjectColor"])));
+                        listboxObjects.Items.Add(
+                            new DataItem(obj.ToString(),
+                            new SolidColorBrush(GetColorFromResources("DynObjectColor"))));
                     }
-                    else if (obj.GetType() == typeof(Container) && checkboxFilterCONTAINER.IsChecked == true)
+                    else if (obj.GetType() == typeof(Container)
+                            && checkboxFilterCONTAINER.IsChecked == true)
                     {
-                        listboxObjects.Items.Add(new DataItem(obj.ToString(), new SolidColorBrush((Color)Application.Current.Resources["ContainerColor"])));
+                        listboxObjects.Items.Add(
+                            new DataItem(obj.ToString(),
+                            new SolidColorBrush(GetColorFromResources("ContainerColor"))));
                     }
-                    else if (obj.GetType() == typeof(Corpse) && checkboxFilterCORPSE.IsChecked == true)
+                    else if (obj.GetType() == typeof(Corpse)
+                            && checkboxFilterCORPSE.IsChecked == true)
                     {
-                        listboxObjects.Items.Add(new DataItem(obj.ToString(), new SolidColorBrush((Color)Application.Current.Resources["CorpseColor"])));
+                        listboxObjects.Items.Add(
+                            new DataItem(obj.ToString(),
+                            new SolidColorBrush(GetColorFromResources("CorpseColor"))));
                     }
-                    else if (obj.GetType() == typeof(Unit) && checkboxFilterUNIT.IsChecked == true)
+                    else if (obj.GetType() == typeof(Unit)
+                            && checkboxFilterUNIT.IsChecked == true)
                     {
-                        listboxObjects.Items.Add(new DataItem(obj.ToString(), new SolidColorBrush((Color)Application.Current.Resources["UnitColor"])));
+                        listboxObjects.Items.Add(
+                            new DataItem(obj.ToString(),
+                            new SolidColorBrush(GetColorFromResources("UnitColor"))));
                     }
-                    else if (obj.GetType() == typeof(Player) && checkboxFilterPLAYER.IsChecked == true)
+                    else if (obj.GetType() == typeof(Player)
+                            && checkboxFilterPLAYER.IsChecked == true)
                     {
-                        listboxObjects.Items.Add(new DataItem(obj.ToString(), new SolidColorBrush((Color)Application.Current.Resources["PlayerColor"])));
+                        listboxObjects.Items.Add(
+                            new DataItem(obj.ToString(),
+                            new SolidColorBrush(GetColorFromResources("PlayerColor"))));
                     }
-                    else if (obj.GetType() == typeof(Me) && checkboxFilterME.IsChecked == true)
+                    else if (obj.GetType() == typeof(Me)
+                            && checkboxFilterME.IsChecked == true)
                     {
-                        listboxObjects.Items.Add(new DataItem(obj.ToString(), new SolidColorBrush((Color)Application.Current.Resources["MeColor"])));
+                        listboxObjects.Items.Add(
+                            new DataItem(obj.ToString(),
+                            new SolidColorBrush(GetColorFromResources("MeColor"))));
                     }
                 }
             }
@@ -106,6 +121,9 @@ namespace AmeisenBotGUI
             uiUpdateTimer.Interval = new TimeSpan(0, 0, 0, 1, 0);
             uiUpdateTimer.Start();
         }
+
+        private Color GetColorFromResources(string resString)
+                => (Color)Application.Current.Resources[resString];
     }
 
     /// <summary>
@@ -114,7 +132,6 @@ namespace AmeisenBotGUI
     internal class DataItem
     {
         public Brush Background { get; set; }
-
         public string Text { get; set; }
 
         public DataItem(string text, Brush background)

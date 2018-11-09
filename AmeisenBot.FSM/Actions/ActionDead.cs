@@ -35,15 +35,9 @@ namespace AmeisenBotFSM.Actions
             base.DoThings();
         }
 
-        public override void Start()
-        {
-            base.Start();
-        }
+        public override void Start() => base.Start();
 
-        public override void Stop()
-        {
-            base.Stop();
-        }
+        public override void Stop() => base.Stop();
 
         private void GoToCorpseAndRevive()
         {

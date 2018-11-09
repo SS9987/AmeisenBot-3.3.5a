@@ -163,9 +163,7 @@ namespace AmeisenBotFSM.Actions
         }
 
         private double GetFollowAngle(int memberCount, int myPosition)
-        {
-            return 2 * Math.PI / (memberCount * myPosition);
-        }
+            => 2 * Math.PI / (memberCount * myPosition);
 
         private Vector3 CalculateMovementOffset(Vector3 posToMoveTo, double angle, double distance)
         {

@@ -71,14 +71,8 @@ namespace AmeisenBotFSM.Actions
             catch { }
         }
 
-        public void Start()
-        {
-            CombatClass?.Init();
-        }
+        public void Start() => CombatClass?.Init();
 
-        public void Stop()
-        {
-            CombatClass?.Exit();
-        }
+        public void Stop() => CombatClass?.Exit();
     }
 }

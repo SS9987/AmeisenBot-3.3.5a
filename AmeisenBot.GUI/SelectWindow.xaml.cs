@@ -111,9 +111,7 @@ namespace AmeisenBotGUI
         }
 
         private void ButtonRefresh_Click(object sender, RoutedEventArgs e)
-        {
-            SearchForWoW();
-        }
+            => SearchForWoW();
 
         private void ComboBoxAccounts_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
@@ -184,10 +182,7 @@ namespace AmeisenBotGUI
 
         private void LoadingForm_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            try
-            {
-                DragMove();
-            }
+            try { DragMove(); }
             catch { }
         }
 

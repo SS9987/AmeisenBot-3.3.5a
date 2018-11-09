@@ -1,4 +1,5 @@
 ﻿using AmeisenBotManager;
+using AmeisenBotUtilities;
 using Microsoft.Win32;
 using System;
 using System.IO;
@@ -14,24 +15,21 @@ namespace AmeisenBotGUI
     public partial class SettingsWindow : Window
     {
         private BotManager BotManager { get; }
+        private Settings Settings { get; set; }
 
         public SettingsWindow(BotManager botManager)
         {
             InitializeComponent();
             BotManager = botManager;
-
-            Topmost = BotManager.Settings.topMost;
+            Settings = Settings;
+            Topmost = Settings.topMost;
         }
 
         private void ButtonExit_Click(object sender, RoutedEventArgs e)
-        {
-            Close();
-        }
+            => Close();
 
         private void ButtonMinimize_Click(object sender, RoutedEventArgs e)
-        {
-            WindowState = WindowState.Minimized;
-        }
+            => WindowState = WindowState.Minimized;
 
         private void ButtonSelectPicture_Click(object sender, RoutedEventArgs e)
         {
@@ -48,25 +46,19 @@ namespace AmeisenBotGUI
         }
 
         private void ColorMe_Click(object sender, RoutedEventArgs e)
-        {
-            SelectColor("MeNodeColor");
-        }
+            => SelectColor("MeNodeColor");
 
         private void ColorWalkable_Click(object sender, RoutedEventArgs e)
-        {
-            SelectColor("WalkableNodeColorLow");
-        }
+            => SelectColor("WalkableNodeColorLow");
 
         private void ColorWalkableNodeHigh_Click(object sender, RoutedEventArgs e)
-        {
-            SelectColor("WalkableNodeColorHigh");
-        }
+            => SelectColor("WalkableNodeColorHigh");
 
         private void LoadAmeisenServerSettings()
         {
-            textboxIP.Text = BotManager.Settings.ameisenServerIP;
-            textboxPort.Text = BotManager.Settings.ameisenServerPort.ToString();
-            checkboxAutoConnect.IsChecked = BotManager.Settings.serverAutoConnect;
+            textboxIP.Text = Settings.ameisenServerIP;
+            textboxPort.Text = Settings.ameisenServerPort.ToString();
+            checkboxAutoConnect.IsChecked = Settings.serverAutoConnect;
         }
 
         private void LoadBotPicture(string fileName)
@@ -96,18 +88,18 @@ namespace AmeisenBotGUI
                 File.Copy(fileName, imagePath);
             }
 
-            BotManager.Settings.picturePath = imagePath;
+            Settings.picturePath = imagePath;
             labelSelectedPicture.Content = Path.GetFileName(fileName);
         }
 
         private void LoadDatabaseSettings()
         {
-            textboxDBIP.Text = BotManager.Settings.databaseIP;
-            textboxDBPort.Text = BotManager.Settings.databasePort.ToString();
-            textboxDBDatabase.Text = BotManager.Settings.databaseName;
-            textboxDBUsername.Text = BotManager.Settings.databaseUsername;
-            textboxDBPassword.Password = BotManager.Settings.databasePasswort;
-            checkboxDBAutoConnect.IsChecked = BotManager.Settings.databaseAutoConnect;
+            textboxDBIP.Text = Settings.databaseIP;
+            textboxDBPort.Text = Settings.databasePort.ToString();
+            textboxDBDatabase.Text = Settings.databaseName;
+            textboxDBUsername.Text = Settings.databaseUsername;
+            textboxDBPassword.Password = Settings.databasePasswort;
+            checkboxDBAutoConnect.IsChecked = Settings.databaseAutoConnect;
         }
 
         /// <summary>
@@ -115,52 +107,55 @@ namespace AmeisenBotGUI
         /// </summary>
         private void LoadSettings()
         {
-            labelSelectedPicture.Content = Path.GetFileName(BotManager.Settings.picturePath);
+            labelSelectedPicture.Content = Path.GetFileName(Settings.picturePath);
 
             LoadAmeisenServerSettings();
             LoadDatabaseSettings();
 
-            checkboxSaveBotPosition.IsChecked = BotManager.Settings.saveBotWindowPosition;
-            checkboxSaveWoWPosition.IsChecked = BotManager.Settings.saveWoWWindowPosition;
+            checkboxSaveBotPosition.IsChecked = Settings.saveBotWindowPosition;
+            checkboxSaveWoWPosition.IsChecked = Settings.saveWoWWindowPosition;
 
             // Colors are already loaded
         }
 
         private void SaveAmeisenServerSettings()
         {
-            BotManager.Settings.ameisenServerIP = textboxIP.Text;
-            BotManager.Settings.ameisenServerPort = Convert.ToInt32(textboxPort.Text);
-            BotManager.Settings.serverAutoConnect = (bool)checkboxAutoConnect.IsChecked;
+            Settings.ameisenServerIP = textboxIP.Text;
+            Settings.ameisenServerPort = Convert.ToInt32(textboxPort.Text);
+            Settings.serverAutoConnect = (bool)checkboxAutoConnect.IsChecked;
         }
 
         private void SaveDatabaseSettings()
         {
-            BotManager.Settings.databaseIP = textboxDBIP.Text;
-            BotManager.Settings.databasePort = Convert.ToInt32(textboxDBPort.Text);
-            BotManager.Settings.databaseName = textboxDBDatabase.Text;
-            BotManager.Settings.databaseUsername = textboxDBUsername.Text;
-            BotManager.Settings.databasePasswort = textboxDBPassword.Password;
-            BotManager.Settings.databaseAutoConnect = (bool)checkboxDBAutoConnect.IsChecked;
+            Settings.databaseIP = textboxDBIP.Text;
+            Settings.databasePort = Convert.ToInt32(textboxDBPort.Text);
+            Settings.databaseName = textboxDBDatabase.Text;
+            Settings.databaseUsername = textboxDBUsername.Text;
+            Settings.databasePasswort = textboxDBPassword.Password;
+            Settings.databaseAutoConnect = (bool)checkboxDBAutoConnect.IsChecked;
         }
 
         private void SaveMainUISettings()
         {
-            BotManager.Settings.accentColor = ((Color)Application.Current.Resources["AccentColor"]).ToString();
-            BotManager.Settings.backgroundColor = ((Color)Application.Current.Resources["BackgroundColor"]).ToString();
-            BotManager.Settings.textColor = ((Color)Application.Current.Resources["TextColor"]).ToString();
-            BotManager.Settings.healthColor = ((Color)Application.Current.Resources["HealthColor"]).ToString();
-            BotManager.Settings.energyColor = ((Color)Application.Current.Resources["EnergyColor"]).ToString();
-            BotManager.Settings.expColor = ((Color)Application.Current.Resources["ExpColor"]).ToString();
-            BotManager.Settings.targetHealthColor = ((Color)Application.Current.Resources["TargetHealthColor"]).ToString();
-            BotManager.Settings.targetEnergyColor = ((Color)Application.Current.Resources["TargetEnergyColor"]).ToString();
-            BotManager.Settings.holoLogoColor = ((Color)Application.Current.Resources["holoLogoColor"]).ToString();
+            Settings.accentColor = GetColorFromResources("AccentColor").ToString();
+            Settings.backgroundColor = GetColorFromResources("BackgroundColor").ToString();
+            Settings.textColor = GetColorFromResources("TextColor").ToString();
+            Settings.healthColor = GetColorFromResources("HealthColor").ToString();
+            Settings.energyColor = GetColorFromResources("EnergyColor").ToString();
+            Settings.expColor = GetColorFromResources("ExpColor").ToString();
+            Settings.targetHealthColor = GetColorFromResources("TargetHealthColor").ToString();
+            Settings.targetEnergyColor = GetColorFromResources("TargetEnergyColor").ToString();
+            Settings.holoLogoColor = GetColorFromResources("holoLogoColor").ToString();
         }
+
+        private Color GetColorFromResources(string resString)
+            => (Color)Application.Current.Resources[resString];
 
         private void SaveMapUISettings()
         {
-            BotManager.Settings.walkableNodeColorLow = ((Color)Application.Current.Resources["WalkableNodeColorLow"]).ToString();
-            BotManager.Settings.walkableNodeColorHigh = ((Color)Application.Current.Resources["WalkableNodeColorHigh"]).ToString();
-            BotManager.Settings.meNodeColor = ((Color)Application.Current.Resources["MeNodeColor"]).ToString();
+            Settings.walkableNodeColorLow = GetColorFromResources("WalkableNodeColorLow").ToString();
+            Settings.walkableNodeColorHigh = GetColorFromResources("WalkableNodeColorHigh").ToString();
+            Settings.meNodeColor = GetColorFromResources("MeNodeColor").ToString();
         }
 
         /// <summary>
@@ -173,17 +168,17 @@ namespace AmeisenBotGUI
             SaveMapUISettings();
             SaveMainUISettings();
 
-            BotManager.Settings.saveBotWindowPosition = (bool)checkboxSaveBotPosition.IsChecked;
-            BotManager.Settings.saveWoWWindowPosition = (bool)checkboxSaveWoWPosition.IsChecked;
+            Settings.saveBotWindowPosition = (bool)checkboxSaveBotPosition.IsChecked;
+            Settings.saveWoWWindowPosition = (bool)checkboxSaveWoWPosition.IsChecked;
 
             BotManager.SaveSettingsToFile(BotManager.LoadedConfigName);
         }
 
         private void SelectColor(string resourceColor)
         {
-            ColorPickWindow colorpicker = new ColorPickWindow((Color)Application.Current.Resources[resourceColor])
+            ColorPickWindow colorpicker = new ColorPickWindow(GetColorFromResources(resourceColor))
             {
-                Topmost = BotManager.Settings.topMost
+                Topmost = Settings.topMost
             };
             colorpicker.ShowDialog();
             if (colorpicker.ApplyColor)
@@ -196,23 +191,23 @@ namespace AmeisenBotGUI
         {
             if ((bool)radiobuttonRefreshSpeedLowest.IsChecked)
             {
-                BotManager.Settings.dataRefreshRate = 1000;
+                Settings.dataRefreshRate = 1000;
             }
             else if ((bool)radiobuttonRefreshSpeedLow.IsChecked)
             {
-                BotManager.Settings.dataRefreshRate = 500;
+                Settings.dataRefreshRate = 500;
             }
             else if ((bool)radiobuttonRefreshSpeedMedium.IsChecked)
             {
-                BotManager.Settings.dataRefreshRate = 250;
+                Settings.dataRefreshRate = 250;
             }
             else if ((bool)radiobuttonRefreshSpeedHigh.IsChecked)
             {
-                BotManager.Settings.dataRefreshRate = 100;
+                Settings.dataRefreshRate = 100;
             }
             else if ((bool)radiobuttonRefreshSpeedHighest.IsChecked)
             {
-                BotManager.Settings.dataRefreshRate = 0;
+                Settings.dataRefreshRate = 0;
             }
             else
             {
@@ -224,7 +219,7 @@ namespace AmeisenBotGUI
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            switch (BotManager.Settings.dataRefreshRate)
+            switch (Settings.dataRefreshRate)
             {
                 case 1000:
                     radiobuttonRefreshSpeedLowest.IsChecked = true;
@@ -255,56 +250,35 @@ namespace AmeisenBotGUI
 
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            try
-            {
-                DragMove();
-            }
+            try { DragMove(); }
             catch { }
         }
 
         private void ColorBackground_Click(object sender, RoutedEventArgs e)
-        {
-            SelectColor("BackgroundColor");
-        }
+            => SelectColor("BackgroundColor");
 
         private void ColorOutline_Click(object sender, RoutedEventArgs e)
-        {
-            SelectColor("AccentColor");
-        }
+            => SelectColor("AccentColor");
 
         private void ColorText_Click(object sender, RoutedEventArgs e)
-        {
-            SelectColor("TextColor");
-        }
+            => SelectColor("TextColor");
 
         private void ColorHealth_Click(object sender, RoutedEventArgs e)
-        {
-            SelectColor("HealthColor");
-        }
+            => SelectColor("HealthColor");
 
         private void ColorEnergy_Click(object sender, RoutedEventArgs e)
-        {
-            SelectColor("EnergyColor");
-        }
+            => SelectColor("EnergyColor");
 
         private void ColorExp_Click(object sender, RoutedEventArgs e)
-        {
-            SelectColor("EXPColor");
-        }
+            => SelectColor("EXPColor");
 
         private void ColorTargetHealth_Click(object sender, RoutedEventArgs e)
-        {
-            SelectColor("TargetHealthColor");
-        }
+            => SelectColor("TargetHealthColor");
 
         private void ColorTargetEnergy_Click(object sender, RoutedEventArgs e)
-        {
-            SelectColor("TargetEnergyColor");
-        }
+            => SelectColor("TargetEnergyColor");
 
         private void ColorThreads_Click(object sender, RoutedEventArgs e)
-        {
-            SelectColor("holoLogoColor");
-        }
+            => SelectColor("holoLogoColor");
     }
 }

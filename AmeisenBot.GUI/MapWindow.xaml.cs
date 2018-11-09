@@ -78,19 +78,13 @@ namespace AmeisenBotGUI
         }
 
         private void ButtonExit_Click(object sender, RoutedEventArgs e)
-        {
-            Close();
-        }
+            => Close();
 
         private void ButtonMinimize_Click(object sender, RoutedEventArgs e)
-        {
-            WindowState = WindowState.Minimized;
-        }
+            => WindowState = WindowState.Minimized;
 
         private void DBUpdateTimer_Tick(object sender, EventArgs e)
-        {
-            LoadMap();
-        }
+            => LoadMap();
 
         private void DrawMap(Map map)
         {
@@ -193,9 +187,7 @@ namespace AmeisenBotGUI
         }
 
         private void UIUpdateTimer_Tick(object sender, EventArgs e)
-        {
-            DrawMap(currentMap);
-        }
+            => DrawMap(currentMap);
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
@@ -215,7 +207,8 @@ namespace AmeisenBotGUI
 
         private void Window_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            try { DragMove(); } catch { }
+            try { DragMove(); }
+            catch { }
         }
     }
 }

@@ -35,49 +35,54 @@ namespace AmeisenBotGUI
         private string lastImgPath;
         private DispatcherTimer uiUpdateTimer;
         private BotManager BotManager { get; }
+        private Settings Settings { get; set; }
         private ulong LastGuid { get; set; }
 
         public BotWindow(WowExe wowExe, BotManager botManager)
         {
             InitializeComponent();
             BotManager = botManager;
+            Settings = botManager.Settings;
 
             // Load Settings
             BotManager.LoadSettingsFromFile(wowExe.characterName);
             ApplyConfigColors();
             BotManager.StartBot(wowExe);
 
-            if (BotManager.Settings.saveBotWindowPosition)
+            if (Settings.saveBotWindowPosition)
             {
-                if (BotManager.Settings.oldXindowPosX != 0)
+                if (Settings.oldXindowPosX != 0)
                 {
-                    Left = BotManager.Settings.oldXindowPosX;
+                    Left = Settings.oldXindowPosX;
                 }
 
-                if (BotManager.Settings.oldXindowPosY != 0)
+                if (Settings.oldXindowPosY != 0)
                 {
-                    Top = BotManager.Settings.oldXindowPosY;
+                    Top = Settings.oldXindowPosY;
                 }
             }
         }
 
         private void ApplyConfigColors()
         {
-            Application.Current.Resources["AccentColor"] = (Color)ColorConverter.ConvertFromString(BotManager.Settings.accentColor);
-            Application.Current.Resources["BackgroundColor"] = (Color)ColorConverter.ConvertFromString(BotManager.Settings.backgroundColor);
-            Application.Current.Resources["TextColor"] = (Color)ColorConverter.ConvertFromString(BotManager.Settings.textColor);
+            ResourceDictionary resources = Application.Current.Resources;
+            resources["AccentColor"] = ParseColor(Settings.accentColor);
+            resources["BackgroundColor"] = ParseColor(Settings.backgroundColor);
+            resources["TextColor"] = ParseColor(Settings.textColor);
 
-            Application.Current.Resources["MeNodeColor"] = (Color)ColorConverter.ConvertFromString(BotManager.Settings.meNodeColor);
-            Application.Current.Resources["WalkableNodeColorLow"] = (Color)ColorConverter.ConvertFromString(BotManager.Settings.walkableNodeColorLow);
-            Application.Current.Resources["WalkableNodeColorHigh"] = (Color)ColorConverter.ConvertFromString(BotManager.Settings.walkableNodeColorHigh);
+            resources["MeNodeColor"] = ParseColor(Settings.meNodeColor);
+            resources["WalkableNodeColorLow"] = ParseColor(Settings.walkableNodeColorLow);
+            resources["WalkableNodeColorHigh"] = ParseColor(Settings.walkableNodeColorHigh);
 
-            Application.Current.Resources["HealthColor"] = (Color)ColorConverter.ConvertFromString(BotManager.Settings.healthColor);
-            Application.Current.Resources["EnergyColor"] = (Color)ColorConverter.ConvertFromString(BotManager.Settings.energyColor);
-            Application.Current.Resources["ExpColor"] = (Color)ColorConverter.ConvertFromString(BotManager.Settings.expColor);
-            Application.Current.Resources["TargetHealthColor"] = (Color)ColorConverter.ConvertFromString(BotManager.Settings.targetHealthColor);
-            Application.Current.Resources["TargetEnergyColor"] = (Color)ColorConverter.ConvertFromString(BotManager.Settings.targetEnergyColor);
-            Application.Current.Resources["holoLogoColor"] = (Color)ColorConverter.ConvertFromString(BotManager.Settings.holoLogoColor);
+            resources["HealthColor"] = ParseColor(Settings.healthColor);
+            resources["EnergyColor"] = ParseColor(Settings.energyColor);
+            resources["ExpColor"] = ParseColor(Settings.expColor);
+            resources["TargetHealthColor"] = ParseColor(Settings.targetHealthColor);
+            resources["TargetEnergyColor"] = ParseColor(Settings.targetEnergyColor);
+            resources["holoLogoColor"] = ParseColor(Settings.holoLogoColor);
         }
+
+        private Color ParseColor(string colorString) => ParseColor(colorString);
 
         private void ButtonCobatClassEditor_Click(object sender, RoutedEventArgs e)
         {
@@ -86,29 +91,19 @@ namespace AmeisenBotGUI
         }
 
         private void ButtonExit_Click(object sender, RoutedEventArgs e)
-        {
-            Close();
-        }
+            => Close();
 
         private void ButtonExtendedDebugUI_Click(object sender, RoutedEventArgs e)
-        {
-            new DebugWindow(BotManager).Show();
-        }
+            => new DebugWindow(BotManager).Show();
 
         private void ButtonGroup_Click(object sender, RoutedEventArgs e)
-        {
-            new GroupWindow(BotManager).Show();
-        }
+            => new GroupWindow(BotManager).Show();
 
         private void ButtonMap_Click(object sender, RoutedEventArgs e)
-        {
-            new MapWindow(BotManager, BotManager.AmeisenDBManager).Show();
-        }
+            => new MapWindow(BotManager, BotManager.AmeisenDBManager).Show();
 
         private void ButtonMinimize_Click(object sender, RoutedEventArgs e)
-        {
-            WindowState = WindowState.Minimized;
-        }
+            => WindowState = WindowState.Minimized;
 
         private void ButtonOpenFile_Click(object sender, RoutedEventArgs e)
         {
@@ -126,88 +121,72 @@ namespace AmeisenBotGUI
         }
 
         private void ButtonSettings_Click(object sender, RoutedEventArgs e)
-        {
-            new SettingsWindow(BotManager).ShowDialog();
-        }
+            => new SettingsWindow(BotManager).ShowDialog();
 
         private void CheckBoxAssistGroup_Click(object sender, RoutedEventArgs e)
-        {
-            BotManager.IsAllowedToAssistParty = (bool)checkBoxAssistGroup.IsChecked;
-        }
+            => BotManager.IsAllowedToAssistParty = (bool)checkBoxAssistGroup.IsChecked;
 
         private void CheckBoxAssistPartyAttack_Click(object sender, RoutedEventArgs e)
-        {
-            BotManager.IsAllowedToAttack = (bool)checkBoxAssistPartyAttack.IsChecked;
-        }
+            => BotManager.IsAllowedToAttack = (bool)checkBoxAssistPartyAttack.IsChecked;
 
         private void CheckBoxAssistPartyBuff_Click(object sender, RoutedEventArgs e)
-        {
-            BotManager.IsAllowedToBuff = (bool)checkBoxAssistPartyBuff.IsChecked;
-        }
+            => BotManager.IsAllowedToBuff = (bool)checkBoxAssistPartyBuff.IsChecked;
 
         private void CheckBoxAssistPartyHeal_Click(object sender, RoutedEventArgs e)
-        {
-            BotManager.IsAllowedToHeal = (bool)checkBoxAssistPartyAttack.IsChecked;
-        }
+            => BotManager.IsAllowedToHeal = (bool)checkBoxAssistPartyAttack.IsChecked;
 
         private void CheckBoxAssistPartyTank_Click(object sender, RoutedEventArgs e)
-        {
-            BotManager.IsAllowedToTank = (bool)checkBoxAssistPartyTank.IsChecked;
-        }
+            => BotManager.IsAllowedToTank = (bool)checkBoxAssistPartyTank.IsChecked;
 
         private void CheckBoxFollowMaster_Click(object sender, RoutedEventArgs e)
-        {
-            BotManager.IsAllowedToFollowParty = (bool)checkBoxFollowParty.IsChecked;
-        }
+            => BotManager.IsAllowedToFollowParty = (bool)checkBoxFollowParty.IsChecked;
 
         private void CheckBoxTopMost_Click(object sender, RoutedEventArgs e)
-        {
-            SetTopMost();
-        }
+            => SetTopMost();
 
         private void LoadViewSettings()
         {
-            checkBoxAssistPartyAttack.IsChecked = BotManager.Settings.behaviourAttack;
-            BotManager.IsAllowedToAttack = BotManager.Settings.behaviourAttack;
+            checkBoxAssistPartyAttack.IsChecked = Settings.behaviourAttack;
+            BotManager.IsAllowedToAttack = Settings.behaviourAttack;
 
-            checkBoxAssistPartyTank.IsChecked = BotManager.Settings.behaviourTank;
-            BotManager.IsAllowedToTank = BotManager.Settings.behaviourTank;
+            checkBoxAssistPartyTank.IsChecked = Settings.behaviourTank;
+            BotManager.IsAllowedToTank = Settings.behaviourTank;
 
-            checkBoxAssistPartyHeal.IsChecked = BotManager.Settings.behaviourHeal;
-            BotManager.IsAllowedToHeal = BotManager.Settings.behaviourHeal;
+            checkBoxAssistPartyHeal.IsChecked = Settings.behaviourHeal;
+            BotManager.IsAllowedToHeal = Settings.behaviourHeal;
 
-            checkBoxAssistPartyBuff.IsChecked = BotManager.Settings.behaviourBuff;
-            BotManager.IsAllowedToBuff = BotManager.Settings.behaviourBuff;
+            checkBoxAssistPartyBuff.IsChecked = Settings.behaviourBuff;
+            BotManager.IsAllowedToBuff = Settings.behaviourBuff;
 
-            checkBoxAssistGroup.IsChecked = BotManager.Settings.assistParty;
-            BotManager.IsAllowedToAssistParty = BotManager.Settings.assistParty;
+            checkBoxAssistGroup.IsChecked = Settings.assistParty;
+            BotManager.IsAllowedToAssistParty = Settings.assistParty;
 
-            checkBoxFollowParty.IsChecked = BotManager.Settings.followMaster;
-            BotManager.IsAllowedToFollowParty = BotManager.Settings.followMaster;
+            checkBoxFollowParty.IsChecked = Settings.followMaster;
+            BotManager.IsAllowedToFollowParty = Settings.followMaster;
 
-            checkBoxReleaseSpirit.IsChecked = BotManager.Settings.releaseSpirit;
-            BotManager.IsAllowedToReleaseSpirit = BotManager.Settings.releaseSpirit;
+            checkBoxReleaseSpirit.IsChecked = Settings.releaseSpirit;
+            BotManager.IsAllowedToReleaseSpirit = Settings.releaseSpirit;
 
-            checkBoxRandomEmotes.IsChecked = BotManager.Settings.randomEmotes;
-            BotManager.IsAllowedToDoRandomEmotes = BotManager.Settings.randomEmotes;
+            checkBoxRandomEmotes.IsChecked = Settings.randomEmotes;
+            BotManager.IsAllowedToDoRandomEmotes = Settings.randomEmotes;
 
-            checkBoxDoBotStuff.IsChecked = BotManager.Settings.doOwnStuff;
-            BotManager.IsAllowedToDoOwnStuff = BotManager.Settings.doOwnStuff;
+            checkBoxDoBotStuff.IsChecked = Settings.doOwnStuff;
+            BotManager.IsAllowedToDoOwnStuff = Settings.doOwnStuff;
 
-            checkBoxRevive.IsChecked = BotManager.Settings.revive;
-            BotManager.IsAllowedToRevive = BotManager.Settings.revive;
+            checkBoxRevive.IsChecked = Settings.revive;
+            BotManager.IsAllowedToRevive = Settings.revive;
 
-            sliderDistance.Value = BotManager.Settings.followDistance;
+            sliderDistance.Value = Settings.followDistance;
 
-            checkBoxTopMost.IsChecked = BotManager.Settings.topMost;
-            Topmost = BotManager.Settings.topMost;
+            checkBoxTopMost.IsChecked = Settings.topMost;
+            Topmost = Settings.topMost;
         }
 
         private void Mainscreen_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             SaveViewSettings();
-            BotManager.Settings.oldXindowPosX = Left;
-            BotManager.Settings.oldXindowPosY = Top;
+            Settings.oldXindowPosX = Left;
+            Settings.oldXindowPosY = Top;
             BotManager.StopBot();
         }
 
@@ -225,29 +204,26 @@ namespace AmeisenBotGUI
 
         private void Mainscreen_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            try
-            {
-                DragMove();
-            }
+            try { DragMove(); }
             catch { }
         }
 
         private void SaveViewSettings()
         {
-            BotManager.Settings.behaviourAttack = (bool)checkBoxAssistPartyAttack.IsChecked;
-            BotManager.Settings.behaviourTank = (bool)checkBoxAssistPartyTank.IsChecked;
-            BotManager.Settings.behaviourHeal = (bool)checkBoxAssistPartyHeal.IsChecked;
-            BotManager.Settings.behaviourBuff = (bool)checkBoxAssistPartyBuff.IsChecked;
-            BotManager.Settings.followMaster = (bool)checkBoxFollowParty.IsChecked;
-            BotManager.Settings.releaseSpirit = (bool)checkBoxReleaseSpirit.IsChecked;
-            BotManager.Settings.revive = (bool)checkBoxRevive.IsChecked;
+            Settings.behaviourAttack = (bool)checkBoxAssistPartyAttack.IsChecked;
+            Settings.behaviourTank = (bool)checkBoxAssistPartyTank.IsChecked;
+            Settings.behaviourHeal = (bool)checkBoxAssistPartyHeal.IsChecked;
+            Settings.behaviourBuff = (bool)checkBoxAssistPartyBuff.IsChecked;
+            Settings.followMaster = (bool)checkBoxFollowParty.IsChecked;
+            Settings.releaseSpirit = (bool)checkBoxReleaseSpirit.IsChecked;
+            Settings.revive = (bool)checkBoxRevive.IsChecked;
             BotManager.SaveSettingsToFile(BotManager.LoadedConfigName);
         }
 
         private void SetTopMost()
         {
             Topmost = (bool)checkBoxTopMost.IsChecked;
-            BotManager.Settings.topMost = (bool)checkBoxTopMost.IsChecked;
+            Settings.topMost = (bool)checkBoxTopMost.IsChecked;
         }
 
         private void SliderDistance_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -255,7 +231,7 @@ namespace AmeisenBotGUI
             try
             {
                 labelDistance.Content = $"Follow Distance: {Math.Round(sliderDistance.Value, 2)}m";
-                BotManager.Settings.followDistance = Math.Round(sliderDistance.Value, 2);
+                Settings.followDistance = Math.Round(sliderDistance.Value, 2);
             }
             catch { }
         }
@@ -277,20 +253,16 @@ namespace AmeisenBotGUI
             }
         }
 
-        private void UpdateAIView()
-        {
-        }
-
         private void UpdateMyViews()
         {
             try
             {
-                if (BotManager.Settings.picturePath != lastImgPath)
+                if (Settings.picturePath != lastImgPath)
                 {
-                    if (BotManager.Settings.picturePath.Length > 0)
+                    if (Settings.picturePath.Length > 0)
                     {
-                        botPicture.Source = new BitmapImage(new Uri(BotManager.Settings.picturePath));
-                        lastImgPath = BotManager.Settings.picturePath;
+                        botPicture.Source = new BitmapImage(new Uri(Settings.picturePath));
+                        lastImgPath = Settings.picturePath;
                     }
                 }
             }
@@ -356,10 +328,7 @@ namespace AmeisenBotGUI
             }
         }
 
-        private void UpdateFSMViews()
-        {
-            labelFSMState.Content = $"{BotManager.CurrentFSMState}";
-        }
+        private void UpdateFSMViews() => labelFSMState.Content = $"{BotManager.CurrentFSMState}";
 
         /// <summary>
         /// This thing updates the UI... Note to myself: "may need to improve this thing in the future..."
@@ -372,7 +341,7 @@ namespace AmeisenBotGUI
             Process currentProcess = Process.GetCurrentProcess();
             long memoryUsageMB = currentProcess.WorkingSet64 / 1000000;
 
-            labelLoadedCombatClass.Content = $"{Path.GetFileName(BotManager.Settings.combatClassPath)}.cs";
+            labelLoadedCombatClass.Content = $"{Path.GetFileName(Settings.combatClassPath)}.cs";
             labelClass.Content = $"{BotManager.Me.Class.ToString()}";
             labelRace.Content = $"{BotManager.Me.Race.ToString()}";
 
@@ -393,27 +362,13 @@ namespace AmeisenBotGUI
                     AmeisenLogger.Instance.Log(LogLevel.ERROR, e.ToString(), this);
                 }
             }
-
-            UpdateAIView();
-        }
-
-        private double GetCPUUsage(Process process)
-        {
-            //PerformanceCounter counter = new PerformanceCounter("Process", "% Processor Time", process.ProcessName);
-            //counter.NextValue();
-            //return Math.Round(counter.NextValue(), 0) / 100;
-            return 0.0;
         }
 
         private void CheckBoxReleaseSpirit_Click(object sender, RoutedEventArgs e)
-        {
-            BotManager.IsAllowedToReleaseSpirit = (bool)checkBoxReleaseSpirit.IsChecked;
-        }
+            => BotManager.IsAllowedToReleaseSpirit = (bool)checkBoxReleaseSpirit.IsChecked;
 
         private void CheckBoxReleaseSpirit_Copy_Click(object sender, RoutedEventArgs e)
-        {
-            BotManager.IsAllowedToRevive = (bool)checkBoxRevive.IsChecked;
-        }
+            => BotManager.IsAllowedToRevive = (bool)checkBoxRevive.IsChecked;
 
         private void ButtonRememberUnit_Click(object sender, RoutedEventArgs e)
         {
@@ -421,7 +376,7 @@ namespace AmeisenBotGUI
             {
                 RememberUnitWindow rememberUnitWindow = new RememberUnitWindow(BotManager.Target)
                 {
-                    Topmost = BotManager.Settings.topMost
+                    Topmost = Settings.topMost
                 };
                 rememberUnitWindow.ShowDialog();
 
