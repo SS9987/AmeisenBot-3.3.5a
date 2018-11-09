@@ -55,11 +55,7 @@ namespace AmeisenBotFSM
         /// Returns our current BotState to see what the bot is doing right now
         /// </summary>
         /// <returns>current BotState</returns>
-        public BotState GetCurrentState()
-        {
-            return StateStack.Count > 0 ?
-                StateStack.Peek() : BotState.None;
-        }
+        public BotState GetCurrentState() => StateStack.Count > 0 ? StateStack.Peek() : BotState.None;
 
         /// <summary>
         /// Pop the state Stack of the bot, calls the Start() of new State and the Stop() of current State.
@@ -93,30 +89,16 @@ namespace AmeisenBotFSM
         /// <summary>
         /// Call this to Update the Statemachine and execute actions
         /// </summary>
-        public void Update()
-        {
-            GetCurrentStateAction(GetCurrentState())?.StartDoThings.Invoke();
-        }
+        public void Update() => GetCurrentStateAction(GetCurrentState())?.StartDoThings.Invoke();
 
-        private List<IBotStuff> GetBotStuffToDo()
-        {
-            // TODO: implement this
-            return new List<IBotStuff>();
-        }
+        // TODO: implement this
+        private List<IBotStuff> GetBotStuffToDo() => new List<IBotStuff>();
 
         /// <summary>
         /// Map the BotState to an IAction containing Start(), DoThings() and Stop()
         /// </summary>
         /// <param name="state">state to map</param>
         /// <returns>IAction</returns>
-        private IAction GetCurrentStateAction(BotState state)
-        {
-            if (state == BotState.None)
-            {
-                return null;
-            }
-
-            return StateActionMap[state];
-        }
+        private IAction GetCurrentStateAction(BotState state) => state == BotState.None ? null : StateActionMap[state];
     }
 }

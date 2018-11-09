@@ -70,7 +70,7 @@ namespace AmeisenBotCombat.SampleClasses
 
             if (!myAuras.Contains("demon armor"))
             {
-                CombatUtils.CastSpellByName(Me,Target,"Demon Armor", true);
+                CombatUtils.CastSpellByName(Me, Target, "Demon Armor", true);
             }
             if (!myAuras.Contains("blood pact"))
             {

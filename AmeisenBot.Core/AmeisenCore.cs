@@ -74,7 +74,6 @@ namespace AmeisenBotCore
         /// <returns>true if yes, false if no</returns>
         public static bool CheckWorldLoaded() => BlackMagic.ReadInt(Offsets.worldLoaded) == 1;
 
-
         /// <summary>
         /// Reads all WoWObject out of WoW's ObjectManager
         /// </summary>
@@ -116,7 +115,7 @@ namespace AmeisenBotCore
         {
             List<string> resultLowered = new List<string>();
 
-            if (!onlyDebuffs)
+            if (onlyBuffs)
             {
                 StringBuilder cmdBuffs = new StringBuilder();
                 cmdBuffs.Append("local buffs, i = { }, 1;");
@@ -139,7 +138,7 @@ namespace AmeisenBotCore
                 }
             }
 
-            if (!onlyBuffs)
+            if (onlyDebuffs)
             {
                 StringBuilder cmdDebuffs = new StringBuilder();
                 cmdDebuffs.Append("local buffs, i = { }, 1;");
@@ -209,13 +208,12 @@ namespace AmeisenBotCore
         /// Get our active Corpse position
         /// </summary>
         /// <returns>corpse position</returns>
-        public static Vector3 GetCorpsePosition()
-        => new Vector3
-           (
-               BlackMagic.ReadFloat(Offsets.corpseX),
-               BlackMagic.ReadFloat(Offsets.corpseY),
-               BlackMagic.ReadFloat(Offsets.corpseZ)
-           );
+        public static Vector3 GetCorpsePosition() => new Vector3
+        (
+            BlackMagic.ReadFloat(Offsets.corpseX),
+            BlackMagic.ReadFloat(Offsets.corpseY),
+            BlackMagic.ReadFloat(Offsets.corpseZ)
+        );
 
         /// <summary>
         /// Get Localized Text for command
@@ -263,7 +261,7 @@ namespace AmeisenBotCore
                 AmeisenHook.AddHookJob(ref hookJobDoString);
 
                 // wait for our hook-job to return
-                while (!hookJobDoString.IsFinished || !hookJobDoString.IsFinished) { Thread.Sleep(5); }
+                while (!hookJobDoString.IsFinished) { Thread.Sleep(5); }
 
                 // parse the result bytes to a readable string
                 string result = Encoding.UTF8.GetString((byte[])hookJobDoString.ReturnValue);
@@ -296,12 +294,9 @@ namespace AmeisenBotCore
             {
                 foreach (WowObject obj in woWObjects)
                 {
-                    if (obj != null)
+                    if (obj != null && obj.Guid == guid)
                     {
-                        if (obj.Guid == guid)
-                        {
-                            return obj.BaseAddress;
-                        }
+                        return obj.BaseAddress;
                     }
                 }
             }
@@ -310,7 +305,7 @@ namespace AmeisenBotCore
         }
 
         /// <summary>
-        /// Returns the running WoW's in a WoWExe List containing the 
+        /// Returns the running WoW's in a WoWExe List containing the
         /// logged in playername and Process object.
         /// </summary>
         /// <returns>A list containing all the runnign WoW processes</returns>
@@ -323,12 +318,12 @@ namespace AmeisenBotCore
             {
                 AmeisenLogger.Instance.Log(LogLevel.DEBUG, $"Found WoW Process! PID: {p.Id}", "AmeisenCore");
 
-                WowExe wow = new WowExe();
                 BlackMagic blackmagic = new BlackMagic(p.Id);
-
-                wow.characterName = blackmagic.ReadASCIIString(Offsets.playerName, 12);
-                wow.process = p;
-                wows.Add(wow);
+                wows.Add(new WowExe
+                {
+                    characterName = blackmagic.ReadASCIIString(Offsets.playerName, 12),
+                    process = p
+                });
                 blackmagic.Close();
             }
 
@@ -379,7 +374,7 @@ namespace AmeisenBotCore
 
         /// <summary>
         /// Move the player to the given guid npc, object or whatever and iteract with it.
-        /// </summary> 
+        /// </summary>
         /// <param name="pos">Vector3 containing the position to interact with</param>
         /// <param name="guid">guid of the entity</param>
         /// <param name="action">CTM Interaction to perform</param>
@@ -517,13 +512,11 @@ namespace AmeisenBotCore
         /// <returns>the GUID</returns>
         public static ulong ReadPlayerGUID() => BlackMagic.ReadUInt64(Offsets.localPlayerGUID);
 
-
         /// <summary>
         /// Get the bot's char's target's GUID
         /// </summary>
         /// <returns>targets guid</returns>
         public static ulong ReadTargetGUID() => BlackMagic.ReadUInt64(Offsets.localTargetGUID);
-
 
         /// <summary>
         /// Read WoWObject from WoW's memory by its BaseAddress
@@ -671,8 +664,8 @@ namespace AmeisenBotCore
         }
 
         /// <summary>
-        /// Write the coordinates and action to the memory. 
-        /// </summary> 
+        /// Write the coordinates and action to the memory.
+        /// </summary>
         /// <param name="pos">Vector3 containing the position to go to</param>
         /// <param name="action">CTM Interaction to perform</param>
         private static void WriteXYZToMemory(Vector3 pos, InteractionType action)

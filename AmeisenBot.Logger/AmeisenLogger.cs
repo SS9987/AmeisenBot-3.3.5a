@@ -122,12 +122,12 @@ namespace AmeisenBotLogger
         /// Set the LogLevel that is going to be saved in the logs
         /// </summary>
         /// <param name="logLevel">LogLevel to save to the logfile</param>
-        public void SetActiveLogLevel(LogLevel logLevel) { activeLogLevel = logLevel; }
+        public void SetActiveLogLevel(LogLevel logLevel) => activeLogLevel = logLevel;
 
         /// <summary>
         /// Stop the logging thread, dont forget it!
         /// </summary>
-        public void StopLogging() { loggingActive = false; }
+        public void StopLogging() => loggingActive = false;
 
         private void SaveLogToFile(AmeisenLogEntry entry)
         {

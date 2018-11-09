@@ -51,15 +51,9 @@ namespace AmeisenBotCore
             }
         }
 
-        public void Subscribe(string eventName)
-        {
-            AmeisenCore.LuaDoString($"{LUA_REGISTER}('{eventName}')");
-        }
+        public void Subscribe(string eventName) => AmeisenCore.LuaDoString($"{LUA_REGISTER}('{eventName}')");
 
-        public void Unsubscribe(string eventName)
-        {
-            AmeisenCore.LuaDoString($"{LUA_UNREGISTER}('{eventName}')");
-        }
+        public void Unsubscribe(string eventName) => AmeisenCore.LuaDoString($"{LUA_UNREGISTER}('{eventName}')");
 
         private void ReadEvents()
         {

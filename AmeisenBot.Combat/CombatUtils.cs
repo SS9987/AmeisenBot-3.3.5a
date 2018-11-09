@@ -12,7 +12,7 @@ namespace AmeisenBotCombat
         {
             SpellInfo spellInfo = GetSpellInfo(name, onMyself);
 
-            if(!onMyself && !AmeisenCore.IsSpellUseable(name))
+            if (!onMyself && !AmeisenCore.IsSpellUseable(name))
             {
                 MoveToPos(me, target);
             }
@@ -28,15 +28,9 @@ namespace AmeisenBotCombat
             Thread.Sleep(spellInfo.castTime + 100);
         }
 
-        public static SpellInfo GetSpellInfo(string name, bool onMyself)
-        {
-            return AmeisenCore.GetSpellInfo(name);
-        }
+        public static SpellInfo GetSpellInfo(string name, bool onMyself) => AmeisenCore.GetSpellInfo(name);
 
-        public static List<string> GetAuras(LuaUnit luaUnit)
-        {
-            return AmeisenCore.GetAuras(luaUnit).ToList();
-        }
+        public static List<string> GetAuras(LuaUnit luaUnit) => AmeisenCore.GetAuras(luaUnit).ToList();
 
         public static void FaceTarget(Me me, Unit target)
         {
@@ -53,10 +47,7 @@ namespace AmeisenBotCombat
             }
         }
 
-        public static void AttackTarget()
-        {
-            AmeisenCore.LuaDoString("AttackTarget();");
-        }
+        public static void AttackTarget() => AmeisenCore.LuaDoString("AttackTarget();");
 
         public static Unit AssistParty(Me me, List<WowObject> activeWowObjects)
         {
@@ -129,14 +120,9 @@ namespace AmeisenBotCombat
                 {
                     foreach (WowObject obj in activeWowObjects)
                     {
-                        if (guid == obj.Guid)
+                        if (guid == obj.Guid && ((Unit)obj).InCombat)
                         {
-                            if (((Unit)obj).InCombat)
-                            {
-                                inCombatUnits.Add(((Unit)obj));
-                            }
-
-                            break;
+                            inCombatUnits.Add(((Unit)obj));
                         }
                     }
                 }

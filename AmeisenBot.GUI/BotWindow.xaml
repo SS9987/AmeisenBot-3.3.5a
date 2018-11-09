@@ -297,7 +297,7 @@
                 <SolidColorBrush Color="{DynamicResource TextColor}" />
             </Label.Foreground>
         </Label>
-        <Label Content="👾" HorizontalAlignment="Left" Margin="116,202,0,0" VerticalAlignment="Top" FontSize="30" RenderTransformOrigin="4.267,0.515" Height="50" Width="50" Foreground="#19FFFFFF"/>
+        <Label Content="👾" HorizontalAlignment="Left" Margin="116,202,0,0" VerticalAlignment="Top" FontSize="30" RenderTransformOrigin="4.267,0.515" Height="50" Width="50" Foreground="#19FFFFFF" />
         <Rectangle HorizontalAlignment="Left" Height="84" Margin="10,10,0,0" VerticalAlignment="Top" Width="84" StrokeThickness="2">
             <Rectangle.Stroke>
                 <SolidColorBrush Color="{DynamicResource AccentColor}" />
@@ -319,7 +319,7 @@
                 <SolidColorBrush Color="{DynamicResource AccentColor}" />
             </CheckBox.BorderBrush>
         </CheckBox>
-        <Label Content="⚔" HorizontalAlignment="Left" Margin="116,308,0,0" VerticalAlignment="Top" FontSize="30" RenderTransformOrigin="4.267,0.515" Height="50" Width="50" Foreground="#19FFFFFF"/>
+        <Label Content="⚔" HorizontalAlignment="Left" Margin="116,308,0,0" VerticalAlignment="Top" FontSize="30" RenderTransformOrigin="4.267,0.515" Height="50" Width="50" Foreground="#19FFFFFF" />
         <Image x:Name="botPicture" HorizontalAlignment="Left" Height="80" VerticalAlignment="Top" Width="80" Margin="12,12,0,0" />
         <Button x:Name="buttonRememberUnit" Content="💡 Add Unit to DB" HorizontalAlignment="Left" Margin="346,174,0,0" VerticalAlignment="Top" Width="132" BorderThickness="2" Click="ButtonRememberUnit_Click" FontSize="11" Height="23">
             <Button.Background>
@@ -352,7 +352,7 @@
                 <SolidColorBrush Color="{DynamicResource TextColor}" />
             </Label.Foreground>
         </Label>
-        <Label Content="💭" HorizontalAlignment="Left" Margin="426,308,0,0" VerticalAlignment="Top" FontSize="30" RenderTransformOrigin="4.267,0.515" Height="50" Width="50" Foreground="#19FFFFFF"/>
+        <Label Content="💭" HorizontalAlignment="Left" Margin="426,308,0,0" VerticalAlignment="Top" FontSize="30" RenderTransformOrigin="4.267,0.515" Height="50" Width="50" Foreground="#19FFFFFF" />
         <Label x:Name="labelMoney" Content="0 g 0 s 0 c" HorizontalAlignment="Left" Margin="0,223,0,0" VerticalAlignment="Top" FontSize="11">
             <Label.Foreground>
                 <SolidColorBrush Color="{DynamicResource TextColor}" />

@@ -104,7 +104,7 @@ namespace AmeisenBotManager
             objectUpdateThread = new Thread(new ThreadStart(StartTimer));
             objectUpdateThread.Start();
 
-            // Timer to update odes in the DB, 
+            // Timer to update odes in the DB,
             // keep in mind this needs performance at the DB side
             // but will increse mapping details!
             nodeDBUpdateTimer = new System.Timers.Timer(AmeisenDataHolder.Settings.dataRefreshRate);
@@ -144,15 +144,9 @@ namespace AmeisenBotManager
             }
         }
 
-        private void AntiAFK()
-        {
-            AmeisenCore.AntiAFK();
-        }
+        private void AntiAFK() => AmeisenCore.AntiAFK();
 
-        private void ObjectUpdateTimer(object source, ElapsedEventArgs e)
-        {
-            RefreshObjects();
-        }
+        private void ObjectUpdateTimer(object source, ElapsedEventArgs e) => RefreshObjects();
 
         private void RefreshObjects()
         {
@@ -205,10 +199,7 @@ namespace AmeisenBotManager
             new Thread(new ThreadStart(RefreshObjects)).Start();
         }
 
-        private void StartTimer()
-        {
-            objectUpdateTimer.Start();
-        }
+        private void StartTimer() => objectUpdateTimer.Start();
 
         private void UpdateNodeInDB(Me me)
         {

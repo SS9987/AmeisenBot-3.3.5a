@@ -21,7 +21,6 @@ namespace AmeisenBotData
         public Settings Settings { get; set; }
         public bool IsAllowedToDoRandomEmotes { get; set; }
         public bool IsAllowedToDoOwnStuff { get; set; }
-
         public bool IsConnectedToDB { get; set; }
         public bool IsConnectedToServer { get; set; }
 

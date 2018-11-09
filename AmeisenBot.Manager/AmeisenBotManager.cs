@@ -182,19 +182,13 @@ namespace AmeisenBotManager
         /// Loads the Settings from a given file
         /// </summary>
         /// <param name="filename">file to load the Settings from</param>
-        public void LoadSettingsFromFile(string filename)
-        {
-            AmeisenSettings.LoadFromFile(filename);
-        }
+        public void LoadSettingsFromFile(string filename) => AmeisenSettings.LoadFromFile(filename);
 
         /// <summary>
         /// Save the current Settings to the given file
         /// </summary>
         /// <param name="filename">file to save the Settings to</param>
-        public void SaveSettingsToFile(string filename)
-        {
-            AmeisenSettings.SaveToFile(filename);
-        }
+        public void SaveSettingsToFile(string filename) => AmeisenSettings.SaveToFile(filename);
 
         /// <summary>
         /// Starts the bots mechanisms, hooks, ...
@@ -278,25 +272,20 @@ namespace AmeisenBotManager
             }
         }
 
-        private bool ConnectToServer()
-        {
-            return AmeisenClient.Register(
-                       Me,
-                       IPAddress.Parse(AmeisenSettings.Settings.ameisenServerIP),
-                       AmeisenSettings.Settings.ameisenServerPort);
-        }
+        private bool ConnectToServer() => AmeisenClient.Register(
+                Me,
+                IPAddress.Parse(AmeisenSettings.Settings.ameisenServerIP),
+                AmeisenSettings.Settings.ameisenServerPort
+            );
 
-        private bool ConnectToDB()
-        {
-            return AmeisenDBManager.ConnectToMySQL(
-                        string.Format(sqlConnectionString,
-                        AmeisenSettings.Settings.databaseIP,
-                        AmeisenSettings.Settings.databasePort,
-                        AmeisenSettings.Settings.databaseName,
-                        AmeisenSettings.Settings.databaseUsername,
-                        AmeisenSettings.Settings.databasePasswort)
-                    );
-        }
+        private bool ConnectToDB() => AmeisenDBManager.ConnectToMySQL(
+                string.Format(sqlConnectionString,
+                AmeisenSettings.Settings.databaseIP,
+                AmeisenSettings.Settings.databasePort,
+                AmeisenSettings.Settings.databaseName,
+                AmeisenSettings.Settings.databaseUsername,
+                AmeisenSettings.Settings.databasePasswort)
+            );
 
         /// <summary>
         /// Stops the bots mechanisms, hooks, ...
@@ -339,10 +328,7 @@ namespace AmeisenBotManager
         /// Add a RememberedUnit to the RememberedUnits Database to remember its position and UnitTraits
         /// </summary>
         /// <param name="rememberedUnit">Unit that you want to remember</param>
-        public void RememberUnit(RememberedUnit rememberedUnit)
-        {
-            AmeisenDBManager.RememberUnit(rememberedUnit);
-        }
+        public void RememberUnit(RememberedUnit rememberedUnit) => AmeisenDBManager.RememberUnit(rememberedUnit);
 
         /// <summary>
         /// Check if we remember a Unit by its Name, ZoneID and MapID
@@ -352,9 +338,7 @@ namespace AmeisenBotManager
         /// <param name="mapID">mapid of the npc</param>
         /// <returns>RememberedUnit with if we remember it, its UnitTraits and position</returns>
         public RememberedUnit CheckForRememberedUnit(string name, int zoneID, int mapID)
-        {
-            return AmeisenDBManager.CheckForRememberedUnit(name, zoneID, mapID);
-        }
+            => AmeisenDBManager.CheckForRememberedUnit(name, zoneID, mapID);
 
         /// <summary>
         /// Compile a CombatClass *.cs file and return its Instance

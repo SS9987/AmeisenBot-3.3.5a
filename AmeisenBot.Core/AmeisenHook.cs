@@ -41,15 +41,9 @@ namespace AmeisenBotCore
             }
         }
 
-        public void AddHookJob(ref HookJob hookJob)
-        {
-            hookJobs.Enqueue(hookJob);
-        }
+        public void AddHookJob(ref HookJob hookJob) => hookJobs.Enqueue(hookJob);
 
-        public void AddHookJob(ref ReturnHookJob hookJob)
-        {
-            hookJobs.Enqueue(hookJob);
-        }
+        public void AddHookJob(ref ReturnHookJob hookJob) => hookJobs.Enqueue(hookJob);
 
         public void DisposeHooking()
         {
@@ -216,7 +210,7 @@ namespace AmeisenBotCore
                     BlackMagic.Asm.AddLine(s);
                 }
                 BlackMagic.Asm.Inject(codeCaveForInjection);
-                
+
                 // There is code to be executed
                 BlackMagic.WriteInt(codeToExecute, 1);
 
@@ -312,6 +306,7 @@ namespace AmeisenBotCore
         /// <param name="chainedJob">
         /// Job to execute after running the main Job, for example GetLocalizedText stuff
         /// </param>
-        public ReturnHookJob(string[] asm, bool readReturnBytes, HookJob chainedJob) : base(asm, readReturnBytes) { ChainedJob = chainedJob; }
+        public ReturnHookJob(string[] asm, bool readReturnBytes, HookJob chainedJob)
+            : base(asm, readReturnBytes) { ChainedJob = chainedJob; }
     }
 }

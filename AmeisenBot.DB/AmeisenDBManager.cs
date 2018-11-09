@@ -49,10 +49,10 @@ namespace AmeisenBotDB
             return AmeisenDataHolder.IsConnectedToDB;
         }
 
-        /// <summary> 
-        /// Get all saved nodes by the zone & map id 
-        /// </summary> 
-        /// <param name="zoneID">zone id to get the nodes from</param> 
+        /// <summary>
+        /// Get all saved nodes by the zone & map id
+        /// </summary>
+        /// <param name="zoneID">zone id to get the nodes from</param>
         /// <param name="mapID">map id to get the nodes from</param>
         /// <returns>list containing all the MapNodes</returns>
         public List<MapNode> GetNodes(int zoneID, int mapID, int maxX = 0, int minX = 0, int maxY = 0, int minY = 0)
@@ -67,23 +67,11 @@ namespace AmeisenBotDB
                 sqlQuery.Append($"WHERE zone_id = {zoneID} AND ");
                 sqlQuery.Append($"map_id = {mapID} ");
 
-                if (maxX >= minX)
-                {
-                    sqlQuery.Append($"AND (x BETWEEN {minX} AND {maxX})");
-                }
-                else
-                {
-                    sqlQuery.Append($"AND (x BETWEEN {maxX} AND {minX})");
-                }
+                if (maxX >= minX) { sqlQuery.Append($"AND (x BETWEEN {minX} AND {maxX})"); }
+                else { sqlQuery.Append($"AND (x BETWEEN {maxX} AND {minX})"); }
 
-                if (maxX >= minX)
-                {
-                    sqlQuery.Append($"AND (y BETWEEN {minY} AND {maxY})");
-                }
-                else
-                {
-                    sqlQuery.Append($"AND (y BETWEEN {maxY} AND {minY})");
-                }
+                if (maxX >= minX) { sqlQuery.Append($"AND (y BETWEEN {minY} AND {maxY})"); }
+                else { sqlQuery.Append($"AND (y BETWEEN {maxY} AND {minY})"); }
 
                 sqlQuery.Append(";");
 
@@ -156,10 +144,8 @@ namespace AmeisenBotDB
 
                 // very rarely getting weird deadlock exception
                 int affectedRows = 0;
-                try
-                {
-                    affectedRows = sqlConnection.Execute(sqlQuery.ToString());
-                }
+
+                try { affectedRows = sqlConnection.Execute(sqlQuery.ToString()); }
                 catch { }
 
                 sqlConnection.Close();
@@ -187,15 +173,9 @@ namespace AmeisenBotDB
                 sqlQuery.Append($"\"{rememberedUnit.UnitTraitsString}\") ");
                 sqlQuery.Append("ON DUPLICATE KEY UPDATE;");
 
-                try
-                {
-                    sqlConnection.Execute(sqlQuery.ToString());
-                }
+                try { sqlConnection.Execute(sqlQuery.ToString()); }
                 catch { }
-                finally
-                {
-                    sqlConnection.Close();
-                }
+                finally { sqlConnection.Close(); }
             }
         }
 
@@ -229,10 +209,7 @@ namespace AmeisenBotDB
                     unitToReturn = rememberedUnit;
                 }
                 catch { unitToReturn = null; }
-                finally
-                {
-                    sqlConnection.Close();
-                }
+                finally { sqlConnection.Close(); }
                 return unitToReturn;
             }
             return null;

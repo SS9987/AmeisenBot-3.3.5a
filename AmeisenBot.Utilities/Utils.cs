@@ -115,11 +115,9 @@ namespace AmeisenBotUtilities
         /// <param name="b">position A</param>
         /// <returns>Distance between the two Positions</returns>
         public static double GetDistance(Vector3 a, Vector3 b)
-        {
-            return Math.Sqrt((a.X - b.X) * (a.X - b.X) +
-                             (a.Y - b.Y) * (a.Y - b.Y) +
-                             (a.Z - b.Z) * (a.Z - b.Z));
-        }
+            => Math.Sqrt((a.X - b.X) * (a.X - b.X) +
+                         (a.Y - b.Y) * (a.Y - b.Y) +
+                         (a.Z - b.Z) * (a.Z - b.Z));
 
         /// <summary>
         /// Convert an image to byte[]

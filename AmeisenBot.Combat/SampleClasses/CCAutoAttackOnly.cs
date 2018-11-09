@@ -2,7 +2,6 @@
 using AmeisenBotLogger;
 using AmeisenBotUtilities;
 using AmeisenCombatEngine.Interfaces;
-using System.Collections.Generic;
 using System.Threading;
 
 namespace AmeisenBotCombat.SampleClasses
@@ -69,7 +68,6 @@ namespace AmeisenBotCombat.SampleClasses
 
         public void HandleBuffs()
         {
-
         }
 
         public void HandleHealing()

@@ -6,7 +6,7 @@ using System.IO;
 namespace AmeisenBotData
 {
     /// <summary>
-    /// Singleton class to manage our currently loaded settings.
+    /// Class to manage our currently loaded settings.
     ///
     /// Load a settings file by calling LoadFromFile("EXAMPLE"), save it by calling SaveToFile("EXAMPLE").
     ///
@@ -51,7 +51,6 @@ namespace AmeisenBotData
             {
                 // Load default settings
                 Settings = new Settings();
-
                 SaveToFile(filename);
             }
 

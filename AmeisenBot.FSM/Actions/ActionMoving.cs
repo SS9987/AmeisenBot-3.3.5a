@@ -100,7 +100,6 @@ namespace AmeisenBotFSM.Actions
                     {
                         MoveToNode(targetPosition);
                     }
-
                 }
                 else
                 {
@@ -132,7 +131,7 @@ namespace AmeisenBotFSM.Actions
 
         /// <summary>
         /// Process a path by adding all nodes to the WaypointQueue
-        /// 
+        ///
         /// will set PathCalculated to true
         /// </summary>
         /// <param name="path">path to process</param>
@@ -464,11 +463,11 @@ namespace AmeisenBotFSM.Actions
             }
         }
 
-        /// <summary> 
-        /// Modify our go-to-position by a small random factor to provide "naturality" 
+        /// <summary>
+        /// Modify our go-to-position by a small random factor to provide "naturality"
         /// </summary>
-        /// <param name="targetPos">pos you want to go to/param> 
-        /// <param name="offset">distance to keep to the target</param> 
+        /// <param name="targetPos">pos you want to go to/param>
+        /// <param name="offset">distance to keep to the target</param>
         /// <returns>modified position</returns>
         private Vector3 RebaseVector(Vector3 targetPos, int offset)
         {
