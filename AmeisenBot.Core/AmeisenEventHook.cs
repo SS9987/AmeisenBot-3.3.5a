@@ -51,15 +51,15 @@ namespace AmeisenBotCore
             }
         }
 
-        public void Subscribe(string eventName) => AmeisenCore.LuaDoString($"{LUA_REGISTER}('{eventName}')");
+        public void Subscribe(string eventName) => AmeisenCore.LuaDoString($"{LUA_REGISTER}('{eventName}');");
 
-        public void Unsubscribe(string eventName) => AmeisenCore.LuaDoString($"{LUA_UNREGISTER}('{eventName}')");
+        public void Unsubscribe(string eventName) => AmeisenCore.LuaDoString($"{LUA_UNREGISTER}('{eventName}');");
 
         private void ReadEvents()
         {
             while (IsActive)
             {
-                string eventString = AmeisenCore.GetLocalizedText($"ameisenbotEvent = {LUA_EVENTNAME}(1)", "ameisenbotEvent");
+                string eventString = AmeisenCore.GetLocalizedText($"aboteventresult = {LUA_EVENTNAME}(1);", "aboteventresult");
                 if (eventString != "")
                 {
                     AmeisenLogger.Instance.Log(LogLevel.DEBUG, "LUA Event Fired: " + eventString, this);

@@ -34,28 +34,32 @@ namespace AmeisenBotCombat.SampleClasses
 
         public void HandleAttacking()
         {
-            if (Me != null)
-            {
-                Me.Update();
-            }
-            if (Target != null)
-            {
-                Target.Update();
-            }
+            Me?.Update();
+            Target?.Update();
 
             Unit unitToAttack = Target;
 
-            // Get a target
-            if (Me.TargetGuid == 0)
+            // get a target
+            if (Me.TargetGuid == 0
+                || !CombatUtils.IsHostile(LuaUnit.target)
+                || !CombatUtils.CanAttack(LuaUnit.target))
             {
                 unitToAttack = CombatUtils.AssistParty(Me, AmeisenDataHolder.ActiveWoWObjects);
             }
 
             if (unitToAttack != null)
             {
-                CombatUtils.FaceTarget(Me, unitToAttack);
+                if (!CombatUtils.IsFacing(Me, unitToAttack))
+                {
+                    CombatUtils.FaceUnit(Me, unitToAttack);
+                }
 
-                // Start autoattack
+                if (!CombatUtils.IsInRange(Me, unitToAttack, 3.0))
+                {
+                    CombatUtils.MoveInRange(Me, unitToAttack, 2.0);
+                }
+
+                // start autoattack
                 if (!Me.InCombat)
                 {
                     CombatUtils.AttackTarget();

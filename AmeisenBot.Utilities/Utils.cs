@@ -36,7 +36,9 @@ namespace AmeisenBotUtilities
         public static BitmapImage Base64ToBitmapImage(string base64String, bool compressionUsed = false)
         {
             if (base64String == "")
+            {
                 return null;
+            }
 
             byte[] imageBytes = Convert.FromBase64String(base64String);
 
@@ -199,25 +201,17 @@ namespace AmeisenBotUtilities
         /// </summary>
         /// <param name="bytesToCompress">byte[] to compress using GZip</param>
         /// <returns>GZip-Compressed byte[]</returns>
-        public static byte[] GZipCompressBytes(byte[] input)
+        public static byte[] GZipCompressBytes(byte[] rawInput)
         {
-            byte[] result = null;
-            MemoryStream memorystream = null;
-            try
+            using (MemoryStream memory = new MemoryStream())
             {
-                memorystream = new MemoryStream();
-                using (GZipStream compressionStream = new GZipStream(memorystream, CompressionMode.Compress))
+                using (GZipStream gzip = new GZipStream(memory,
+                    CompressionMode.Compress, true))
                 {
-                    compressionStream.Write(input, 0, input.Length);
-                    compressionStream.Flush();
-                    result = memorystream.ToArray();
+                    gzip.Write(rawInput, 0, rawInput.Length);
                 }
+                return memory.ToArray();
             }
-            finally
-            {
-                memorystream?.Dispose();
-            }
-            return result;
         }
 
         /// <summary>
@@ -225,29 +219,27 @@ namespace AmeisenBotUtilities
         /// </summary>
         /// <param name="compressedBytes">GZip-Compressed byte[]</param>
         /// <returns>Decompressed byte[]</returns>
-        public static byte[] GZipDecompressBytes(byte[] input)
+        public static byte[] GZipDecompressBytes(byte[] compressedInput)
         {
-            byte[] result = null;
-            MemoryStream memorystream = null;
-            try
+            using (GZipStream stream = new GZipStream(new MemoryStream(compressedInput), CompressionMode.Decompress))
             {
-                memorystream = new MemoryStream(input);
-                byte[] lengthBytes = new byte[4];
-                memorystream.Read(lengthBytes, 0, 4);
-
-                int length = BitConverter.ToInt32(lengthBytes, 0);
-                using (GZipStream decompressionStream = new GZipStream(memorystream, CompressionMode.Decompress))
+                const int size = 4096;
+                byte[] buffer = new byte[size];
+                using (MemoryStream memory = new MemoryStream())
                 {
-                    result = new byte[length];
-                    decompressionStream.Read(result, 0, length);
+                    int count = 0;
+                    do
+                    {
+                        count = stream.Read(buffer, 0, size);
+                        if (count > 0)
+                        {
+                            memory.Write(buffer, 0, count);
+                        }
+                    }
+                    while (count > 0);
+                    return memory.ToArray();
                 }
             }
-            finally
-            {
-                memorystream?.Dispose();
-            }
-
-            return result;
         }
     }
 }

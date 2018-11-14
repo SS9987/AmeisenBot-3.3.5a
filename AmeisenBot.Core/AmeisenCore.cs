@@ -1,5 +1,6 @@
 ﻿using AmeisenBotLogger;
 using AmeisenBotUtilities;
+using AmeisenBotUtilities.Enums;
 using Magic;
 using System;
 using System.Collections.Generic;
@@ -49,6 +50,37 @@ namespace AmeisenBotCore
             {
                 LuaDoString($"CastSpellByName(\"{spellname}\");");
             }
+        }
+
+        public static bool IsEnemy(LuaUnit luaunit, LuaUnit otherluaunit = LuaUnit.player)
+            => ParseLuaIntResult($"isEnemy = UnitIsEnemy({luaunit.ToString()}, {otherluaunit.ToString()});", "isEnemy");
+
+
+        public static bool CanCooperate(LuaUnit luaunit, LuaUnit otherluaunit = LuaUnit.player)
+            => ParseLuaIntResult($"canCoop = UnitCanCooperate({luaunit.ToString()}, {otherluaunit.ToString()});", "canCoop");
+
+
+        public static bool CanAttack(LuaUnit luaunit, LuaUnit otherluaunit = LuaUnit.player)
+            => ParseLuaIntResult($"canAttack = UnitCanAttack({luaunit.ToString()}, {otherluaunit.ToString()});", "canAttack");
+
+
+        private static bool ParseLuaIntResult(string command, string outputVariable)
+        {
+            try
+            {
+                return int.Parse(GetLocalizedText(command, outputVariable)) > 0;
+            }
+            catch { return false; }
+        }
+
+        public static UnitReaction GetUnitReaction(LuaUnit luaunit, LuaUnit otherluaunit = LuaUnit.player)
+        {
+            try
+            {
+                string cmd = $"reaction = UnitReaction({luaunit.ToString()}, {otherluaunit.ToString()});";
+                return (UnitReaction)int.Parse(GetLocalizedText(cmd, "reaction"));
+            }
+            catch { return UnitReaction.NONE; }
         }
 
         /// <summary>
@@ -105,64 +137,77 @@ namespace AmeisenBotCore
         }
 
         /// <summary>
-        /// Check for Auras/Buffs
+        /// Check for Buffs
         /// </summary>
-        /// <param name="LuaUnit">LuaUnit to get the Auras of</param>
-        /// <param name="onlyDebuffs">only get Debuffs</param>
-        /// <param name="onlyBuffs">only get Buffs</param>
-        /// <returns>returns unit Auras as string[]</returns>
-        public static string[] GetAuras(LuaUnit LuaUnit, bool onlyDebuffs = false, bool onlyBuffs = false)
+        /// <param name="luaUnit">LuaUnit to get the Buffs of</param>
+        /// <returns>returns unit Buffs as string list</returns>
+        public static List<string> GetBuffs(LuaUnit LuaUnit)
         {
             List<string> resultLowered = new List<string>();
+            StringBuilder cmdBuffs = new StringBuilder();
+            cmdBuffs.Append("local buffs, i = { }, 1;");
+            cmdBuffs.Append($"local buff = UnitBuff(\"{LuaUnit.ToString()}\", i);");
+            cmdBuffs.Append("while buff do\n");
+            cmdBuffs.Append("buffs[#buffs + 1] = buff;");
+            cmdBuffs.Append("i = i + 1;");
+            cmdBuffs.Append($"buff = UnitBuff(\"{LuaUnit.ToString()}\", i);");
+            cmdBuffs.Append("end;");
+            cmdBuffs.Append("if #buffs < 1 then\n");
+            cmdBuffs.Append("buffs = \"\";");
+            cmdBuffs.Append("else\n");
+            cmdBuffs.Append("activeUnitBuffs = table.concat(buffs, \", \");");
+            cmdBuffs.Append("end;");
+            string[] buffs = GetLocalizedText(cmdBuffs.ToString(), "activeUnitBuffs").Split(',');
 
-            if (onlyBuffs)
+            foreach (string s in buffs)
             {
-                StringBuilder cmdBuffs = new StringBuilder();
-                cmdBuffs.Append("local buffs, i = { }, 1;");
-                cmdBuffs.Append($"local buff = UnitBuff(\"{LuaUnit.ToString()}\", i);");
-                cmdBuffs.Append("while buff do\n");
-                cmdBuffs.Append("buffs[#buffs + 1] = buff;");
-                cmdBuffs.Append("i = i + 1;");
-                cmdBuffs.Append($"buff = UnitBuff(\"{LuaUnit.ToString()}\", i);");
-                cmdBuffs.Append("end;");
-                cmdBuffs.Append("if #buffs < 1 then\n");
-                cmdBuffs.Append("buffs = \"\";");
-                cmdBuffs.Append("else\n");
-                cmdBuffs.Append("activeUnitBuffs = table.concat(buffs, \", \");");
-                cmdBuffs.Append("end;");
-                string[] buffs = GetLocalizedText(cmdBuffs.ToString(), "activeUnitBuffs").Split(',');
-
-                foreach (string s in buffs)
-                {
-                    resultLowered.Add(s.Trim().ToLower());
-                }
+                resultLowered.Add(s.Trim().ToLower());
             }
 
-            if (onlyDebuffs)
-            {
-                StringBuilder cmdDebuffs = new StringBuilder();
-                cmdDebuffs.Append("local buffs, i = { }, 1;");
-                cmdDebuffs.Append($"local buff = UnitDebuff(\"{LuaUnit.ToString()}\", i);");
-                cmdDebuffs.Append("while buff do\n");
-                cmdDebuffs.Append("buffs[#buffs + 1] = buff;");
-                cmdDebuffs.Append("i = i + 1;");
-                cmdDebuffs.Append($"buff = UnitDebuff(\"{LuaUnit.ToString()}\", i);");
-                cmdDebuffs.Append("end;");
-                cmdDebuffs.Append("if #buffs < 1 then\n");
-                cmdDebuffs.Append("buffs = \"\";");
-                cmdDebuffs.Append("else\n");
-                cmdDebuffs.Append("activeUnitDebuffs = table.concat(buffs, \", \");");
-                cmdDebuffs.Append("end;");
-                string[] debuffs = GetLocalizedText(cmdDebuffs.ToString(), "activeUnitDebuffs").Split(',');
+            return resultLowered;
+        }
 
-                foreach (string s in debuffs)
-                {
-                    resultLowered.Add(s.Trim().ToLower());
-                }
+        /// <summary>
+        /// Check for Debuffs
+        /// </summary>
+        /// <param name="luaUnit">LuaUnit to get the Debuffs of</param>
+        /// <returns>returns unit Debuffs as string list</returns>
+        public static List<string> GetDebuffs(LuaUnit LuaUnit)
+        {
+            List<string> resultLowered = new List<string>();
+            StringBuilder cmdDebuffs = new StringBuilder();
+            cmdDebuffs.Append("local buffs, i = { }, 1;");
+            cmdDebuffs.Append($"local buff = UnitDebuff(\"{LuaUnit.ToString()}\", i);");
+            cmdDebuffs.Append("while buff do\n");
+            cmdDebuffs.Append("buffs[#buffs + 1] = buff;");
+            cmdDebuffs.Append("i = i + 1;");
+            cmdDebuffs.Append($"buff = UnitDebuff(\"{LuaUnit.ToString()}\", i);");
+            cmdDebuffs.Append("end;");
+            cmdDebuffs.Append("if #buffs < 1 then\n");
+            cmdDebuffs.Append("buffs = \"\";");
+            cmdDebuffs.Append("else\n");
+            cmdDebuffs.Append("activeUnitDebuffs = table.concat(buffs, \", \");");
+            cmdDebuffs.Append("end;");
+            string[] debuffs = GetLocalizedText(cmdDebuffs.ToString(), "activeUnitDebuffs").Split(',');
+
+            foreach (string s in debuffs)
+            {
+                resultLowered.Add(s.Trim().ToLower());
             }
 
-            AmeisenLogger.Instance.Log(LogLevel.VERBOSE, $"UnitAuras: {resultLowered.ToString()}", "AmeisenCore");
-            return resultLowered.ToArray();
+            return resultLowered;
+        }
+
+        /// <summary>
+        /// Check for Auras/Buffs
+        /// </summary>
+        /// <param name="luaUnit">LuaUnit to get the Auras of</param>
+        /// <returns>returns unit Auras as string list</returns>
+        public static List<string> GetAuras(LuaUnit luaUnit)
+        {
+            List<string> result = new List<string>(GetBuffs(luaUnit));
+            result.AddRange(GetDebuffs(luaUnit));
+            return result;
         }
 
         /// <summary>
@@ -171,15 +216,9 @@ namespace AmeisenBotCore
         /// <param name="LuaUnit">LuaUnit to check</param>
         /// <returns>true if unit is in combat, false if not</returns>
         public static bool GetCombatState(LuaUnit LuaUnit)
-        {
-            AmeisenLogger.Instance.Log(LogLevel.VERBOSE, $"Getting Combat state of: {LuaUnit.ToString()}", "AmeisenCore");
+            => ParseLuaIntResult($"affectingCombat = UnitAffectingCombat(\"{LuaUnit.ToString()}\");", "affectingCombat");
 
-            try
-            {
-                return int.Parse(GetLocalizedText($"affectingCombat = UnitAffectingCombat(\"{LuaUnit.ToString()}\");", "affectingCombat")) == 1;
-            }
-            catch { return false; }
-        }
+
 
         /// <summary>
         /// Set WoW's window position and dimensions by its handle
@@ -190,7 +229,7 @@ namespace AmeisenBotCore
         /// <param name="width">window width</param>
         /// <param name="height">window height</param>
         public static void SetWindowPosition(IntPtr mainWindowHandle, int x, int y, int width, int height)
-        => SafeNativeMethods.MoveWindow(mainWindowHandle, x, y, height, width, true);
+            => SafeNativeMethods.MoveWindow(mainWindowHandle, x, y, height, width, true);
 
         /// <summary>
         /// Returns WoW's window size as a native RECT struct by a given windowHandle
@@ -338,7 +377,6 @@ namespace AmeisenBotCore
         public static SpellInfo GetSpellInfo(string spell)
         {
             SpellInfo info = new SpellInfo();
-
             string cmd = $"_, _, _, cost, _, _, castTime, _ = GetSpellInfo(\"{spell}\");";
 
             info.name = spell; //try { info.name = GetLocalizedText("name"); } catch { info.castTime = -1; }
@@ -353,16 +391,16 @@ namespace AmeisenBotCore
         /// </summary>
         /// <param name="player">LuaUnit to check</param>
         /// <returns>CastingInfo: spellname, castEndTime, canInterrupt</returns>
-        public static CastingInfo GetUnitCastingInfo(LuaUnit player)
+        public static CastingInfo GetUnitCastingInfo(LuaUnit luaunit)
         {
             CastingInfo info = new CastingInfo();
-            string cmd = $"name, _, _, _, _, endTime _, _, canInterrupt = UnitCastingInfo(\"{player}\");";
+            string cmd = $"name, _, _, _, _, endTime _, _, canInterrupt = UnitCastingInfo(\"{luaunit.ToString()}\");";
 
             try { info.name = GetLocalizedText(cmd, "name"); } catch { info.name = "none"; }
             try { info.endTime = int.Parse(GetLocalizedText(cmd, "endTime")); } catch { info.endTime = -1; }
-            try { info.canInterrupt = bool.Parse(GetLocalizedText(cmd, "canInterrupt")); } catch { info.canInterrupt = false; }
+            //try { info.canInterrupt = bool.Parse(GetLocalizedText(cmd, "canInterrupt")); } catch { info.canInterrupt = false; }
 
-            AmeisenLogger.Instance.Log(LogLevel.DEBUG, $"CastingInfo: [{info.name},{info.endTime},{info.canInterrupt}]", "AmeisenCore");
+            AmeisenLogger.Instance.Log(LogLevel.DEBUG, $"CastingInfo: [{info.name}, {info.endTime}]", "AmeisenCore");
             return info;
         }
 
@@ -391,14 +429,8 @@ namespace AmeisenBotCore
         /// <param name="LuaUnit">LuaUnit to read the data from</param>
         /// <returns>is LuaUnit dead</returns>
         public static bool IsDead(LuaUnit LuaUnit)
-        {
-            try
-            {
-                string text = GetLocalizedText($"isDead = UnitIsDead(\"{LuaUnit.ToString()}\");", "isDead");
-                return int.Parse(text) > 0;
-            }
-            catch { return false; }
-        }
+            => ParseLuaIntResult($"isDead = UnitIsDead(\"{LuaUnit.ToString()}\");", "isDead");
+
 
         /// <summary>
         /// returns true if the selected LuaUnit is a ghost or dead
@@ -406,14 +438,8 @@ namespace AmeisenBotCore
         /// <param name="LuaUnit">LuaUnit to read the data from</param>
         /// <returns>is LuaUnit a ghost or dead</returns>
         public static bool IsDeadOrGhost(LuaUnit LuaUnit)
-        {
-            try
-            {
-                string text = GetLocalizedText($"isDeadOrGhost = UnitIsDeadOrGhost(\"{LuaUnit.ToString()}\");", "isDeadOrGhost");
-                return int.Parse(text) > 0;
-            }
-            catch { return false; }
-        }
+            => ParseLuaIntResult($"isDeadOrGhost = UnitIsDeadOrGhost(\"{LuaUnit.ToString()}\");", "isDeadOrGhost");
+
 
         /// <summary>
         /// returns true if the LuaUnit is a ghost
@@ -421,14 +447,8 @@ namespace AmeisenBotCore
         /// <param name="LuaUnit">LuaUnit to read the data from</param>
         /// <returns>is LuaUnit a ghost</returns>
         public static bool IsGhost(LuaUnit LuaUnit)
-        {
-            try
-            {
-                string text = GetLocalizedText($"isGhost = UnitIsDeadOrGhost(\"{LuaUnit.ToString()}\");", "isGhost");
-                return int.Parse(text) > 0;
-            }
-            catch { return false; }
-        }
+            => ParseLuaIntResult($"isGhost = UnitIsDeadOrGhost(\"{LuaUnit.ToString()}\");", "isGhost");
+
 
         /// <summary>
         /// Check if the spell is on cooldown
@@ -436,28 +456,16 @@ namespace AmeisenBotCore
         /// <param name="spell">spellname</param>
         /// <returns>true if it is on cooldown, false if not</returns>
         public static bool IsOnCooldown(string spell)
-        {
-            try
-            {
-                string text = GetLocalizedText($"start, duration, enabled = GetSpellCooldown(\"{spell}\");", "duration");
-                return int.Parse(text) > 0;
-            }
-            catch { return false; }
-        }
+            => ParseLuaIntResult($"start, duration, enabled = GetSpellCooldown(\"{spell}\");", "duration");
+
 
         /// <summary>
         /// Returns true or false, wether the Target is friendly or not
         /// </summary>
         /// <returns>true if unit is friendly, false if not</returns>
-        public static bool IsTargetFriendly()
-        {
-            try
-            {
-                string text = GetLocalizedText("isFriendly  = UnitAffectingCombat(\"player\", \"target\");", "isFriendly");
-                return int.Parse(text) == 1;
-            }
-            catch { return false; }
-        }
+        public static bool IsFriend(LuaUnit luaunit, LuaUnit otherluaunit = LuaUnit.player)
+            => ParseLuaIntResult($"isFriendly = UnitIsFriend({luaunit.ToString()}, {otherluaunit.ToString()});", "isFriendly");
+
 
         /// <summary>
         /// Execute the given LUA command inside WoW's MainThread
@@ -497,12 +505,12 @@ namespace AmeisenBotCore
         /// </summary>
         /// <param name="pos">Vector3 containing the position to go to</param>
         /// <param name="action">CTM Interaction to perform</param>
-        public static void MovePlayerToXYZ(Vector3 pos, InteractionType action)
+        public static void MovePlayerToXYZ(Vector3 pos, InteractionType action, double distance = 1.5)
         {
             AmeisenLogger.Instance.Log(LogLevel.VERBOSE, $"Moving to: X [{pos.X}] Y [{pos.Y}] Z [{pos.Z}]", "AmeisenCore");
             //if (AmeisenManager.Instance.Me().pos.x != pos.x && AmeisenManager.Instance.Me().pos.y != pos.y && AmeisenManager.Instance.Me().pos.z != pos.z)
             //{
-            WriteXYZToMemory(pos, action);
+            WriteXYZToMemory(pos, action, (float)distance);
             //}
         }
 
@@ -596,7 +604,7 @@ namespace AmeisenBotCore
         /// </summary>
         /// <param name="slashCommand">Example: /target player</param>
         public static void RunSlashCommand(string slashCommand)
-        => LuaDoString($"DEFAULT_CHAT_FRAME.editBox:SetText(\"{slashCommand}\") ChatEdit_SendText(DEFAULT_CHAT_FRAME.editBox, 0)");
+            => LuaDoString($"DEFAULT_CHAT_FRAME.editBox:SetText(\"{slashCommand}\") ChatEdit_SendText(DEFAULT_CHAT_FRAME.editBox, 0)");
 
         /// <summary>
         /// Target a GUID by calling WoW's clientGameUITarget function on our hook
@@ -668,11 +676,8 @@ namespace AmeisenBotCore
         /// </summary>
         /// <param name="pos">Vector3 containing the position to go to</param>
         /// <param name="action">CTM Interaction to perform</param>
-        private static void WriteXYZToMemory(Vector3 pos, InteractionType action)
+        private static void WriteXYZToMemory(Vector3 pos, InteractionType action, float distance = 1.5f)
         {
-            // doesnt matter so lets keep it at 1.5f
-            const float distance = 1.5f;
-
             AmeisenLogger.Instance.Log(LogLevel.VERBOSE, $"Writing: X [{pos.X},{pos.Y},{pos.Z}] Action [{action}] Distance [{distance}]", "AmeisenCore");
             BlackMagic.WriteFloat(Offsets.ctmX, (float)pos.X);
             BlackMagic.WriteFloat(Offsets.ctmY, (float)pos.Y);
@@ -686,6 +691,8 @@ namespace AmeisenBotCore
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
-        public static bool IsSpellUseable(string name) => true; //TODO: implement this crap
+        public static bool IsSpellUseable(string spellname)
+            => ParseLuaIntResult($"usable, nomana = IsUsableSpell(\"{spellname}\");", "useable")
+            || ParseLuaIntResult($"usable, nomana = IsUsableSpell(\"{spellname}\");", "nomana");
     }
 }

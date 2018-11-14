@@ -1,5 +1,6 @@
 ﻿using AmeisenBotCore;
 using AmeisenBotUtilities;
+using AmeisenBotUtilities.Enums;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -8,47 +9,215 @@ namespace AmeisenBotCombat
 {
     public abstract class CombatUtils
     {
-        public static void CastSpellByName(Me me, Unit target, string name, bool onMyself)
+        /// <summary>
+        /// Cast a spell
+        /// </summary>
+        /// <param name="me">you</param>
+        /// <param name="target">target to cast the spell on</param>
+        /// <param name="spellname">spell to cast</param>
+        /// <param name="onMyself">cast sepll on yourself</param>
+        /// <param name="waitOnCastToFinish">wait for the cast to finish</param>
+        public static void CastSpellByName(Me me, Unit target, string spellname, bool onMyself, bool waitOnCastToFinish = true)
         {
-            SpellInfo spellInfo = GetSpellInfo(name, onMyself);
+            SpellInfo spellInfo = GetSpellInfo(spellname);
 
-            if (!onMyself && !AmeisenCore.IsSpellUseable(name))
+            FaceUnit(me, target);
+            AmeisenCore.CastSpellByName(spellname, onMyself);
+            Thread.Sleep(100);
+
+            while (AmeisenCore.GetUnitCastingInfo(LuaUnit.player).endTime > 1)
             {
-                MoveToPos(me, target);
+                Thread.Sleep(25);
             }
-            else
-            {
-                AmeisenCore.InteractWithGUID(
-                       target.pos,
-                       target.Guid,
-                       InteractionType.STOP);
-            }
-            FaceTarget(me, target);
-            AmeisenCore.CastSpellByName(name, onMyself);
-            Thread.Sleep(spellInfo.castTime + 100);
         }
 
-        public static SpellInfo GetSpellInfo(string name, bool onMyself) => AmeisenCore.GetSpellInfo(name);
+        /// <summary>
+        /// Get the spellinfo of a spell that contains casttime, mana etc.
+        /// </summary>
+        /// <param name="spellname">spell to check</param>
+        /// <returns>spellinfo</returns>
+        public static SpellInfo GetSpellInfo(string spellname)
+            => AmeisenCore.GetSpellInfo(spellname);
 
-        public static List<string> GetAuras(LuaUnit luaUnit) => AmeisenCore.GetAuras(luaUnit).ToList();
+        /// <summary>
+        /// Checks for a spell beeing useable
+        /// </summary>
+        /// <param name="spellname">spell to check for</param>
+        /// <returns>wether the spell is useable or not</returns>
+        public static bool IsSpellUseable(string spellname)
+            => AmeisenCore.IsSpellUseable(spellname);
 
-        public static void FaceTarget(Me me, Unit target)
+        /// <summary>
+        /// Get a Units buffs & debuffs
+        /// </summary>
+        /// <param name="luaUnit">luaunit to check</param>
+        /// <returns>buffs & debuffs as a string list</returns>
+        public static List<string> GetAuras(LuaUnit luaUnit)
+            => AmeisenCore.GetAuras(luaUnit);
+
+        /// <summary>
+        /// Get a Units buffs
+        /// </summary>
+        /// <param name="luaUnit">luaunit to check</param>
+        /// <returns>buffs as a string list</returns>
+        public static List<string> GetBuffs(LuaUnit luaUnit)
+            => AmeisenCore.GetBuffs(luaUnit);
+
+        /// <summary>
+        /// Get a Units debuffs
+        /// </summary>
+        /// <param name="luaUnit">luaunit to check</param>
+        /// <returns>debuffs as a string list</returns>
+        public static List<string> GetDebuffs(LuaUnit luaUnit)
+            => AmeisenCore.GetDebuffs(luaUnit);
+
+        /// <summary>
+        /// Check for facing a specific unit
+        /// </summary
+        /// <param name="me">you</param>
+        /// <param name="unit">target</param>
+        /// <returns>wether you're facing the unit or not</returns>
+        public static bool IsFacing(Me me, Unit unit)
+            => Utils.IsFacing(me.pos, me.Rotation, unit.pos);
+
+        /// <summary>
+        /// Check the LuaUnit for its enemy-state
+        /// </summary>
+        /// <param name="luaUnit">luaunit to check</param>
+        /// <returns>wether the unit is an enemy or not</returns>
+        public static bool IsEnemy(LuaUnit luaUnit)
+            => AmeisenCore.IsEnemy(luaUnit);
+
+        /// <summary>
+        /// Check the LuaUnit for its friend-state
+        /// </summary>
+        /// <param name="luaUnit">luaunit to check</param>
+        /// <returns>wether the unit is a friend or not</returns>
+        public static bool IsFriend(LuaUnit luaUnit)
+            => AmeisenCore.IsFriend(luaUnit);
+
+        /// <summary>
+        /// Check the LuaUnit for its attacked to you
+        /// </summary>
+        /// <param name="luaUnit">luaunit to check</param>
+        /// <returns>wether the unit can be attacked or not</returns>
+        public static bool CanAttack(LuaUnit luaUnit)
+            => AmeisenCore.CanAttack(luaUnit);
+
+        /// <summary>
+        /// Check the LuaUnit for its coop-state to you
+        /// </summary>
+        /// <param name="luaUnit">luaunit to check</param>
+        /// <returns>wether the unit can be cooperated with or not</returns>
+        public static bool CanCooperate(LuaUnit luaUnit)
+            => AmeisenCore.CanCooperate(luaUnit);
+
+        /// <summary>
+        /// Check the LuaUnit for its reaction to you
+        /// </summary>
+        /// <param name="luaUnit">luaunit to check</param>
+        /// <returns>wether the unit reacts hostile or not</returns>
+        public static bool IsHostile(LuaUnit luaUnit)
+            => AmeisenCore.GetUnitReaction(luaUnit) == UnitReaction.HOSTILE;
+
+        /// <summary>
+        /// Check the LuaUnit for its reaction to you
+        /// </summary>
+        /// <param name="luaUnit">luaunit to check</param>
+        /// <returns>wether the unit reacts neutral or not</returns>
+        public static bool IsNeutral(LuaUnit luaUnit)
+            => AmeisenCore.GetUnitReaction(luaUnit) == UnitReaction.NEUTRAL;
+
+        /// <summary>
+        /// Check the LuaUnit for its reaction to you
+        /// </summary>
+        /// <param name="luaUnit">luaunit to check</param>
+        /// <returns>wether the unit reacts friendly or not</returns>
+        public static bool IsFriendly(LuaUnit luaUnit)
         {
-            if (target != null)
+            UnitReaction reaction = AmeisenCore.GetUnitReaction(luaUnit);
+            switch (reaction)
             {
-                target.Update();
-                if (!Utils.IsFacing(me.pos, me.Rotation, target.pos))
-                {
-                    AmeisenCore.InteractWithGUID(
-                        target.pos,
-                        target.Guid,
-                        InteractionType.FACETARGET);
-                }
+                case UnitReaction.FRIENDLY:
+                    return true;
+
+                case UnitReaction.HONORED:
+                    return true;
+
+                case UnitReaction.REVERED:
+                    return true;
+
+                case UnitReaction.EXALTED:
+                    return true;
+
+                default:
+                    return false;
             }
+        }
+
+        /// <summary>
+        /// Turn into a specified Units direction
+        /// </summary>
+        /// <param name="me">me object</param>
+        /// <param name="unit">unit to turn to</param>
+        public static void FaceUnit(Me me, Unit unit)
+        {
+            if (unit != null)
+            {
+                unit.Update();
+                AmeisenCore.InteractWithGUID(
+                    unit.pos,
+                    unit.Guid,
+                    InteractionType.FACETARGET);
+            }
+        }
+
+        /// <summary>
+        /// Check if you're able to cast a certain spell at your current position
+        /// </summary>
+        /// <param name="me">me object</param>
+        /// <param name="unitToAttack">unit to attack</param>
+        /// <param name="distance">spell distance or something alike</param>
+        /// <returns>true/false wether your are or a re'nt in range to cast</returns>
+        public static bool IsInRange(Me me, Unit unitToAttack, double distance)
+            => Utils.GetDistance(me.pos, unitToAttack.pos) > distance;
+
+        /// <summary>
+        /// Move into a spell range
+        /// </summary>
+        /// <param name="me">me object</param>
+        /// <param name="unitToAttack">unit to attack</param>
+        /// <param name="distance">distance how close you want to get to the target</param>
+        public static void MoveInRange(Me me, Unit unitToAttack, double distance)
+        {
+            int count = 0;
+            while (Utils.GetDistance(me.pos, unitToAttack.pos) > distance && count < 5)
+            {
+                AmeisenCore.MovePlayerToXYZ(
+                        unitToAttack.pos,
+                        InteractionType.MOVE,
+                        distance);
+                me.Update();
+                unitToAttack.Update();
+
+                Thread.Sleep(250);
+                count++;
+            }
+
+            AmeisenCore.InteractWithGUID(
+                       unitToAttack.pos,
+                       unitToAttack.Guid,
+                       InteractionType.STOP);
         }
 
         public static void AttackTarget() => AmeisenCore.LuaDoString("AttackTarget();");
 
+        /// <summary>
+        /// Get a target to attack by scanniung hwat your partymembers attack
+        /// </summary>
+        /// <param name="me">me object</param>
+        /// <param name="activeWowObjects">all active wow objects</param>
+        /// <returns>a possible target unit</returns>
         public static Unit AssistParty(Me me, List<WowObject> activeWowObjects)
         {
             // Get the one with the lowest hp and assist him/her
@@ -60,6 +229,7 @@ namespace AmeisenBotCombat
 
                 Unit targetToAttack = (Unit)GetWoWObjectFromGUID(u.TargetGuid, activeWowObjects);
                 targetToAttack.Update();
+
                 AmeisenCore.TargetGUID(targetToAttack.Guid);
                 me.Update();
                 return targetToAttack;
@@ -93,6 +263,12 @@ namespace AmeisenBotCombat
             }
         }
 
+        /// <summary>
+        /// Target a target that needs healing from your party
+        /// </summary>
+        /// <param name="me">me object</param>
+        /// <param name="activeWowObjects">active wow objects</param>
+        /// <returns>a teammember that needs healing</returns>
         public static Unit TargetTargetToHeal(Me me, List<WowObject> activeWowObjects)
         {
             // Get the one with the lowest hp and target him/her

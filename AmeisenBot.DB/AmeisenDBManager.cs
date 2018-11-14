@@ -179,7 +179,7 @@ namespace AmeisenBotDB
             }
         }
 
-        public RememberedUnit CheckForRememberedUnit(string name, int zoneID, int mapID)
+        public RememberedUnit CheckForRememberedUnit(string unitname, int zoneID, int mapID)
         {
             if (AmeisenDataHolder.IsConnectedToDB)
             {
@@ -191,7 +191,7 @@ namespace AmeisenBotDB
                 sqlQuery.Append($"SELECT * FROM {TABLE_NAME_REMEMBERED_UNITS} ");
                 sqlQuery.Append($"WHERE zone_id = {zoneID} AND ");
                 sqlQuery.Append($"map_id = {mapID} AND ");
-                sqlQuery.Append($"name = \"{name}\";");
+                sqlQuery.Append($"name = \"{unitname}\";");
 
                 try
                 {

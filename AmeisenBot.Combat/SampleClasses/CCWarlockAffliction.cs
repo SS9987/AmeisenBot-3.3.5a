@@ -56,7 +56,7 @@ namespace AmeisenBotCombat.SampleClasses
                 // Start autoattack
                 if (!Me.InCombat)
                 {
-                    CombatUtils.FaceTarget(Me, unitToAttack);
+                    CombatUtils.FaceUnit(Me, unitToAttack);
                     CombatUtils.AttackTarget();
                 }
 

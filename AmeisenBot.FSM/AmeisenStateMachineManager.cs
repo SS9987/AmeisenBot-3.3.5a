@@ -188,8 +188,8 @@ namespace AmeisenBotFSM
             if (Me != null)
             {
                 if (Me.InCombat
-                    || (CombatUtils.PartymembersInCombat(Me, AmeisenDataHolder.ActiveWoWObjects).Count > 0
-                    && AmeisenDataHolder.IsAllowedToAssistParty))
+                    || (AmeisenDataHolder.IsAllowedToAssistParty
+                    && CombatUtils.PartymembersInCombat(Me, AmeisenDataHolder.ActiveWoWObjects).Count > 0))
                 {
                     if (StateMachine.GetCurrentState() != BotState.Idle)
                     {

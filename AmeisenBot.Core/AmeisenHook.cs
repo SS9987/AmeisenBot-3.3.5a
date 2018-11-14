@@ -10,8 +10,6 @@ namespace AmeisenBotCore
 {
     /// <summary>
     /// Class that manages the hooking of WoW's EndScene
-    ///
-    /// !!! W.I.P !!!
     /// </summary>
     public class AmeisenHook
     {
@@ -47,11 +45,11 @@ namespace AmeisenBotCore
 
         public void DisposeHooking()
         {
-            // Get D3D9 Endscene Pointer
+            // get D3D9 Endscene Pointer
             uint endscene = GetEndScene();
             endscene += ENDSCENE_HOOK_OFFSET;
 
-            // Check if WoW is hooked
+            // check if WoW is hooked
             if (BlackMagic.ReadByte(endscene) == 0xE9)
             {
                 BlackMagic.WriteBytes(endscene, originalEndscene);
@@ -73,7 +71,7 @@ namespace AmeisenBotCore
                 {
                     if (hookJobs.TryDequeue(out HookJob currentJob))
                     {
-                        // Process a hook job
+                        // process a hook job
                         InjectAndExecute(currentJob.Asm, currentJob.ReadReturnBytes);
 
                         // if its a chained hook job, execute it too
@@ -81,8 +79,7 @@ namespace AmeisenBotCore
                         {
                             currentJob.ReturnValue = InjectAndExecute(
                                 ((ReturnHookJob)currentJob).ChainedJob.Asm,
-                                ((ReturnHookJob)currentJob).ChainedJob.ReadReturnBytes
-                                );
+                                ((ReturnHookJob)currentJob).ChainedJob.ReadReturnBytes);
                         }
 
                         currentJob.IsFinished = true;
@@ -104,10 +101,10 @@ namespace AmeisenBotCore
         {
             if (BlackMagic.IsProcessOpen)
             {
-                // Get D3D9 Endscene Pointer
+                // get D3D9 Endscene Pointer
                 uint endscene = GetEndScene();
 
-                // If WoW is already hooked, unhook it
+                // if WoW is already hooked, unhook it
                 if (BlackMagic.ReadByte(endscene) == 0xE9)
                 {
                     originalEndscene = new byte[] { 0xB8, 0x51, 0xD7, 0xCA, 0x64 };
@@ -116,16 +113,16 @@ namespace AmeisenBotCore
 
                 try
                 {
-                    // If WoW is now/was unhooked, hook it
+                    // if WoW is now/was unhooked, hook it
                     if (BlackMagic.ReadByte(endscene) != 0xE9)
                     {
-                        // First thing thats 5 bytes big is here
+                        // first thing thats 5 bytes big is here
                         endscene += ENDSCENE_HOOK_OFFSET;
 
-                        // After the jump wer'e going to inject
+                        // return after the jump wer'e going to inject
                         endsceneReturnAddress = endscene + 0x5;
 
-                        // Read our original EndScene
+                        // read our original EndScene
                         //originalEndscene = BlackMagic.ReadBytes(endscene, 5);
 
                         codeToExecute = BlackMagic.AllocateMemory(4);
@@ -145,26 +142,26 @@ namespace AmeisenBotCore
                         AmeisenLogger.Instance.Log(LogLevel.DEBUG, $"Original Endscene bytes: {Utils.ByteArrayToString(originalEndscene)}", this);
 
                         BlackMagic.Asm.Clear();
-                        // Save registers
+                        // save registers
                         BlackMagic.Asm.AddLine("PUSHFD");
                         BlackMagic.Asm.AddLine("PUSHAD");
 
-                        // Check for code to be executed
+                        // check for code to be executed
                         BlackMagic.Asm.AddLine($"MOV EBX, [{(codeToExecute)}]");
                         BlackMagic.Asm.AddLine("TEST EBX, 1");
                         BlackMagic.Asm.AddLine("JE @out");
 
-                        // Execute our stuff and get return address
+                        // execute our stuff and get return address
                         BlackMagic.Asm.AddLine($"MOV EDX, {(codeCaveForInjection)}");
                         BlackMagic.Asm.AddLine("CALL EDX");
                         BlackMagic.Asm.AddLine($"MOV [{(returnAdress)}], EAX");
 
-                        // FInish up our execution
+                        // finish up our execution
                         BlackMagic.Asm.AddLine("@out:");
                         BlackMagic.Asm.AddLine("MOV EDX, 0");
                         BlackMagic.Asm.AddLine($"MOV [{(codeToExecute)}], EDX");
 
-                        // Restore registers
+                        // restore registers
                         BlackMagic.Asm.AddLine("POPAD");
                         BlackMagic.Asm.AddLine("POPFD");
 
@@ -172,15 +169,15 @@ namespace AmeisenBotCore
                         BlackMagic.Asm.Inject(codeCave);
                         BlackMagic.Asm.Clear();
 
-                        // Do the original EndScene stuff after we restored the registers
+                        // do the original EndScene stuff after we restored the registers
                         BlackMagic.WriteBytes(codeCave + (uint)asmLenght, originalEndscene);
 
-                        // Return to original function
+                        // return to original function
                         BlackMagic.Asm.AddLine($"JMP {(endsceneReturnAddress)}");
                         BlackMagic.Asm.Inject((codeCave + (uint)asmLenght) + 5);
                         BlackMagic.Asm.Clear();
 
-                        // Modify original EndScene function to start the hook
+                        // modify original EndScene function to start the hook
                         BlackMagic.Asm.AddLine($"JMP {(codeCave)}");
                         BlackMagic.Asm.Inject(endscene);
                     }
@@ -203,7 +200,7 @@ namespace AmeisenBotCore
 
                 isInjectionUsed = true;
 
-                // Inject the given ASM
+                // inject the given ASM
                 BlackMagic.Asm.Clear();
                 foreach (string s in asm)
                 {
@@ -211,10 +208,10 @@ namespace AmeisenBotCore
                 }
                 BlackMagic.Asm.Inject(codeCaveForInjection);
 
-                // There is code to be executed
+                // there is code to be executed
                 BlackMagic.WriteInt(codeToExecute, 1);
 
-                // We don't need this atm
+                // we don't need this atm
                 //AmeisenManager.Instance().GetBlackMagic().Asm.AddLine("JMP " + (endsceneReturnAddress));
                 //int asmLenght = BlackMagic.Asm.Assemble().Length;
 
@@ -230,7 +227,7 @@ namespace AmeisenBotCore
                     byte buffer = new byte();
                     try
                     {
-                        // Get our return parameter address
+                        // get our return parameter address
                         uint dwAddress = BlackMagic.ReadUInt(returnAdress);
 
                         // read all parameter-bytes until we the buffer is 0
@@ -253,7 +250,7 @@ namespace AmeisenBotCore
             }
             catch (Exception e)
             {
-                // There is code to be executed
+                // there is code to be executed
                 BlackMagic.WriteInt(codeToExecute, 0);
 
                 AmeisenLogger.Instance.Log(

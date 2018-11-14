@@ -1,5 +1,5 @@
-﻿using AmeisenBotUtilities;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Text;
 
 namespace AmeisenBotUtilities.Tests
 {
@@ -36,11 +36,15 @@ namespace AmeisenBotUtilities.Tests
         [TestMethod()]
         public void GZipCompressBytesTest()
         {
-            byte[] testData = { 0x1, 0x2, 0x3, 0x4 };
+            byte[] testData = { 0x1, 0x1, 0x3, 0x3, 0x1, 0x1, 0x3, 0x3, 0x1, 0x1, 0x3, 0x3 };
 
             byte[] compressedData = Utils.GZipCompressBytes(testData);
             byte[] decompressedData = Utils.GZipDecompressBytes(compressedData);
-            Assert.AreEqual(testData, decompressedData);
+
+            Assert.AreEqual(
+                Encoding.UTF8.GetString(testData),
+                Encoding.UTF8.GetString(decompressedData)
+            );
         }
     }
 }
