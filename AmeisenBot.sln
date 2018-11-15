@@ -31,6 +31,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AmeisenPath.Core", "Ameisen
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WoWLoginAutomator", "WoW-LoginAutomator\WoWLoginAutomator\WoWLoginAutomator.csproj", "{14811D57-C812-4651-85FA-7C65B974724B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AmeisenBot.Character", "AmeisenBot.Character\AmeisenBot.Character.csproj", "{23D5C950-8A33-414F-A366-99715073AA0B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -209,6 +211,18 @@ Global
 		{14811D57-C812-4651-85FA-7C65B974724B}.Release|x64.Build.0 = Release|Any CPU
 		{14811D57-C812-4651-85FA-7C65B974724B}.Release|x86.ActiveCfg = Release|Any CPU
 		{14811D57-C812-4651-85FA-7C65B974724B}.Release|x86.Build.0 = Release|Any CPU
+		{23D5C950-8A33-414F-A366-99715073AA0B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{23D5C950-8A33-414F-A366-99715073AA0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{23D5C950-8A33-414F-A366-99715073AA0B}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{23D5C950-8A33-414F-A366-99715073AA0B}.Debug|x64.Build.0 = Debug|Any CPU
+		{23D5C950-8A33-414F-A366-99715073AA0B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{23D5C950-8A33-414F-A366-99715073AA0B}.Debug|x86.Build.0 = Debug|Any CPU
+		{23D5C950-8A33-414F-A366-99715073AA0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23D5C950-8A33-414F-A366-99715073AA0B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{23D5C950-8A33-414F-A366-99715073AA0B}.Release|x64.ActiveCfg = Release|Any CPU
+		{23D5C950-8A33-414F-A366-99715073AA0B}.Release|x64.Build.0 = Release|Any CPU
+		{23D5C950-8A33-414F-A366-99715073AA0B}.Release|x86.ActiveCfg = Release|Any CPU
+		{23D5C950-8A33-414F-A366-99715073AA0B}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

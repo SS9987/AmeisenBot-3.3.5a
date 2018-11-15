@@ -93,6 +93,15 @@ namespace AmeisenBotUtilities
         }
 
         /// <summary>
+        /// Tries to parse an int, if it fails returns -1
+        /// </summary>
+        /// <param name="intToParse">int to try parse</param>
+        /// <returns>parsed int or -1 if it failed</returns>
+        public static int TryParseInt(string intToParse)
+            => int.TryParse(intToParse, out int value) ? value : -1;
+        
+
+        /// <summary>
         /// Generate a random string with the given size out of the given chars
         /// </summary>
         /// <param name="lenght">string lenght</param>
