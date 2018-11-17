@@ -269,7 +269,8 @@ namespace AmeisenBotManager
             AmeisenStateMachineManager.Start();
 
             // Init our CharacterMangager to keep track of our stats/items/money
-            //CharacterManager = new CharacterManager();
+            CharacterManager = new CharacterManager();
+            CharacterManager.UpdateCharacter();
 
             // Connect to Server
             if (Settings.serverAutoConnect)

@@ -21,7 +21,17 @@ namespace AmeisenBot.Character.Objects
         public int CooldownStart { get; set; }
         public int CooldownEnd { get; set; }
 
-        public double Durability => DurabilityCurrent / DurabilityMax;
+        public double Durability
+        {
+            get
+            {
+                try
+                {
+                    return DurabilityCurrent / DurabilityMax;
+                }
+                catch { return -1; };
+            }
+        }
         public int DurabilityMax { get; set; }
         public int DurabilityCurrent { get; set; }
 
@@ -80,12 +90,12 @@ namespace AmeisenBot.Character.Objects
         private (int, int) ReadItemIntTuple(string functionName)
             => (Utils.TryParseInt(
                     AmeisenCore.GetLocalizedText(
-                        $"xvara, xvarb = {functionName}(player, {Slot});",
+                        $"xvara, xvarb = {functionName}(\"player\", {Slot});",
                         "xvara")
                 ),
                 Utils.TryParseInt(
                     AmeisenCore.GetLocalizedText(
-                        $"xvara, xvarb = {functionName}(player, {Slot});",
+                        $"xvara, xvarb = {functionName}(\"player\", {Slot});",
                         "xvarb")
                     )
                 );
@@ -98,7 +108,7 @@ namespace AmeisenBot.Character.Objects
         private int ReadItemIntAttribute(string functionName)
             => Utils.TryParseInt(
                 AmeisenCore.GetLocalizedText(
-                    $"xvara = {functionName}(player, {Slot});",
+                    $"xvara = {functionName}(\"player\", {Slot});",
                     "xvara")
                 );
     }

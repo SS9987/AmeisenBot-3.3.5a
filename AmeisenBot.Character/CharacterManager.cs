@@ -3,6 +3,7 @@ using AmeisenBot.Character.Interfaces;
 using AmeisenBot.Character.Objects;
 using AmeisenBotCore;
 using System;
+using System.Threading;
 
 namespace AmeisenBot.Character
 {
@@ -19,7 +20,7 @@ namespace AmeisenBot.Character
         /// Update the whole character, may takes some time
         /// Updates stuff: Gear, Bags, Stats, Items
         /// </summary>
-        public void UpdateCharacter() => Character.Update();
+        public void UpdateCharacter() => new Thread(new ThreadStart(Character.Update)).Start();
 
         /// <summary>
         /// This method equips better item if they are determined

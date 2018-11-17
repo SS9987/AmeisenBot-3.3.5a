@@ -1,10 +1,13 @@
 ﻿using AmeisenBotCore;
+using AmeisenBotLogger;
 using AmeisenBotUtilities;
+using Newtonsoft.Json;
 
 namespace AmeisenBot.Character.Objects
 {
     public class MeCharacter
     {
+        public bool FullyLoaded { get; private set; }
         public PrimaryStats PrimaryStats { get; set; }
         public SecondaryStats SecondaryStats { get; set; }
         public Resistances Resistances { get; set; }
@@ -14,13 +17,11 @@ namespace AmeisenBot.Character.Objects
         public Bag[] Bags { get; set; }
         public Equipment Equipment { get; set; }
 
-        public MeCharacter()
-        {
-            Update();
-        }
+        public MeCharacter() { }
 
         public void Update()
         {
+            FullyLoaded = false;
             PrimaryStats = new PrimaryStats();
             PrimaryStats.UpdateFromPlayer();
             SecondaryStats = new SecondaryStats();
@@ -35,6 +36,10 @@ namespace AmeisenBot.Character.Objects
             };
 
             Money = Utils.TryParseInt(AmeisenCore.GetLocalizedText("moneyX = GetMoney();", "moneyX"));
+            FullyLoaded = true;
+
+            string characterJson = JsonConvert.SerializeObject(this);
+            AmeisenLogger.Instance.Log(LogLevel.DEBUG, $"Updated Character: {characterJson}", this);
         }
     }
 }
