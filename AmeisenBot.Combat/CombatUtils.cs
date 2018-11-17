@@ -1,6 +1,7 @@
 ﻿using AmeisenBotCore;
 using AmeisenBotUtilities;
 using AmeisenBotUtilities.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -38,6 +39,8 @@ namespace AmeisenBotCombat
         /// <returns>spellinfo</returns>
         public static SpellInfo GetSpellInfo(string spellname)
             => AmeisenCore.GetSpellInfo(spellname);
+
+        public static void TargetNearestEnemy() => AmeisenCore.LuaDoString("TargetNearestEnemy();");
 
         /// <summary>
         /// Checks for a spell beeing useable
@@ -165,10 +168,11 @@ namespace AmeisenBotCombat
             if (unit != null)
             {
                 unit.Update();
-                AmeisenCore.InteractWithGUID(
+                AmeisenCore.MovePlayerToXYZ(
                     unit.pos,
-                    unit.Guid,
-                    InteractionType.FACETARGET);
+                    InteractionType.FACETARGET,
+                    0);
+                //AmeisenCore.FaceUnit(me, unit);
             }
         }
 
@@ -178,9 +182,9 @@ namespace AmeisenBotCombat
         /// <param name="me">me object</param>
         /// <param name="unitToAttack">unit to attack</param>
         /// <param name="distance">spell distance or something alike</param>
-        /// <returns>true/false wether your are or a re'nt in range to cast</returns>
+        /// <returns>true/false wether your are or arent in range to cast</returns>
         public static bool IsInRange(Me me, Unit unitToAttack, double distance)
-            => Utils.GetDistance(me.pos, unitToAttack.pos) > distance;
+            => Utils.GetDistance(me.pos, unitToAttack.pos) < distance;
 
         /// <summary>
         /// Move into a spell range
@@ -200,7 +204,7 @@ namespace AmeisenBotCombat
                 me.Update();
                 unitToAttack.Update();
 
-                Thread.Sleep(250);
+                Thread.Sleep(50);
                 count++;
             }
 
@@ -210,7 +214,7 @@ namespace AmeisenBotCombat
                        InteractionType.STOP);
         }
 
-        public static void AttackTarget() => AmeisenCore.LuaDoString("AttackTarget();");
+        public static void AttackTarget() => AmeisenCore.RunSlashCommand("/startattack");
 
         /// <summary>
         /// Get a target to attack by scanniung hwat your partymembers attack

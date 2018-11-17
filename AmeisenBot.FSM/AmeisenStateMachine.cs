@@ -51,6 +51,9 @@ namespace AmeisenBotFSM
             };
         }
 
+        public void LoadNewCombatClass(AmeisenDataHolder ameisenDataHolder, IAmeisenCombatClass combatClass) 
+            => StateActionMap[BotState.Combat] = new ActionCombat(ameisenDataHolder, combatClass);
+
         /// <summary>
         /// Returns our current BotState to see what the bot is doing right now
         /// </summary>

@@ -155,6 +155,7 @@ namespace AmeisenBotManager
         private BlackMagic Blackmagic { get; set; }
         private AmeisenEventHook AmeisenEventHook { get; set; }
         private CharacterManager CharacterManager { get; set; }
+        public string CurrentCombatClass { get; set; }
 
         /// <summary>
         /// Create a new AmeisenBotManager to manage the bot's functionality
@@ -178,7 +179,9 @@ namespace AmeisenBotManager
         {
             AmeisenSettings.Settings.combatClassPath = fileName;
             AmeisenSettings.SaveToFile(AmeisenSettings.loadedconfName);
-            CompileAndLoadCombatClass(fileName);
+            IAmeisenCombatClass combatClass = CompileAndLoadCombatClass(fileName);
+            AmeisenStateMachineManager.StateMachine.LoadNewCombatClass(AmeisenDataHolder, combatClass);
+            CurrentCombatClass = combatClass.ToString();
         }
 
         /// <summary>

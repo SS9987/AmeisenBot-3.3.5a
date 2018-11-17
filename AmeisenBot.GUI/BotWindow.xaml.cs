@@ -342,6 +342,7 @@ namespace AmeisenBotGUI
             long memoryUsageMB = currentProcess.WorkingSet64 / 1000000;
 
             labelLoadedCombatClass.Content = $"{Path.GetFileName(Settings.combatClassPath)}.cs";
+            labelLoadedCombatClassC.Content = $"{BotManager.CurrentCombatClass}";
             labelClass.Content = $"{BotManager.Me.Class.ToString()}";
             labelRace.Content = $"{BotManager.Me.Race.ToString()}";
 

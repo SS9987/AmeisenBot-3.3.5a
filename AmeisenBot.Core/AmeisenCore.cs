@@ -164,6 +164,11 @@ namespace AmeisenBotCore
             return resultLowered;
         }
 
+        public static void FaceUnit(Me me, Unit unit)
+        {
+            BlackMagic.WriteFloat(me.BaseAddress + 0x7A8, Utils.GetFacingAngle(me.pos, me.Rotation, unit.pos));
+        }
+
         /// <summary>
         /// Check for Debuffs
         /// </summary>

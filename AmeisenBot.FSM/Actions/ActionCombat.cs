@@ -27,6 +27,8 @@ namespace AmeisenBotFSM.Actions
             set { AmeisenDataHolder.Target = value; }
         }
 
+        public void LoadNewCombatClass(IAmeisenCombatClass combatClass) => CombatClass = combatClass;
+
         public ActionCombat(AmeisenDataHolder ameisenDataHolder, IAmeisenCombatClass combatClass)
         {
             AmeisenDataHolder = ameisenDataHolder;

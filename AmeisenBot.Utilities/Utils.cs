@@ -190,18 +190,25 @@ namespace AmeisenBotUtilities
         /// <returns>true if the target is in our view area, false if not</returns>
         public static bool IsFacing(Vector3 myPosition, float myRotation, Vector3 targetPosition)
         {
-            float f = (float)Math.Atan2(targetPosition.Y - myPosition.Y, targetPosition.X - myPosition.X);
-
-            if (f < 0.0f)
-            {
-                f = f + (float)Math.PI * 2.0f;
-            }
-            else if (f > (float)Math.PI * 2)
-            {
-                f = f - (float)Math.PI * 2.0f;
-            }
+            float f = GetFacingAngle(myPosition, myRotation, targetPosition);
 
             return (f >= (myRotation * 0.7)) && (f <= (myRotation * 1.3)) ? true : false;
+        }
+
+        public static float GetFacingAngle(Vector3 myPosition, float myRotation, Vector3 targetPosition)
+        {
+            float angle = (float)Math.Atan2(targetPosition.Y - myPosition.Y, targetPosition.X - myPosition.X);
+
+            if (angle < 0.0f)
+            {
+                angle = angle + (float)Math.PI * 2.0f;
+            }
+            else if (angle > (float)Math.PI * 2)
+            {
+                angle = angle - (float)Math.PI * 2.0f;
+            }
+
+            return angle;
         }
 
         /// <summary>
