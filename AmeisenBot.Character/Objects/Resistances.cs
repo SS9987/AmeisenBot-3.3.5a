@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace AmeisenBot.Character.Objects
+﻿namespace AmeisenBot.Character.Objects
 {
     public class Resistances
     {

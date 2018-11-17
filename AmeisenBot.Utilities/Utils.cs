@@ -99,7 +99,6 @@ namespace AmeisenBotUtilities
         /// <returns>parsed int or -1 if it failed</returns>
         public static int TryParseInt(string intToParse)
             => int.TryParse(intToParse, out int value) ? value : -1;
-        
 
         /// <summary>
         /// Generate a random string with the given size out of the given chars

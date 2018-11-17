@@ -8,12 +8,14 @@ namespace AmeisenBot.Character.Objects
     public class Item
     {
         public int Id { get; set; }
+        public string ItemLink { get; set; }
         public int Slot { get; private set; }
         public string Name { get; set; }
         public int Count { get; set; }
         public int Level { get; set; }
         public int RequiredLevel { get; set; }
         public int Price { get; set; }
+        public string EquipLocation { get; set; }
 
         public int Cooldown => CooldownEnd - CooldownStart;
         public int CooldownStart { get; set; }
@@ -44,16 +46,17 @@ namespace AmeisenBot.Character.Objects
             Level = Utils.TryParseInt(ReadItemDetail("itemLevel"));
             RequiredLevel = Utils.TryParseInt(ReadItemDetail("itemMinLevel"));
             Price = Utils.TryParseInt(ReadItemDetail("itemSellPrice"));
+            EquipLocation = ReadItemDetail("itemEquipLoc");
         }
 
         /// <summary>
         /// Read one of the following deatails:
-        /// 
+        ///
         /// itemName, itemLink, itemRarity, itemLevel, itemMinLevel,
         /// itemType, itemSubType, itemStackCount, itemEquipLoc,
         /// itemIcon, itemSellPrice, itemClassID, itemSubClassID,
         /// bindType, expacID, itemSetID, isCraftingReagent.
-        /// 
+        ///
         /// May returns nothing when the item is still beeing queried!
         /// </summary>
         /// <param name="detailToRead">detail to read</param>
@@ -98,6 +101,5 @@ namespace AmeisenBot.Character.Objects
                     $"xvara = {functionName}(player, {Slot});",
                     "xvara")
                 );
-
     }
 }

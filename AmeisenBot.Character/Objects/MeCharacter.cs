@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AmeisenBotCore;
+using AmeisenBotUtilities;
 
 namespace AmeisenBot.Character.Objects
 {
@@ -7,6 +8,8 @@ namespace AmeisenBot.Character.Objects
         public PrimaryStats PrimaryStats { get; set; }
         public SecondaryStats SecondaryStats { get; set; }
         public Resistances Resistances { get; set; }
+
+        public int Money { get; set; }
 
         public Bag[] Bags { get; set; }
         public Equipment Equipment { get; set; }
@@ -19,6 +22,7 @@ namespace AmeisenBot.Character.Objects
         public void Update()
         {
             PrimaryStats = new PrimaryStats();
+            PrimaryStats.UpdateFromPlayer();
             SecondaryStats = new SecondaryStats();
             Resistances = new Resistances();
             Equipment = new Equipment();
@@ -29,6 +33,8 @@ namespace AmeisenBot.Character.Objects
                 new Bag(3),
                 new Bag(4)
             };
+
+            Money = Utils.TryParseInt(AmeisenCore.GetLocalizedText("moneyX = GetMoney();", "moneyX"));
         }
     }
 }

@@ -5,7 +5,9 @@ namespace AmeisenBotUtilities
 {
     public class GameObject : WowObject
     {
-        public GameObject(uint baseAddress, BlackMagic blackMagic) : base(baseAddress, blackMagic) { }
+        public GameObject(uint baseAddress, BlackMagic blackMagic) : base(baseAddress, blackMagic)
+        {
+        }
 
         public override string ToString()
         {

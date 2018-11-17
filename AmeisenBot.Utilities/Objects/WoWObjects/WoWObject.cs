@@ -45,6 +45,8 @@ namespace AmeisenBotUtilities
             return sb.ToString();
         }
 
-        public virtual void Update() { }
+        public virtual void Update()
+        {
+        }
     }
 }

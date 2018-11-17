@@ -9,7 +9,6 @@ using AmeisenPathCore;
 using AmeisenPathCore.Objects;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading;
 using static AmeisenBotFSM.Objects.Delegates;
 
@@ -292,7 +291,7 @@ namespace AmeisenBotFSM.Actions
                 return RebasePath(path, offsetX, offsetY);
             }
         }
-                
+
         /// <summary>
         /// Init a map with all fields blocked
         /// </summary>

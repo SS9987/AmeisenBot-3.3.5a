@@ -7,7 +7,9 @@ namespace AmeisenBotUtilities
     {
         private ulong Owner { get; set; }
 
-        public Corpse(uint baseAddress, BlackMagic blackMagic) : base(baseAddress, blackMagic) { }
+        public Corpse(uint baseAddress, BlackMagic blackMagic) : base(baseAddress, blackMagic)
+        {
+        }
 
         public override string ToString()
         {

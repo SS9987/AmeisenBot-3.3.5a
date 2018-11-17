@@ -64,6 +64,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\AmeisenBot.Character\AmeisenBot.Character.csproj">
+      <Project>{23D5C950-8A33-414F-A366-99715073AA0B}</Project>
+      <Name>AmeisenBot.Character</Name>
+    </ProjectReference>
     <ProjectReference Include="..\AmeisenBot.Combat\AmeisenBot.Combat.csproj">
       <Project>{CD72AD54-7C40-4EC0-8878-0771922A2961}</Project>
       <Name>AmeisenBot.Combat</Name>

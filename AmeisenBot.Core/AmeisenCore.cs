@@ -55,14 +55,11 @@ namespace AmeisenBotCore
         public static bool IsEnemy(LuaUnit luaunit, LuaUnit otherluaunit = LuaUnit.player)
             => ParseLuaIntResult($"isEnemy = UnitIsEnemy({luaunit.ToString()}, {otherluaunit.ToString()});", "isEnemy");
 
-
         public static bool CanCooperate(LuaUnit luaunit, LuaUnit otherluaunit = LuaUnit.player)
             => ParseLuaIntResult($"canCoop = UnitCanCooperate({luaunit.ToString()}, {otherluaunit.ToString()});", "canCoop");
 
-
         public static bool CanAttack(LuaUnit luaunit, LuaUnit otherluaunit = LuaUnit.player)
             => ParseLuaIntResult($"canAttack = UnitCanAttack({luaunit.ToString()}, {otherluaunit.ToString()});", "canAttack");
-
 
         private static bool ParseLuaIntResult(string command, string outputVariable)
         {
@@ -217,8 +214,6 @@ namespace AmeisenBotCore
         /// <returns>true if unit is in combat, false if not</returns>
         public static bool GetCombatState(LuaUnit LuaUnit)
             => ParseLuaIntResult($"affectingCombat = UnitAffectingCombat(\"{LuaUnit.ToString()}\");", "affectingCombat");
-
-
 
         /// <summary>
         /// Set WoW's window position and dimensions by its handle
@@ -431,7 +426,6 @@ namespace AmeisenBotCore
         public static bool IsDead(LuaUnit LuaUnit)
             => ParseLuaIntResult($"isDead = UnitIsDead(\"{LuaUnit.ToString()}\");", "isDead");
 
-
         /// <summary>
         /// returns true if the selected LuaUnit is a ghost or dead
         /// </summary>
@@ -439,7 +433,6 @@ namespace AmeisenBotCore
         /// <returns>is LuaUnit a ghost or dead</returns>
         public static bool IsDeadOrGhost(LuaUnit LuaUnit)
             => ParseLuaIntResult($"isDeadOrGhost = UnitIsDeadOrGhost(\"{LuaUnit.ToString()}\");", "isDeadOrGhost");
-
 
         /// <summary>
         /// returns true if the LuaUnit is a ghost
@@ -449,7 +442,6 @@ namespace AmeisenBotCore
         public static bool IsGhost(LuaUnit LuaUnit)
             => ParseLuaIntResult($"isGhost = UnitIsDeadOrGhost(\"{LuaUnit.ToString()}\");", "isGhost");
 
-
         /// <summary>
         /// Check if the spell is on cooldown
         /// </summary>
@@ -458,14 +450,12 @@ namespace AmeisenBotCore
         public static bool IsOnCooldown(string spell)
             => ParseLuaIntResult($"start, duration, enabled = GetSpellCooldown(\"{spell}\");", "duration");
 
-
         /// <summary>
         /// Returns true or false, wether the Target is friendly or not
         /// </summary>
         /// <returns>true if unit is friendly, false if not</returns>
         public static bool IsFriend(LuaUnit luaunit, LuaUnit otherluaunit = LuaUnit.player)
             => ParseLuaIntResult($"isFriendly = UnitIsFriend({luaunit.ToString()}, {otherluaunit.ToString()});", "isFriendly");
-
 
         /// <summary>
         /// Execute the given LUA command inside WoW's MainThread

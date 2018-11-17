@@ -5,7 +5,9 @@ namespace AmeisenBotUtilities
 {
     public class Container : WowObject
     {
-        public Container(uint baseAddress, BlackMagic blackMagic) : base(baseAddress, blackMagic) { }
+        public Container(uint baseAddress, BlackMagic blackMagic) : base(baseAddress, blackMagic)
+        {
+        }
 
         public override string ToString()
         {

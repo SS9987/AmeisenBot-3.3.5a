@@ -1,10 +1,12 @@
-﻿using AmeisenBotCore;
+﻿using AmeisenBot.Character;
+using AmeisenBotCore;
 using AmeisenBotData;
 using AmeisenBotDB;
 using AmeisenBotFSM;
 using AmeisenBotFSM.Enums;
 using AmeisenBotLogger;
 using AmeisenBotUtilities;
+using AmeisenBotUtilities.Enums;
 using AmeisenBotUtilities.Objects;
 using AmeisenCombatEngine.Interfaces;
 using AmeisenMovement;
@@ -152,6 +154,7 @@ namespace AmeisenBotManager
         private AmeisenMovementEngine AmeisenMovementEngine { get; set; }
         private BlackMagic Blackmagic { get; set; }
         private AmeisenEventHook AmeisenEventHook { get; set; }
+        private CharacterManager CharacterManager { get; set; }
 
         /// <summary>
         /// Create a new AmeisenBotManager to manage the bot's functionality
@@ -237,9 +240,9 @@ namespace AmeisenBotManager
             AmeisenCore.AmeisenHook = AmeisenHook;
 
             // Hook Events
-            /*AmeisenEventHook = new AmeisenEventHook();
+            AmeisenEventHook = new AmeisenEventHook();
             AmeisenEventHook.Init();
-            AmeisenEventHook.Subscribe("UI_ERROR_MESSAGE");*/
+            AmeisenEventHook.Subscribe(WowEvents.PLAYER_ENTERING_WORLD);
 
             // Start our object updates
             AmeisenObjectManager = new AmeisenObjectManager(AmeisenDataHolder, AmeisenDBManager);
@@ -264,6 +267,9 @@ namespace AmeisenBotManager
             // Deafult Idle state
             AmeisenStateMachineManager.StateMachine.PushAction(BotState.Idle);
             AmeisenStateMachineManager.Start();
+
+            // Init our CharacterMangager to keep track of our stats/items/money
+            //CharacterManager = new CharacterManager();
 
             // Connect to Server
             if (Settings.serverAutoConnect)
@@ -328,7 +334,8 @@ namespace AmeisenBotManager
         /// Add a RememberedUnit to the RememberedUnits Database to remember its position and UnitTraits
         /// </summary>
         /// <param name="rememberedUnit">Unit that you want to remember</param>
-        public void RememberUnit(RememberedUnit rememberedUnit) => AmeisenDBManager.RememberUnit(rememberedUnit);
+        public void RememberUnit(RememberedUnit rememberedUnit)
+            => AmeisenDBManager.RememberUnit(rememberedUnit);
 
         /// <summary>
         /// Check if we remember a Unit by its Name, ZoneID and MapID
