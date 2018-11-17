@@ -82,7 +82,7 @@ namespace AmeisenBotGUI
             resources["holoLogoColor"] = ParseColor(Settings.holoLogoColor);
         }
 
-        private Color ParseColor(string colorString) => ParseColor(colorString);
+        private Color ParseColor(string colorString) => (Color)ColorConverter.ConvertFromString(colorString);
 
         private void ButtonCobatClassEditor_Click(object sender, RoutedEventArgs e)
         {

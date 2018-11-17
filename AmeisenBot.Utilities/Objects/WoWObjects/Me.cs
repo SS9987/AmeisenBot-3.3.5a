@@ -18,7 +18,7 @@ namespace AmeisenBotUtilities
 
         public Me(uint baseAddress, BlackMagic blackMagic) : base(baseAddress, blackMagic)
         {
-            base.Update();
+            Update();
         }
 
         public override string ToString()
@@ -99,13 +99,10 @@ namespace AmeisenBotUtilities
                 PartymemberGuids = new List<ulong>();
                 PartyleaderGUID = BlackMagicInstance.ReadUInt64(Offsets.partyLeader);
 
-                if (PartyleaderGUID != 0)
-                {
-                    PartymemberGuids?.Add(BlackMagicInstance.ReadUInt64(Offsets.partyPlayer1));
-                    PartymemberGuids?.Add(BlackMagicInstance.ReadUInt64(Offsets.partyPlayer2));
-                    PartymemberGuids?.Add(BlackMagicInstance.ReadUInt64(Offsets.partyPlayer3));
-                    PartymemberGuids?.Add(BlackMagicInstance.ReadUInt64(Offsets.partyPlayer4));
-                }
+                PartymemberGuids.Add(BlackMagicInstance.ReadUInt64(Offsets.partyPlayer1));
+                PartymemberGuids.Add(BlackMagicInstance.ReadUInt64(Offsets.partyPlayer2));
+                PartymemberGuids.Add(BlackMagicInstance.ReadUInt64(Offsets.partyPlayer3));
+                PartymemberGuids.Add(BlackMagicInstance.ReadUInt64(Offsets.partyPlayer4));
             }
             catch { }
         }

@@ -115,11 +115,7 @@ namespace AmeisenBotFSM
                 // Do i need to buff
                 if (AmeisenDataHolder.IsAllowedToBuff)
                 {
-                    try
-                    {
-                        CombatClass.HandleBuffs();
-                    }
-                    catch { }
+                    CombatClass?.HandleBuffs();
                 }
 
                 AmeisenLogger.Instance.Log(LogLevel.VERBOSE, $"FSM: {StateMachine.GetCurrentState()}", this);

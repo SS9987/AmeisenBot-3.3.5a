@@ -46,6 +46,9 @@ namespace AmeisenBotManager
             if (!AmeisenDataHolder.IsConnectedToServer)
             {
                 IRestResponse response = SendRequest(me, ip, port, HttpMethod.Post, true);
+
+                if(response == null) return false;
+
                 if (response.StatusCode == HttpStatusCode.Created
                     || response.StatusCode == HttpStatusCode.OK)
                 {
