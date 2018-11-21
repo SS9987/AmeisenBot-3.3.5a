@@ -35,6 +35,11 @@ namespace AmeisenBotCore
 
         public static bool IsInStealth => ParseLuaIntResult("isStealthed = IsStealthed();", "isStealthed");
 
+        public static string GetLocalizedText(object p1, object p2)
+        {
+            throw new NotImplementedException();
+        }
+
         public static bool IsPvPFlagged => ParseLuaIntResult("isPvp = GetPVPDesired();", "isPvp");
 
         public static void AcceptResurrect() => LuaDoString("AcceptResurrect();");
