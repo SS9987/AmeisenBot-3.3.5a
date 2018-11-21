@@ -35,14 +35,13 @@ namespace AmeisenBotGUI
         private string lastImgPath;
         private DispatcherTimer uiUpdateTimer;
         private BotManager BotManager { get; }
-        private Settings Settings { get; set; }
+        private Settings Settings => BotManager.Settings;
         private ulong LastGuid { get; set; }
 
         public BotWindow(WowExe wowExe, BotManager botManager)
         {
             InitializeComponent();
             BotManager = botManager;
-            Settings = botManager.Settings;
 
             // Load Settings
             BotManager.LoadSettingsFromFile(wowExe.characterName);

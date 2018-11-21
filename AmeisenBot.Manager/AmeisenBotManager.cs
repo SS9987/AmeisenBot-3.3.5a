@@ -333,6 +333,7 @@ namespace AmeisenBotManager
 
             // Stop logging
             AmeisenLogger.Instance.StopLogging();
+            AmeisenSettings.SaveToFile(AmeisenSettings.loadedconfName);
         }
 
         /// <summary>
