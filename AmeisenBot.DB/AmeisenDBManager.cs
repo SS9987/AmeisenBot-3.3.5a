@@ -164,7 +164,7 @@ namespace AmeisenBotDB
 
                 sqlConnection.Execute(dbInit.ToString());
                 sqlConnection.Close();
-                AmeisenLogger.Instance.Log(LogLevel.ERROR, "Initialized MySQL DB", this);
+                AmeisenLogger.Instance.Log(LogLevel.DEBUG, "Initialized MySQL DB", this);
             }
         }
 
