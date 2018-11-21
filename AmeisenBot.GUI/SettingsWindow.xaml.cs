@@ -1,4 +1,5 @@
-﻿using AmeisenBotManager;
+﻿using AmeisenBotData;
+using AmeisenBotManager;
 using AmeisenBotUtilities;
 using Microsoft.Win32;
 using System;
@@ -21,7 +22,7 @@ namespace AmeisenBotGUI
         {
             InitializeComponent();
             BotManager = botManager;
-            Settings = Settings;
+            Settings = botManager.Settings;
             Topmost = Settings.topMost;
         }
 
