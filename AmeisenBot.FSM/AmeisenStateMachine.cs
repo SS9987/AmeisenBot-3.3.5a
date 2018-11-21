@@ -1,6 +1,8 @@
-﻿using AmeisenBotData;
+﻿using AmeisenBot.Character;
+using AmeisenBotData;
 using AmeisenBotDB;
 using AmeisenBotFSM.Actions;
+using AmeisenBotFSM.BotStuff;
 using AmeisenBotFSM.Enums;
 using AmeisenBotFSM.Interfaces;
 using AmeisenBotLogger;
@@ -32,12 +34,14 @@ namespace AmeisenBotFSM
     {
         private Dictionary<BotState, IAction> StateActionMap { get; set; }
         private Stack<BotState> StateStack { get; set; }
+        public List<IAction> BotStuffList { get; private set; }
 
         public AmeisenStateMachine(
             AmeisenDataHolder ameisenDataHolder,
             AmeisenDBManager ameisenDBManager,
             AmeisenMovementEngine ameisenMovementEngine,
-            IAmeisenCombatClass combatClass)
+            IAmeisenCombatClass combatClass,
+            AmeisenCharacterManager characterManager)
         {
             StateStack = new Stack<BotState>();
             StateActionMap = new Dictionary<BotState, IAction>
@@ -49,9 +53,13 @@ namespace AmeisenBotFSM
                 { BotState.Dead, new ActionDead(ameisenDataHolder,ameisenDBManager) },
                 { BotState.BotStuff, new ActionDoBotStuff(ameisenDataHolder, GetBotStuffToDo()) }
             };
+
+            BotStuffList = new List<IAction>() {
+                new BotStuffRepairEquip(ameisenDataHolder, ameisenDBManager, characterManager)
+            };
         }
 
-        public void LoadNewCombatClass(AmeisenDataHolder ameisenDataHolder, IAmeisenCombatClass combatClass) 
+        public void LoadNewCombatClass(AmeisenDataHolder ameisenDataHolder, IAmeisenCombatClass combatClass)
             => StateActionMap[BotState.Combat] = new ActionCombat(ameisenDataHolder, combatClass);
 
         /// <summary>
@@ -95,7 +103,8 @@ namespace AmeisenBotFSM
         public void Update() => GetCurrentStateAction(GetCurrentState())?.StartDoThings.Invoke();
 
         // TODO: implement this
-        private List<IBotStuff> GetBotStuffToDo() => new List<IBotStuff>();
+        private List<IAction> GetBotStuffToDo()
+            => BotStuffList;
 
         /// <summary>
         /// Map the BotState to an IAction containing Start(), DoThings() and Stop()

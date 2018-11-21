@@ -11,9 +11,9 @@ namespace AmeisenBotFSM.Actions
         public DoThings StartDoThings { get { return DoThings; } }
         public Exit StartExit { get { return Stop; } }
         private AmeisenDataHolder AmeisenDataHolder { get; set; }
-        private List<IBotStuff> StuffToDo { get; set; }
+        private List<IAction> StuffToDo { get; set; }
 
-        public ActionDoBotStuff(AmeisenDataHolder ameisenDataHolder, List<IBotStuff> stuffToDo)
+        public ActionDoBotStuff(AmeisenDataHolder ameisenDataHolder, List<IAction> stuffToDo)
         {
             AmeisenDataHolder = ameisenDataHolder;
             StuffToDo = stuffToDo;
@@ -27,7 +27,6 @@ namespace AmeisenBotFSM.Actions
 
         public void Start()
         {
-            GetPossibleThingsToDo();
         }
 
         public void Stop()
@@ -40,10 +39,6 @@ namespace AmeisenBotFSM.Actions
 
         private void DecideWhatToDo()
         {
-        }
-
-        private void GetPossibleThingsToDo()
-        {
-        }
+        }        
     }
 }

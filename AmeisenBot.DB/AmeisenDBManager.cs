@@ -1,4 +1,5 @@
 ﻿using AmeisenBotData;
+using AmeisenBotLogger;
 using AmeisenBotMapping.objects;
 using AmeisenBotUtilities;
 using AmeisenBotUtilities.Enums;
@@ -26,6 +27,44 @@ namespace AmeisenBotDB
             ameisenDataHolder.IsConnectedToDB = false;
         }
 
+        public List<RememberedUnit> GetRememberedUnits(UnitTrait unitTrait)
+        {
+            if (AmeisenDataHolder.IsConnectedToDB)
+            {
+                List<RememberedUnit> unitsToReturn = new List<RememberedUnit>();
+                MySqlConnection sqlConnection = new MySqlConnection(MysqlConnectionString);
+                sqlConnection.Open();
+
+                StringBuilder sqlQuery = new StringBuilder();
+                sqlQuery.Append($"SELECT * FROM {TABLE_NAME_REMEMBERED_UNITS} ");
+
+                List<dynamic> rawUnits = sqlConnection.Query(sqlQuery.ToString()).AsList();
+
+                foreach (dynamic rawUnit in rawUnits)
+                {
+                    try
+                    {
+                        RememberedUnit rememberedUnit = new RememberedUnit
+                        {
+                            Name = rawUnit.name,
+                            ZoneID = rawUnit.zone_id,
+                            MapID = rawUnit.map_id,
+                            Position = new Vector3(rawUnit.x, rawUnit.y, rawUnit.z),
+                            UnitTraitsString = rawUnit.traits
+                        };
+
+                        rememberedUnit.UnitTraits = JsonConvert.DeserializeObject<List<UnitTrait>>(rememberedUnit.UnitTraitsString);
+                        unitsToReturn.Add(rememberedUnit);
+                    }
+                    catch { AmeisenLogger.Instance.Log(LogLevel.ERROR, "Error Parsing RememberedUnit...", this); }
+                    finally { sqlConnection.Close(); }
+                }
+
+                return unitsToReturn;
+            }
+            return new List<RememberedUnit>();
+        }
+
         /// <summary>
         /// Connect to a MySQL database
         /// </summary>
@@ -40,11 +79,12 @@ namespace AmeisenBotDB
                 try
                 {
                     sqlConnection.Open();
+                    AmeisenLogger.Instance.Log(LogLevel.DEBUG, "Connected to MySQL DB", this);
                     AmeisenDataHolder.IsConnectedToDB = true;
                     InitDB();
                     sqlConnection.Close();
                 }
-                catch { }
+                catch { AmeisenLogger.Instance.Log(LogLevel.ERROR, $"Connection to MySQL failed... connectionString: {mysqlConnectionString}", this); }
             }
             return AmeisenDataHolder.IsConnectedToDB;
         }
@@ -92,6 +132,8 @@ namespace AmeisenBotDB
                 MySqlConnection sqlConnection = new MySqlConnection(MysqlConnectionString);
                 StringBuilder dbInit = new StringBuilder();
 
+                AmeisenLogger.Instance.Log(LogLevel.DEBUG, "Initializing MySQL DB...", this);
+
                 dbInit.Append($"CREATE DATABASE IF NOT EXISTS `{sqlConnection.Database}` /*!40100 DEFAULT CHARACTER SET utf8 */;");
                 dbInit.Append($"USE `{sqlConnection.Database}`;");
                 dbInit.Append($"CREATE TABLE IF NOT EXISTS `{TABLE_NAME_NODES}` (");
@@ -122,6 +164,7 @@ namespace AmeisenBotDB
 
                 sqlConnection.Execute(dbInit.ToString());
                 sqlConnection.Close();
+                AmeisenLogger.Instance.Log(LogLevel.ERROR, "Initialized MySQL DB", this);
             }
         }
 
@@ -146,7 +189,7 @@ namespace AmeisenBotDB
                 int affectedRows = 0;
 
                 try { affectedRows = sqlConnection.Execute(sqlQuery.ToString()); }
-                catch { }
+                catch { /* duplicate rows throw an error lel */ }
 
                 sqlConnection.Close();
                 return affectedRows;
@@ -174,7 +217,7 @@ namespace AmeisenBotDB
                 sqlQuery.Append("ON DUPLICATE KEY UPDATE;");
 
                 try { sqlConnection.Execute(sqlQuery.ToString()); }
-                catch { }
+                catch { AmeisenLogger.Instance.Log(LogLevel.ERROR, $"Error adding RememberedUnit: {JsonConvert.SerializeObject(rememberedUnit)}", this); }
                 finally { sqlConnection.Close(); }
             }
         }
@@ -208,7 +251,11 @@ namespace AmeisenBotDB
                     rememberedUnit.UnitTraits = JsonConvert.DeserializeObject<List<UnitTrait>>(rememberedUnit.UnitTraitsString);
                     unitToReturn = rememberedUnit;
                 }
-                catch { unitToReturn = null; }
+                catch
+                {
+                    AmeisenLogger.Instance.Log(LogLevel.ERROR, $"Error checking for RememberedUnit: unitName: {unitname}, zoneId: {zoneID}, mapId: {mapID}", this);
+                    unitToReturn = null;
+                }
                 finally { sqlConnection.Close(); }
                 return unitToReturn;
             }

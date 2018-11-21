@@ -32,6 +32,7 @@ namespace AmeisenBot.Character.Objects
                 catch { return -1; };
             }
         }
+
         public int DurabilityMax { get; set; }
         public int DurabilityCurrent { get; set; }
 
@@ -57,6 +58,11 @@ namespace AmeisenBot.Character.Objects
             RequiredLevel = Utils.TryParseInt(ReadItemDetail("itemMinLevel"));
             Price = Utils.TryParseInt(ReadItemDetail("itemSellPrice"));
             EquipLocation = ReadItemDetail("itemEquipLoc");
+
+            // Experimental! but should be 100x faster
+            //string itemInfoJson = AmeisenCore.GetLocalizedText(GetItemInfo.Lua(Slot), GetItemInfo.OutVar());
+            //AmeisenLogger.Instance.Log(LogLevel.DEBUG, $"GetItemInfoLuaJSON: {itemInfoJson}", this);
+            // TODO: parse this JSON
         }
 
         /// <summary>

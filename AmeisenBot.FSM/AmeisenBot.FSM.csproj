@@ -49,13 +49,17 @@
     <Compile Include="Actions\ActionMoving.cs" />
     <Compile Include="AmeisenStateMachine.cs" />
     <Compile Include="AmeisenStateMachineManager.cs" />
+    <Compile Include="BotStuff\BotStuffRepairEquip.cs" />
     <Compile Include="Enums\BotState.cs" />
-    <Compile Include="Interfaces\IBotStuff.cs" />
     <Compile Include="Objects\Delegates.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Interfaces\IAction.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\AmeisenBot.Character\AmeisenBot.Character.csproj">
+      <Project>{23D5C950-8A33-414F-A366-99715073AA0B}</Project>
+      <Name>AmeisenBot.Character</Name>
+    </ProjectReference>
     <ProjectReference Include="..\AmeisenBot.Combat\AmeisenBot.Combat.csproj">
       <Project>{CD72AD54-7C40-4EC0-8878-0771922A2961}</Project>
       <Name>AmeisenBot.Combat</Name>
@@ -96,8 +100,6 @@
   <ItemGroup>
     <None Include="app.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="BotStuff\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

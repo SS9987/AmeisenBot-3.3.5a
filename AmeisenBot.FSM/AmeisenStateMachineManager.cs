@@ -1,4 +1,5 @@
-﻿using AmeisenBotCombat;
+﻿using AmeisenBot.Character;
+using AmeisenBotCombat;
 using AmeisenBotCore;
 using AmeisenBotData;
 using AmeisenBotDB;
@@ -38,7 +39,8 @@ namespace AmeisenBotFSM
             AmeisenDataHolder ameisenDataHolder,
             AmeisenDBManager ameisenDBManager,
             AmeisenMovementEngine ameisenMovementEngine,
-            IAmeisenCombatClass combatClass)
+            IAmeisenCombatClass combatClass,
+            AmeisenCharacterManager characterManager)
         {
             Active = false;
 
@@ -48,7 +50,7 @@ namespace AmeisenBotFSM
 
             MainWorker = new Thread(new ThreadStart(DoWork));
             StateWatcherWorker = new Thread(new ThreadStart(WatchForStateChanges));
-            StateMachine = new AmeisenStateMachine(ameisenDataHolder, ameisenDBManager, ameisenMovementEngine, combatClass);
+            StateMachine = new AmeisenStateMachine(ameisenDataHolder, ameisenDBManager, ameisenMovementEngine, combatClass, characterManager);
         }
 
         /// <summary>

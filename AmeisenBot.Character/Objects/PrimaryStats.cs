@@ -41,7 +41,12 @@ namespace AmeisenBot.Character.Objects
                 "itemStatsX"
             );
 
-            AmeisenLogger.Instance.Log(LogLevel.WARNING, $"Itemstats of [{item.Id}]: {itemStats}", this);
+            // Experimental! but should be 100x faster
+            //string itemStatsJson = AmeisenCore.GetLocalizedText(GetItemStats.Lua(Slot), GetItemStats.OutVar());
+            //AmeisenLogger.Instance.Log(LogLevel.DEBUG, $"GetItemStatsLuaJSON: {itemStatsJson}", this);
+            // TODO: parse this JSON
+
+            AmeisenLogger.Instance.Log(LogLevel.DEBUG, $"Itemstats of [{item.Id}]: {itemStats}", this);
         }
 
         public void UpdateFromPlayer()

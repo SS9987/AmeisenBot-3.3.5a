@@ -154,7 +154,7 @@ namespace AmeisenBotManager
         private AmeisenMovementEngine AmeisenMovementEngine { get; set; }
         private BlackMagic Blackmagic { get; set; }
         private AmeisenEventHook AmeisenEventHook { get; set; }
-        private CharacterManager CharacterManager { get; set; }
+        private AmeisenCharacterManager AmeisenCharacterManager { get; set; }
         public string CurrentCombatClass { get; set; }
 
         /// <summary>
@@ -265,15 +265,16 @@ namespace AmeisenBotManager
                 AmeisenDataHolder,
                 AmeisenDBManager,
                 AmeisenMovementEngine,
-                combatClass);
+                combatClass,
+                AmeisenCharacterManager);
 
             // Deafult Idle state
             AmeisenStateMachineManager.StateMachine.PushAction(BotState.Idle);
             AmeisenStateMachineManager.Start();
 
             // Init our CharacterMangager to keep track of our stats/items/money
-            CharacterManager = new CharacterManager();
-            CharacterManager.UpdateCharacter();
+            AmeisenCharacterManager = new AmeisenCharacterManager();
+            AmeisenCharacterManager.UpdateCharacter();
 
             // Connect to Server
             if (Settings.serverAutoConnect)

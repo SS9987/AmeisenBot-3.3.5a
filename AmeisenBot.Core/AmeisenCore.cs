@@ -19,6 +19,38 @@ namespace AmeisenBotCore
         public static BlackMagic BlackMagic { get; set; }
         public static AmeisenHook AmeisenHook { get; set; }
 
+        public static bool IsFalling => ParseLuaIntResult("isFalling = IsFalling();", "isFalling");
+
+        public static bool IsOutdoors => ParseLuaIntResult("isOutdoor = IsOutdoors();", "isOutdoor");
+
+        public static bool IsSwimming => ParseLuaIntResult("isSwimming = IsSwimming();", "isSwimming");
+
+        public static bool IsFlying => ParseLuaIntResult("isFlying = IsFlying();", "isFlying");
+
+        public static bool IsMounted => ParseLuaIntResult("isMounted = IsMounted();", "isMounted");
+
+        public static bool IsInFlyableArea => ParseLuaIntResult("isFlyableArea = IsFlyableArea();", "isFlyableArea");
+
+        public static bool IsResting => ParseLuaIntResult("isResting = IsResting();", "isResting");
+
+        public static bool IsInStealth => ParseLuaIntResult("isStealthed = IsStealthed();", "isStealthed");
+
+        public static bool IsPvPFlagged => ParseLuaIntResult("isPvp = GetPVPDesired();", "isPvp");
+
+        public static void AcceptResurrect() => LuaDoString("AcceptResurrect();");
+
+        public static void DeclineResurrect() => LuaDoString("DeclineResurrect();");
+
+        public static void AcceptSummon() => LuaDoString("ConfirmSummon();");
+
+        public static void DeclineSummon() => LuaDoString("CancelSummon();");
+
+        public static void KickNpcsOutOfMammoth() => LuaDoString("for i = 1, 2 do EjectPassengerFromSeat(i) end");
+
+        public static void SellAllGrayItems() => LuaDoString("local p,N,n=0 for b=0,4 do for s=1,GetContainerNumSlots(b) do n=GetContainerItemLink(b,s) if n and string.find(n,\"9d9d9d\") then N={GetItemInfo(n)} p=p+N[11] UseContainerItem(b,s) print(\"Sold: \"..n) end end end print(\"Total: \"..GetCoinText(p))");
+
+        public static void TargetNpcByName(string name, bool exactMatch = true) => LuaDoString($"TargetUnit({name}, {(exactMatch ? "true" : "false")});");
+
         /// <summary>
         /// AntiAFK
         /// </summary>
@@ -52,6 +84,8 @@ namespace AmeisenBotCore
             }
         }
 
+        public static void RepairAllItems() => LuaDoString("RepairAllItems();");
+
         public static bool IsEnemy(LuaUnit luaunit, LuaUnit otherluaunit = LuaUnit.player)
             => ParseLuaIntResult($"isEnemy = UnitIsEnemy({luaunit.ToString()}, {otherluaunit.ToString()});", "isEnemy");
 
@@ -69,6 +103,9 @@ namespace AmeisenBotCore
             }
             catch { return false; }
         }
+
+        public static void CastSpellById(int spellId, bool petSpell = false)
+            => LuaDoString($"CastSpell({spellId}, {(petSpell ? "BOOKTYPE_PET" : "BOOKTYPE_SPELL")}\")");
 
         public static UnitReaction GetUnitReaction(LuaUnit luaunit, LuaUnit otherluaunit = LuaUnit.player)
         {
@@ -689,5 +726,8 @@ namespace AmeisenBotCore
         public static bool IsSpellUseable(string spellname)
             => ParseLuaIntResult($"usable, nomana = IsUsableSpell(\"{spellname}\");", "useable")
             || ParseLuaIntResult($"usable, nomana = IsUsableSpell(\"{spellname}\");", "nomana");
+
+        public static bool IsSpellKnown(int spellId, bool isPetSpell = false)
+             => ParseLuaIntResult($"isKnown = IsSpellKnown({spellId}, {isPetSpell})", "isKnown");
     }
 }

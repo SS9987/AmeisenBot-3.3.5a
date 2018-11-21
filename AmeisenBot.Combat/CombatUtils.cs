@@ -1,7 +1,6 @@
 ﻿using AmeisenBotCore;
 using AmeisenBotUtilities;
 using AmeisenBotUtilities.Enums;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -24,11 +23,15 @@ namespace AmeisenBotCombat
 
             FaceUnit(me, target);
             AmeisenCore.CastSpellByName(spellname, onMyself);
-            Thread.Sleep(100);
 
-            while (AmeisenCore.GetUnitCastingInfo(LuaUnit.player).endTime > 1)
+            if (waitOnCastToFinish)
             {
-                Thread.Sleep(25);
+                Thread.Sleep(100);
+
+                while (AmeisenCore.GetUnitCastingInfo(LuaUnit.player).endTime > 1)
+                {
+                    Thread.Sleep(25);
+                }
             }
         }
 
