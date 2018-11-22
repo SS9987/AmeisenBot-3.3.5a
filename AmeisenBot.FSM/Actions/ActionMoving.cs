@@ -118,12 +118,18 @@ namespace AmeisenBotFSM.Actions
             }
             else
             {
+                AmeisenLogger.Instance.Log(LogLevel.DEBUG, "Path is null", this);
                 // retry with thicker path
                 path = FindWayToNode(initialPosition, targetPosition, true);
 
                 if (path != null)
                 {
                     ProcessPath(path);
+                }
+                else
+                {
+                    AmeisenLogger.Instance.Log(LogLevel.DEBUG, "Thicker Path is null", this);
+                    Thread.Sleep(1000);
                 }
             }
         }
@@ -136,7 +142,7 @@ namespace AmeisenBotFSM.Actions
         /// <param name="path">path to process</param>
         private void ProcessPath(List<Node> path)
         {
-            AmeisenLogger.Instance.Log(LogLevel.DEBUG, "Found path: " + path.ToString(), this);
+            AmeisenLogger.Instance.Log(LogLevel.DEBUG, "Found path...", this);
             foreach (Node node in path)
             {
                 Me.Update();

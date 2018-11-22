@@ -24,12 +24,12 @@ namespace AmeisenBotCombat.SampleClasses
 
         public void Init()
         {
-            AmeisenLogger.Instance.Log(LogLevel.DEBUG, "CombatClass: In combat now", this);
+            AmeisenLogger.Instance.Log(LogLevel.VERBOSE, "CombatClass: In combat now", this);
         }
 
         public void Exit()
         {
-            AmeisenLogger.Instance.Log(LogLevel.DEBUG, "CombatClass: Out of combat now", this);
+            AmeisenLogger.Instance.Log(LogLevel.VERBOSE, "CombatClass: Out of combat now", this);
         }
 
         public void HandleAttacking()

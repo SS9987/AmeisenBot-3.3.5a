@@ -44,6 +44,7 @@ namespace AmeisenBot.Character
             {
                 AmeisenCore.LuaDoString($"EquipItemByName({newItem.Id}, {currentItem.Slot});");
                 AmeisenCore.LuaDoString("ConfirmBindOnUse();");
+                AmeisenCore.RunSlashCommand("/click StaticPopup1Button1");
                 AmeisenLogger.Instance.Log(LogLevel.DEBUG, $"Equipped new Item...", this);
             }
         }

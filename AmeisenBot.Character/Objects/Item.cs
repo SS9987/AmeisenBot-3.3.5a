@@ -32,11 +32,14 @@ namespace AmeisenBot.Character.Objects
         {
             get
             {
-                try
+                if (DurabilityCurrent == 0 || DurabilityMax == 0)
+                {
+                    return -1;
+                }
+                else
                 {
                     return DurabilityCurrent / DurabilityMax;
                 }
-                catch { return -1; };
             }
         }
 

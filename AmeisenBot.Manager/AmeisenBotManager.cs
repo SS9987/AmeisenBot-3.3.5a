@@ -299,6 +299,7 @@ namespace AmeisenBotManager
             );
 
             AmeisenCore.AcceptResurrect();
+            AmeisenCore.RunSlashCommand("/click StaticPopup1Button1");
         }
 
         private void OnSummonRequest(long timestamp, List<string> args)
@@ -310,6 +311,7 @@ namespace AmeisenBotManager
             );
 
             AmeisenCore.AcceptSummon();
+            AmeisenCore.RunSlashCommand("/click StaticPopup1Button1");
         }
 
         private void OnPartyInvitation(long timestamp, List<string> args)
@@ -321,6 +323,7 @@ namespace AmeisenBotManager
             );
 
             AmeisenCore.AcceptGroupInvite();
+            AmeisenCore.RunSlashCommand("/click StaticPopup1Button1");
         }
 
         private void OnReadyCheck(long timestamp, List<string> args)
