@@ -58,6 +58,7 @@
     <Compile Include="AmeisenHook.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SafeNativeMethods.cs" />
+    <Compile Include="Structs\RawEvent.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AmeisenBot.Logger\AmeisenBot.Logger.csproj">

@@ -13,6 +13,7 @@ using AmeisenMovement;
 using AmeisenMovement.Formations;
 using Magic;
 using Microsoft.CSharp;
+using Newtonsoft.Json;
 using System;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
@@ -144,7 +145,7 @@ namespace AmeisenBotManager
         }
 
         public bool IsRegisteredAtServer { get { return AmeisenClient.IsRegistered; } }
-        public object CurrentFSMState { get { return AmeisenStateMachineManager.StateMachine.GetCurrentState(); } }
+        public BotState CurrentFSMState { get { return AmeisenStateMachineManager.StateMachine.GetCurrentState(); } }
         private AmeisenDataHolder AmeisenDataHolder { get; set; }
         private AmeisenClient AmeisenClient { get; set; }
         private AmeisenHook AmeisenHook { get; set; }
@@ -245,7 +246,13 @@ namespace AmeisenBotManager
             // Hook Events
             AmeisenEventHook = new AmeisenEventHook();
             AmeisenEventHook.Init();
-            AmeisenEventHook.Subscribe(WowEvents.PLAYER_ENTERING_WORLD);
+            AmeisenEventHook.Subscribe(WowEvents.PLAYER_ENTERING_WORLD, OnPlayerEnteringWorld);
+            AmeisenEventHook.Subscribe(WowEvents.LOOT_OPENED, OnLootWindowOpened);
+            AmeisenEventHook.Subscribe(WowEvents.LOOT_BIND_CONFIRM, OnLootBindOnPickup);
+            AmeisenEventHook.Subscribe(WowEvents.READY_CHECK, OnReadyCheck);
+            AmeisenEventHook.Subscribe(WowEvents.PARTY_INVITE_REQUEST, OnPartyInvitation);
+            AmeisenEventHook.Subscribe(WowEvents.CONFIRM_SUMMON, OnSummonRequest);
+            AmeisenEventHook.Subscribe(WowEvents.RESURRECT_REQUEST, OnResurrectRequest);
 
             // Start our object updates
             AmeisenObjectManager = new AmeisenObjectManager(AmeisenDataHolder, AmeisenDBManager);
@@ -281,6 +288,79 @@ namespace AmeisenBotManager
             {
                 ConnectToServer();
             }
+        }
+
+        private void OnResurrectRequest(long timestamp, List<string> args)
+        {
+            AmeisenLogger.Instance.Log(
+                LogLevel.DEBUG,
+                $"[{timestamp}] OnResurrectRequest args: {JsonConvert.SerializeObject(args)}",
+                this
+            );
+
+            AmeisenCore.AcceptResurrect();
+        }
+
+        private void OnSummonRequest(long timestamp, List<string> args)
+        {
+            AmeisenLogger.Instance.Log(
+                LogLevel.DEBUG,
+                $"[{timestamp}] OnSummonRequest args: {JsonConvert.SerializeObject(args)}",
+                this
+            );
+
+            AmeisenCore.AcceptSummon();
+        }
+
+        private void OnPartyInvitation(long timestamp, List<string> args)
+        {
+            AmeisenLogger.Instance.Log(
+                LogLevel.DEBUG,
+                $"[{timestamp}] OnPartyInvitation args: {JsonConvert.SerializeObject(args)}",
+                this
+            );
+
+            AmeisenCore.AcceptGroupInvite();
+        }
+
+        private void OnReadyCheck(long timestamp, List<string> args)
+        {
+            AmeisenLogger.Instance.Log(
+                LogLevel.DEBUG,
+                $"[{timestamp}] OnReadyCheck args: {JsonConvert.SerializeObject(args)}",
+                this
+            );
+
+            AmeisenCore.ConfirmReadyCheck();
+        }
+
+        private void OnLootBindOnPickup(long timestamp, List<string> args)
+        {
+            AmeisenLogger.Instance.Log(
+                LogLevel.DEBUG,
+                $"[{timestamp}] OnLootBindOnPickup args: {JsonConvert.SerializeObject(args)}",
+                this
+            );
+        }
+
+        private void OnLootWindowOpened(long timestamp, List<string> args)
+        {
+            AmeisenLogger.Instance.Log(
+                LogLevel.DEBUG,
+                $"[{timestamp}] OnLootWindowOpened args: {JsonConvert.SerializeObject(args)}",
+                this
+            );
+
+            AmeisenCore.LootEveryThing();
+        }
+
+        private void OnPlayerEnteringWorld(long timestamp, List<string> args)
+        {
+            AmeisenLogger.Instance.Log(
+                LogLevel.DEBUG,
+                $"[{timestamp}] OnPlayerEnteringWorld args: {JsonConvert.SerializeObject(args)}",
+                this
+            );
         }
 
         private bool ConnectToServer() => AmeisenClient.Register(

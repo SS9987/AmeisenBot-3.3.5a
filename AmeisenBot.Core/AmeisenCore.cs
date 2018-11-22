@@ -35,6 +35,23 @@ namespace AmeisenBotCore
 
         public static bool IsInStealth => ParseLuaIntResult("isStealthed = IsStealthed();", "isStealthed");
 
+        internal static void EnableAutoBoPConfirm()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            sb.Append("abAutoBoPFrame = CreateFrame(\"Frame\", \"ABot\")");
+            sb.Append("abAutoBoPFrame:RegisterEvent(\"CONFIRM_LOOT_ROLL\")");
+            sb.Append("abAutoBoPFrame:SetScript(\"OnEvent\", function(self,event,...)");
+            sb.Append("if event == \"CONFIRM_LOOT_ROLL\" then");
+            sb.Append("local RollID = select(1, ...)");
+            sb.Append("local roll = select(2, ...)");
+            sb.Append("ConfirmLootRoll( RollID, roll )");
+            sb.Append("end");
+            sb.Append("end)");
+
+            LuaDoString(sb.ToString());
+        }
+
         public static string GetLocalizedText(object p1, object p2)
         {
             throw new NotImplementedException();
@@ -262,6 +279,15 @@ namespace AmeisenBotCore
         public static bool GetCombatState(LuaUnit LuaUnit)
             => ParseLuaIntResult($"affectingCombat = UnitAffectingCombat(\"{LuaUnit.ToString()}\");", "affectingCombat");
 
+        public static void AcceptGroupInvite()
+            => LuaDoString("AcceptGroup();");
+
+        public static void ConfirmReadyCheck()
+            => LuaDoString("ConfirmReadyCheck(1);");
+
+        public static void DenyReadyCheck()
+            => LuaDoString("ConfirmReadyCheck(0);");
+
         /// <summary>
         /// Set WoW's window position and dimensions by its handle
         /// </summary>
@@ -295,6 +321,11 @@ namespace AmeisenBotCore
             BlackMagic.ReadFloat(Offsets.corpseY),
             BlackMagic.ReadFloat(Offsets.corpseZ)
         );
+
+        public static void LootEveryThing()
+        {
+            LuaDoString("abLootCount=GetNumLootItems();for i = abLootCount,1,-1 do LootSlot(i); ConfirmLootSlot(i); end");
+        }
 
         /// <summary>
         /// Get Localized Text for command

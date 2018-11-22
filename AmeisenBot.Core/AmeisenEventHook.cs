@@ -1,45 +1,40 @@
-﻿using AmeisenBotLogger;
+﻿using AmeisenBotCore.Structs;
+using AmeisenBotLogger;
+using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Text;
 using System.Threading;
 
 namespace AmeisenBotCore
 {
     public class AmeisenEventHook
     {
-        private const string LUA_FRAME = "abotEventFrame";
-        private const string LUA_TABLE = "abotEventTable";
-        private const string LUA_REGISTER = "abotRegisterEvent";
-        private const string LUA_UNREGISTER = "abotUnregisterEvent";
-        private const string LUA_INFO = "abotGetInfo";
-        private const string LUA_EVENTRECEIVED = "abotOnReceivedEvent";
-        private const string LUA_EVENTCOUNT = "abotGetEventCount";
-        private const string LUA_EVENTREMOVE = "abotRemoveEvent";
-        private const string LUA_EVENTNAME = "abotGetEventName";
-
+        public delegate void OnEventFired(long timestamp, List<string> args);
         public bool IsActive { get; private set; }
-        private List<AmeisenEvent> SubscribedEvents { get; set; }
         private Thread EventReader { get; set; }
+
+        private Dictionary<string, OnEventFired> EventDictionary { get; set; }
 
         public AmeisenEventHook()
         {
             EventReader = new Thread(new ThreadStart(ReadEvents));
+            EventDictionary = new Dictionary<string, OnEventFired>();
         }
 
         public void Init()
         {
-            //StringBuilder luaStuff = new StringBuilder();
-            AmeisenCore.LuaDoString($"{LUA_FRAME} = CreateFrame('Frame','{LUA_FRAME}');{LUA_FRAME}:SetScript('OnEvent',{LUA_EVENTRECEIVED});{LUA_TABLE}={"{}"};");
-            AmeisenCore.LuaDoString($"function {LUA_REGISTER}(e){LUA_FRAME}:RegisterEvent(e);end");
-            AmeisenCore.LuaDoString($"function {LUA_UNREGISTER}(e){LUA_FRAME}:UnregisterEvent(e);end");
-            AmeisenCore.LuaDoString($"function {LUA_INFO}(e,d)table.insert({LUA_TABLE}, {"{e,time(),d}"});end");
-            AmeisenCore.LuaDoString($"function {LUA_EVENTRECEIVED}(s,e,...){LUA_INFO}(e,{"{...}"});end");
-            AmeisenCore.LuaDoString($"function {LUA_EVENTCOUNT}()return {LUA_TABLE}.count;end");
-            AmeisenCore.LuaDoString($"function {LUA_EVENTREMOVE}()table.wipe({LUA_TABLE});end");
-            AmeisenCore.LuaDoString($"function {LUA_EVENTNAME}(i)local ret;ret={LUA_TABLE}[i];{LUA_TABLE}.remove(i);return ret;end");
-            //AmeisenCore.LuaDoString(luaStuff.ToString());
+            StringBuilder luaStuff = new StringBuilder();
+            luaStuff.Append("abFrame = CreateFrame(\"FRAME\", \"AbotEventFrame\");");
+            luaStuff.Append("abEventTable = {};");
+            luaStuff.Append("function abEventHandler(self, event, ...) ");
+            luaStuff.Append("table.insert(abEventTable, {time(), event, {...}}) ");
+            luaStuff.Append("end;");
+            luaStuff.Append("abFrame:SetScript(\"OnEvent\", abEventHandler);");
+            AmeisenCore.LuaDoString(luaStuff.ToString());
 
             IsActive = true;
             EventReader.Start();
+            AmeisenCore.EnableAutoBoPConfirm();
         }
 
         public void Stop()
@@ -51,29 +46,97 @@ namespace AmeisenBotCore
             }
         }
 
-        public void Subscribe(string eventName) => AmeisenCore.LuaDoString($"{LUA_REGISTER}('{eventName}');");
+        public void Subscribe(string eventName, OnEventFired onEventFired)
+        {
+            AmeisenCore.LuaDoString($"abFrame:RegisterEvent(\"{eventName}\");");
+            EventDictionary.Add(eventName, onEventFired);
+        }
 
-        public void Unsubscribe(string eventName) => AmeisenCore.LuaDoString($"{LUA_UNREGISTER}('{eventName}');");
+        public void Unsubscribe(string eventName)
+        {
+            AmeisenCore.LuaDoString($"abFrame:UnregisterEvent(\"{eventName}\");");
+            EventDictionary.Remove(eventName);
+        }
 
         private void ReadEvents()
         {
             while (IsActive)
             {
-                string eventString = AmeisenCore.GetLocalizedText($"aboteventresult = {LUA_EVENTNAME}(1);", "aboteventresult");
-                if (eventString != "")
+                // Unminified lua code is attached down below
+                string eventJson = AmeisenCore.GetLocalizedText("abEventJson='['for a,b in pairs(abEventTable)do abEventJson=abEventJson..'{'for c,d in pairs(b)do if type(d)==\"table\"then abEventJson=abEventJson..'\"args\": ['for e,f in pairs(d)do abEventJson=abEventJson..'\"'..f..'\"'if e<table.getn(d)then abEventJson=abEventJson..','end end;abEventJson=abEventJson..']}'if a<table.getn(abEventTable)then abEventJson=abEventJson..','end else if type(d)==\"string\"then abEventJson=abEventJson..'\"event\": \"'..d..'\",'else abEventJson=abEventJson..'\"time\": \"'..d..'\",'end end end end;abEventJson=abEventJson..']';abEventTable={};", "abEventJson");
+                AmeisenLogger.Instance.Log(LogLevel.DEBUG, $"LUA Events Json: {eventJson}", this);
+
+                List<RawEvent> rawEvents = new List<RawEvent>();
+                try
                 {
-                    AmeisenLogger.Instance.Log(LogLevel.DEBUG, "LUA Event Fired: " + eventString, this);
+                    rawEvents = JsonConvert.DeserializeObject<List<RawEvent>>(eventJson);
+                }
+                catch { AmeisenLogger.Instance.Log(LogLevel.ERROR, "Failed to parse events Json", this); }
+
+                AmeisenLogger.Instance.Log(LogLevel.DEBUG, $"Parsed {rawEvents.Count} events", this);
+                if (rawEvents.Count > 0)
+                {
+                    foreach (RawEvent rawEvent in rawEvents)
+                    {
+                        if (EventDictionary.ContainsKey(rawEvent.eventname))
+                        {
+                            EventDictionary[rawEvent.eventname].Invoke(rawEvent.timestamp, rawEvent.args);
+                            AmeisenLogger.Instance.Log(LogLevel.DEBUG, $"Fired OnEventFired: {rawEvent.eventname}", this);
+                        }
+                    }
                 }
 
-                Thread.Sleep(500);
+                Thread.Sleep(1000);
             }
         }
     }
-
-    public class AmeisenEvent
-    {
-        private string WowEventName { get; set; }
-
-        private delegate void OnWowEventReceived();
-    }
 }
+
+/// Unminified Lua code
+
+// Lua code to catch events
+/*
+abFrame = CreateFrame("FRAME", "AbotEventFrame");
+abEventTable = {};
+
+function abEventHandler(self, event, ...)
+  table.insert(abEventTable, {time(), event, {...} })
+end
+abFrame:SetScript("OnEvent", abEventHandler);
+*/
+
+// Lua code to subscribe to events
+/*
+
+*/
+
+// Lua to convert my eventTable to a Json, Yeet this was fun
+/*
+abEventJson = '[';
+for a,b in pairs(abEventTable) do
+  abEventJson = abEventJson..'{'
+  for c,d in pairs(b) do
+    if type(d) == "table" then
+      abEventJson = abEventJson..'"args": ['
+      for e,f in pairs(d) do
+        abEventJson = abEventJson..'"'..f..'"'
+        if e<(table.getn(d)) then
+        abEventJson = abEventJson..','
+        end
+      end
+      abEventJson = abEventJson..']}'
+      if a<(table.getn(abEventTable)) then
+      abEventJson = abEventJson..','
+      end
+    else
+      if type(d) == "string" then
+        abEventJson = abEventJson..'"event": "'..d..'",'
+      else
+        abEventJson = abEventJson..'"time": "'..d..'",'
+      end
+    end
+  end
+end
+abEventJson = abEventJson..']';
+abEventTable={};
+*/
