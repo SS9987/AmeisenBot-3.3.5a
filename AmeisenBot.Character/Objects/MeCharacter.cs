@@ -1,7 +1,9 @@
-﻿using AmeisenBotCore;
+﻿using AmeisenBot.Character.Lua;
+using AmeisenBotCore;
 using AmeisenBotLogger;
 using AmeisenBotUtilities;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 
 namespace AmeisenBot.Character.Objects
 {
@@ -14,7 +16,7 @@ namespace AmeisenBot.Character.Objects
 
         public int Money { get; set; }
 
-        public Bag[] Bags { get; set; }
+        public List<InventoryItem> InventoryItems { get; set; }
         public Equipment Equipment { get; set; }
 
         public MeCharacter() { }
@@ -27,13 +29,25 @@ namespace AmeisenBot.Character.Objects
             SecondaryStats = new SecondaryStats();
             Resistances = new Resistances();
             Equipment = new Equipment();
-            Bags = new Bag[5] {
-                new Bag(0),
-                new Bag(1),
-                new Bag(2),
-                new Bag(3),
-                new Bag(4)
-            };
+            InventoryItems = new List<InventoryItem>();
+
+            string inventoryItemsJson = AmeisenCore.GetLocalizedText(GetInventoryItems.Lua(), GetInventoryItems.OutVar());
+            List<RawInventoryItem> rawInventoryItems = new List<RawInventoryItem>();
+
+            try
+            {
+                rawInventoryItems = JsonConvert.DeserializeObject<List<RawInventoryItem>>(inventoryItemsJson);
+            }
+            catch
+            {
+                InventoryItems = new List<InventoryItem>();
+                AmeisenLogger.Instance.Log(LogLevel.ERROR, $"Failes to parse InventoryItems", this);
+            }
+
+            foreach (RawInventoryItem rawInventoryItem in rawInventoryItems)
+            {
+                InventoryItems.Add(new InventoryItem(rawInventoryItem));
+            }
 
             Money = Utils.TryParseInt(AmeisenCore.GetLocalizedText("moneyX = GetMoney();", "moneyX"));
             FullyLoaded = true;

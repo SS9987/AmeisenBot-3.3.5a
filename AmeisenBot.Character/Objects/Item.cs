@@ -13,11 +13,11 @@ namespace AmeisenBot.Character.Objects
     {
         public int Id { get; set; }
         public string ItemLink { get; set; }
-        public int Slot { get; private set; }
+        public int Slot { get; set; }
         public string Name { get; set; }
-        public string ItemType { get; private set; }
-        public string ItemSubtype { get; private set; }
-        public int MaxStack { get; private set; }
+        public string ItemType { get; set; }
+        public string ItemSubtype { get; set; }
+        public int MaxStack { get; set; }
         public int Count { get; set; }
         public int Level { get; set; }
         public int RequiredLevel { get; set; }
@@ -49,6 +49,8 @@ namespace AmeisenBot.Character.Objects
         public ItemQuality Quality { get; set; }
 
         public PrimaryStats PrimaryStats { get; set; }
+
+        public Item() { }
 
         public Item(int slot)
         {

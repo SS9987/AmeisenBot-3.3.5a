@@ -39,22 +39,17 @@ namespace AmeisenBotCore
         {
             StringBuilder sb = new StringBuilder();
 
-            sb.Append("abAutoBoPFrame = CreateFrame(\"Frame\", \"ABot\")");
-            sb.Append("abAutoBoPFrame:RegisterEvent(\"CONFIRM_LOOT_ROLL\")");
-            sb.Append("abAutoBoPFrame:SetScript(\"OnEvent\", function(self,event,...)");
-            sb.Append("if event == \"CONFIRM_LOOT_ROLL\" then");
-            sb.Append("local RollID = select(1, ...)");
-            sb.Append("local roll = select(2, ...)");
-            sb.Append("ConfirmLootRoll( RollID, roll )");
-            sb.Append("end");
-            sb.Append("end)");
+            sb.Append("abAutoBoPFrame = CreateFrame(\"Frame\", \"ABot\");");
+            sb.Append("abAutoBoPFrame:RegisterEvent(\"CONFIRM_LOOT_ROLL\");");
+            sb.Append("abAutoBoPFrame:SetScript(\"OnEvent\", function(self,event,...);");
+            sb.Append("if event == \"CONFIRM_LOOT_ROLL\" then ");
+            sb.Append("RollID = select(1, ...);");
+            sb.Append("roll = select(2, ...);");
+            sb.Append("ConfirmLootRoll( RollID, roll );");
+            sb.Append("end;");
+            sb.Append("end);");
 
             LuaDoString(sb.ToString());
-        }
-
-        public static string GetLocalizedText(object p1, object p2)
-        {
-            throw new NotImplementedException();
         }
 
         public static bool IsPvPFlagged => ParseLuaIntResult("isPvp = GetPVPDesired();", "isPvp");
