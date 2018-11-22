@@ -204,6 +204,10 @@
       <Project>{9b3f7a78-0a9b-492a-8299-9c86d2e297ed}</Project>
       <Name>AmeisenBot.DB</Name>
     </ProjectReference>
+    <ProjectReference Include="..\AmeisenBot.FSM\AmeisenBot.FSM.csproj">
+      <Project>{C93B8F0C-8CFA-45F6-9B2C-43B72E1CFE0F}</Project>
+      <Name>AmeisenBot.FSM</Name>
+    </ProjectReference>
     <ProjectReference Include="..\AmeisenBot.Logger\AmeisenBot.Logger.csproj">
       <Project>{017a67a9-f7bd-46e3-b716-e1d601afca4b}</Project>
       <Name>AmeisenBot.Logger</Name>

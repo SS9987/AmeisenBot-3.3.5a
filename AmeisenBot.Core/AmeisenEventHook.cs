@@ -64,7 +64,7 @@ namespace AmeisenBotCore
             {
                 // Unminified lua code is attached down below
                 string eventJson = AmeisenCore.GetLocalizedText("abEventJson='['for a,b in pairs(abEventTable)do abEventJson=abEventJson..'{'for c,d in pairs(b)do if type(d)==\"table\"then abEventJson=abEventJson..'\"args\": ['for e,f in pairs(d)do abEventJson=abEventJson..'\"'..f..'\"'if e<table.getn(d)then abEventJson=abEventJson..','end end;abEventJson=abEventJson..']}'if a<table.getn(abEventTable)then abEventJson=abEventJson..','end else if type(d)==\"string\"then abEventJson=abEventJson..'\"event\": \"'..d..'\",'else abEventJson=abEventJson..'\"time\": \"'..d..'\",'end end end end;abEventJson=abEventJson..']';abEventTable={};", "abEventJson");
-                AmeisenLogger.Instance.Log(LogLevel.DEBUG, $"LUA Events Json: {eventJson}", this);
+                AmeisenLogger.Instance.Log(LogLevel.VERBOSE, $"LUA Events Json: {eventJson}", this);
 
                 List<RawEvent> rawEvents = new List<RawEvent>();
                 try
@@ -73,15 +73,15 @@ namespace AmeisenBotCore
                 }
                 catch { AmeisenLogger.Instance.Log(LogLevel.ERROR, "Failed to parse events Json", this); }
 
-                AmeisenLogger.Instance.Log(LogLevel.DEBUG, $"Parsed {rawEvents.Count} events", this);
+                AmeisenLogger.Instance.Log(LogLevel.VERBOSE, $"Parsed {rawEvents.Count} events", this);
                 if (rawEvents.Count > 0)
                 {
                     foreach (RawEvent rawEvent in rawEvents)
                     {
-                        if (EventDictionary.ContainsKey(rawEvent.eventname))
+                        if (EventDictionary.ContainsKey(rawEvent.@event))
                         {
-                            EventDictionary[rawEvent.eventname].Invoke(rawEvent.timestamp, rawEvent.args);
-                            AmeisenLogger.Instance.Log(LogLevel.DEBUG, $"Fired OnEventFired: {rawEvent.eventname}", this);
+                            EventDictionary[rawEvent.@event].Invoke(rawEvent.time, rawEvent.args);
+                            AmeisenLogger.Instance.Log(LogLevel.VERBOSE, $"Fired OnEventFired: {rawEvent.@event}", this);
                         }
                     }
                 }
