@@ -43,7 +43,7 @@ namespace AmeisenBot.Character.Objects
             // parse this JSON
             try
             {
-                RawStats rawItem = (RawStats)JsonConvert.DeserializeObject(itemStatsJson);
+                RawStats rawItem = JsonConvert.DeserializeObject<RawStats>(itemStatsJson);
                 Armor = rawItem.armor;
                 Strenght = rawItem.strenght;
                 Agility = rawItem.agility;

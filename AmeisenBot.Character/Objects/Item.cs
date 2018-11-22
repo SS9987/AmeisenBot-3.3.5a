@@ -79,7 +79,7 @@ namespace AmeisenBot.Character.Objects
             // parse this JSON
             try
             {
-                RawItem rawItem = (RawItem)JsonConvert.DeserializeObject(itemInfoJson);
+                RawItem rawItem = JsonConvert.DeserializeObject<RawItem>(itemInfoJson);
                 Id = int.Parse(rawItem.id);
                 Count = int.Parse(rawItem.count);
                 Quality = (ItemQuality)int.Parse(rawItem.quality);
