@@ -290,6 +290,16 @@ namespace AmeisenBotManager
             }
         }
 
+        /// <summary>
+        /// Equip all better items thats in the bots inventory
+        /// </summary>
+        public void EquipAllBetterItems() => AmeisenCharacterManager.EquipAllBetterItems();
+
+        /// <summary>
+        /// Refresh the characters equipment & inventory
+        /// </summary>
+        public void RefreshCurrentItems() => AmeisenCharacterManager.UpdateCharacter();
+
         private void OnResurrectRequest(long timestamp, List<string> args)
         {
             AmeisenLogger.Instance.Log(

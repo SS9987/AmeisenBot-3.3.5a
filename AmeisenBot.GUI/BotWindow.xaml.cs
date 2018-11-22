@@ -386,5 +386,15 @@ namespace AmeisenBotGUI
                 }
             }
         }
+
+        private void ButtonRefreshCharacterEquip_Click(object sender, RoutedEventArgs e)
+        {
+            BotManager.RefreshCurrentItems();
+        }
+
+        private void ButtonEquiptAllBetter_Click(object sender, RoutedEventArgs e)
+        {
+            BotManager.EquipAllBetterItems();
+        }
     }
 }

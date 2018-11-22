@@ -1,4 +1,5 @@
 ﻿using AmeisenBot.Character.Enums;
+using System.Collections.Generic;
 
 namespace AmeisenBot.Character.Objects
 {
@@ -23,6 +24,12 @@ namespace AmeisenBot.Character.Objects
         public Item MainHand { get; set; }
         public Item OffHand { get; set; }
         public Item Ammo { get; set; }
+
+        public IEnumerable<Item> AsList()
+        {
+            return new List<Item>() { Head, Necklace, Shoulder, Back, Shirt, Tabard, Chest, Hands, Wrist, Waist, Legs, Feet, RingOne, RingTwo, TrinketOne, TrinketTwo, MainHand, OffHand, Ammo };
+        }
+
         public Item Ranged { get; set; }
 
         public Equipment()

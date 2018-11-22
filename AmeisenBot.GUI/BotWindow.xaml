@@ -363,5 +363,27 @@
                 <SolidColorBrush Color="{DynamicResource TextColor}" />
             </Label.Foreground>
         </Label>
+        <Button x:Name="buttonEquiptAllBetter" Content="💡 Equip all better Items" HorizontalAlignment="Left" Margin="166,147,0,0" VerticalAlignment="Top" Width="128" BorderThickness="2" FontSize="11" Height="23" Click="ButtonEquiptAllBetter_Click">
+            <Button.Background>
+                <SolidColorBrush Color="{DynamicResource BackgroundColor}" />
+            </Button.Background>
+            <Button.BorderBrush>
+                <SolidColorBrush Color="{DynamicResource AccentColor}" />
+            </Button.BorderBrush>
+            <Button.Foreground>
+                <SolidColorBrush Color="{DynamicResource TextColor}" />
+            </Button.Foreground>
+        </Button>
+        <Button x:Name="buttonRefreshCharacterEquip" Content="💡 Refresh Equipment" HorizontalAlignment="Left" Margin="166,118,0,0" VerticalAlignment="Top" Width="128" BorderThickness="2" FontSize="11" Height="23" Click="ButtonRefreshCharacterEquip_Click">
+            <Button.Background>
+                <SolidColorBrush Color="{DynamicResource BackgroundColor}" />
+            </Button.Background>
+            <Button.BorderBrush>
+                <SolidColorBrush Color="{DynamicResource AccentColor}" />
+            </Button.BorderBrush>
+            <Button.Foreground>
+                <SolidColorBrush Color="{DynamicResource TextColor}" />
+            </Button.Foreground>
+        </Button>
     </Grid>
 </Window>
