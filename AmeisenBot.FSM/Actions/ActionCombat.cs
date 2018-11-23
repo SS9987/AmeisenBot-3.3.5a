@@ -2,6 +2,7 @@
 using AmeisenBotData;
 using AmeisenBotFSM.Interfaces;
 using AmeisenBotUtilities;
+using AmeisenBotUtilities.Enums;
 using AmeisenCombatEngine.Interfaces;
 using static AmeisenBotFSM.Objects.Delegates;
 
@@ -36,10 +37,29 @@ namespace AmeisenBotFSM.Actions
             // TODO: Add Class/Spec recognition
             if (combatClass == null)
             {
-                CombatClass = new CCAutoAttackOnly
+                switch (Me.Class)
                 {
-                    AmeisenDataHolder = ameisenDataHolder
-                };
+                    case WowClass.Warlock:
+                        CombatClass = new CCWarlockAffliction
+                        {
+                            AmeisenDataHolder = ameisenDataHolder
+                        };
+                        break;
+
+                    case WowClass.Warrior:
+                        CombatClass = new CCWarriorArms
+                        {
+                            AmeisenDataHolder = ameisenDataHolder
+                        };
+                        break;
+
+                    default:
+                        CombatClass = new CCAutoAttackOnly
+                        {
+                            AmeisenDataHolder = ameisenDataHolder
+                        };
+                        break;
+                }
             }
             else
             {

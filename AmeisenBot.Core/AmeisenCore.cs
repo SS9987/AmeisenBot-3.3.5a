@@ -521,7 +521,7 @@ namespace AmeisenBotCore
         /// <param name="spell">spellname</param>
         /// <returns>true if it is on cooldown, false if not</returns>
         public static bool IsOnCooldown(string spell)
-            => ParseLuaIntResult($"start, duration, enabled = GetSpellCooldown(\"{spell}\");", "duration");
+            => ParseLuaIntResult($"start, abDuration, enabled = GetSpellCooldown(\"{spell}\");", "abDuration");
 
         /// <summary>
         /// Returns true or false, wether the Target is friendly or not
@@ -755,8 +755,7 @@ namespace AmeisenBotCore
         /// <param name="name"></param>
         /// <returns></returns>
         public static bool IsSpellUseable(string spellname)
-            => ParseLuaIntResult($"usable, nomana = IsUsableSpell(\"{spellname}\");", "useable")
-            || ParseLuaIntResult($"usable, nomana = IsUsableSpell(\"{spellname}\");", "nomana");
+            => ParseLuaIntResult($"usable, nomana = IsUsableSpell(\"{spellname}\");if usable then resultUseable = 1 else resultUseable = 0 end;", "resultUseable");
 
         public static bool IsSpellKnown(int spellId, bool isPetSpell = false)
              => ParseLuaIntResult($"isKnown = IsSpellKnown({spellId}, {isPetSpell})", "isKnown");

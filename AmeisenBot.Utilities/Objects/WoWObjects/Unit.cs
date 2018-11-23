@@ -109,8 +109,18 @@ namespace AmeisenBotUtilities
                 Level = BlackMagicInstance.ReadInt(Descriptor + 0xD8);
                 Health = BlackMagicInstance.ReadInt(Descriptor + 0x60);
                 MaxHealth = BlackMagicInstance.ReadInt(Descriptor + 0x80);
+
+                // Mana
                 Energy = BlackMagicInstance.ReadInt(Descriptor + 0x64);
                 MaxEnergy = BlackMagicInstance.ReadInt(Descriptor + 0x84);
+
+                // Rage
+                if (Energy == 0 && MaxEnergy == 0)
+                {
+                    Energy = BlackMagicInstance.ReadInt(Descriptor + 0x68) / 10;
+                    MaxEnergy = BlackMagicInstance.ReadInt(Descriptor + 0x88) / 10;
+                }
+
                 //CombatReach = BlackMagicInstance.ReadInt(BaseUnitFields + (0x42 * 4));
                 //ChannelSpell = BlackMagicInstance.ReadInt(BaseUnitFields + (0x16 * 4));
                 //SummonedBy = BlackMagicInstance.ReadInt(BaseUnitFields + (0xE * 4));

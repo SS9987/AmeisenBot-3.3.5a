@@ -51,7 +51,8 @@ namespace AmeisenBotCombat
         /// <param name="spellname">spell to check for</param>
         /// <returns>wether the spell is useable or not</returns>
         public static bool IsSpellUseable(string spellname)
-            => AmeisenCore.IsSpellUseable(spellname);
+            => AmeisenCore.IsSpellUseable(spellname) 
+            && !AmeisenCore.IsOnCooldown(spellname);
 
         /// <summary>
         /// Get a Units buffs & debuffs
