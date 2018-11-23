@@ -80,17 +80,63 @@ namespace AmeisenBotCombat.SampleClasses
 
         private void DoAttackRoutine()
         {
+            List<string> myAuras = CombatUtils.GetAuras(LuaUnit.player);
             List<string> targetAuras = CombatUtils.GetAuras(LuaUnit.target);
             double distance = Utils.GetDistance(Me.pos, Target.pos);
 
             Me?.Update();
             Target?.Update();
 
+            if (CombatUtils.IsSpellUseable("Enraged Regeneration"))
+            {
+                if (Me.Rage >= 15 && Me.HealthPercentage <= 60)
+                {
+                    CombatUtils.CastSpellByName(Me, Target, "Enraged Regeneration", false);
+                    return;
+                }
+            }
+
+            if (CombatUtils.IsSpellUseable("Retaliation"))
+            {
+                if (Me.HealthPercentage <= 40)
+                {
+                    CombatUtils.CastSpellByName(Me, Target, "Retaliation", false);
+                    return;
+                }
+            }
+
             if (CombatUtils.IsSpellUseable("Charge"))
             {
                 if (distance >= 10 && distance <= 23)
                 {
                     CombatUtils.CastSpellByName(Me, Target, "Charge", false);
+                    return;
+                }
+            }
+
+            if (CombatUtils.IsSpellUseable("Herioc Throw"))
+            {
+                if (distance >= 10 && distance <= 28)
+                {
+                    CombatUtils.CastSpellByName(Me, Target, "Herioc Throw", false);
+                    return;
+                }
+            }
+
+            if (CombatUtils.IsSpellUseable("Victory Rush"))
+            {
+                if (Me.HealthPercentage <= 80)
+                {
+                    CombatUtils.CastSpellByName(Me, Target, "Victory Rush", false);
+                    return;
+                }
+            }
+
+            if (CombatUtils.IsSpellUseable("Battle Shout"))
+            {
+                if (Me.Rage >= 10 && !myAuras.Contains("battle shout"))
+                {
+                    CombatUtils.CastSpellByName(Me, Target, "Battle Shout", false);
                     return;
                 }
             }
@@ -113,6 +159,14 @@ namespace AmeisenBotCombat.SampleClasses
                 }
             }
 
+            if (CombatUtils.IsSpellUseable("Execute"))
+            {
+                if (Me.Rage >= 15)
+                {
+                    CombatUtils.CastSpellByName(Me, Target, "Execute", false);
+                    return;
+                }
+            }
 
             if (CombatUtils.IsSpellUseable("Overpower"))
             {
@@ -146,6 +200,15 @@ namespace AmeisenBotCombat.SampleClasses
                 if (Me.Rage >= 12)
                 {
                     CombatUtils.CastSpellByName(Me, Target, "Heroic Strike", false);
+                    return;
+                }
+            }
+
+            if (CombatUtils.IsSpellUseable("Slam"))
+            {
+                if (Me.Rage >= 15)
+                {
+                    CombatUtils.CastSpellByName(Me, Target, "Slam", false);
                     return;
                 }
             }
