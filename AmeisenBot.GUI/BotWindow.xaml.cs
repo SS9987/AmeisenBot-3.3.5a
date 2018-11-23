@@ -273,9 +273,32 @@ namespace AmeisenBotGUI
             progressBarHP.Maximum = BotManager.Me.MaxHealth;
             progressBarHP.Value = BotManager.Me.Health;
 
-            labelEnergy.Content = $"Energy {BotManager.Me.Energy} / {BotManager.Me.MaxEnergy}";
-            progressBarEnergy.Maximum = BotManager.Me.MaxEnergy;
-            progressBarEnergy.Value = BotManager.Me.Energy;
+            switch (BotManager.Me.Class)
+            {
+                case WowClass.Warrior:
+                    labelEnergy.Content = $"Energy {BotManager.Me.Rage} / {BotManager.Me.MaxRage}";
+                    progressBarEnergy.Maximum = BotManager.Me.MaxRage;
+                    progressBarEnergy.Value = BotManager.Me.Rage;
+                    break;
+
+                case WowClass.Rogue:
+                    labelEnergy.Content = $"Energy {BotManager.Me.Energy} / {BotManager.Me.MaxEnergy}";
+                    progressBarEnergy.Maximum = BotManager.Me.MaxEnergy;
+                    progressBarEnergy.Value = BotManager.Me.Energy;
+                    break;
+
+                case WowClass.DeathKnight:
+                    labelEnergy.Content = $"Energy {BotManager.Me.RuneEnergy} / {BotManager.Me.MaxRuneEnergy}";
+                    progressBarEnergy.Maximum = BotManager.Me.MaxRuneEnergy;
+                    progressBarEnergy.Value = BotManager.Me.RuneEnergy;
+                    break;
+
+                default:
+                    labelEnergy.Content = $"Energy {BotManager.Me.Mana} / {BotManager.Me.MaxMana}";
+                    progressBarEnergy.Maximum = BotManager.Me.MaxMana;
+                    progressBarEnergy.Value = BotManager.Me.Mana;
+                    break;
+            }
 
             labelExp.Content = $"Exp {BotManager.Me.Exp} / {BotManager.Me.MaxExp}";
             progressBarXP.Maximum = BotManager.Me.MaxExp;
@@ -290,9 +313,9 @@ namespace AmeisenBotGUI
             progressBarHPTarget.Maximum = BotManager.Target.MaxHealth;
             progressBarHPTarget.Value = BotManager.Target.Health;
 
-            labelTargetEnergy.Content = $"Energy {BotManager.Target.Energy} / {BotManager.Target.MaxEnergy}";
-            progressBarEnergyTarget.Maximum = BotManager.Target.MaxEnergy;
-            progressBarEnergyTarget.Value = BotManager.Target.Energy;
+            labelTargetEnergy.Content = $"Energy {BotManager.Target.Mana} / {BotManager.Target.MaxMana}";
+            progressBarEnergyTarget.Maximum = BotManager.Target.MaxMana;
+            progressBarEnergyTarget.Value = BotManager.Target.Mana;
 
             labelTargetDistance.Content = $"Distance: {Math.Round(BotManager.Target.Distance, 2)}m";
 

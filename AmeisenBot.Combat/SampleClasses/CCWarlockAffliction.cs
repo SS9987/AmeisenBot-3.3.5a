@@ -92,7 +92,7 @@ namespace AmeisenBotCombat.SampleClasses
 
             Me?.Update();
             // Restore Mana
-            if (Me.EnergyPercentage < 30 && Me.HealthPercentage > 50)
+            if (Me.ManaPercentage < 30 && Me.HealthPercentage > 50)
             {
                 CombatUtils.CastSpellByName(Me, Target, "Life Tap", true);
                 return;

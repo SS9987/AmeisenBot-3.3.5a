@@ -7,16 +7,25 @@ namespace AmeisenBotUtilities
     public partial class Unit : WowObject
     {
         public BitVector32 DynamicUFlags { get; set; }
-        public int Energy { get; set; }
+        public int Mana { get; set; }
         public int Health { get; set; }
         public int HealthPercentage => (Health / MaxHealth) * 100;
+        public int ManaPercentage => (Mana / MaxMana) * 100;
+        public int RagePercentage => (Rage / MaxRage) * 100;
         public int EnergyPercentage => (Energy / MaxEnergy) * 100;
+        public int RuneEnergyPercentage => (RuneEnergy / MaxRuneEnergy) * 100;
         public bool InCombat => UFlags[(int)UnitFlags.COMBAT];
         public bool IsCasting { get; set; }
         public bool IsDead { get; set; }
         public bool IsLootable => UFlags[(int)DynamicUnitFlags.LOOTABLE];
         public int Level { get; set; }
+        public int MaxMana { get; set; }
+        public int Rage { get; set; }
+        public int MaxRage { get; set; }
+        public int Energy { get; set; }
         public int MaxEnergy { get; set; }
+        public int RuneEnergy { get; set; }
+        public int MaxRuneEnergy { get; set; }
         public int MaxHealth { get; set; }
         public bool NeedToRevive => Health == 0;
         public ulong TargetGuid { get; set; }
@@ -61,8 +70,8 @@ namespace AmeisenBotUtilities
             sb.Append($" >> level: {Level}");
             sb.Append($" >> health: {Health}");
             sb.Append($" >> maxHealth: {MaxHealth}");
-            sb.Append($" >> energy: {Energy}");
-            sb.Append($" >> maxEnergy: {MaxEnergy}");
+            sb.Append($" >> energy: {Mana}");
+            sb.Append($" >> maxEnergy: {MaxMana}");
 
             return sb.ToString();
         }
@@ -110,16 +119,17 @@ namespace AmeisenBotUtilities
                 Health = BlackMagicInstance.ReadInt(Descriptor + 0x60);
                 MaxHealth = BlackMagicInstance.ReadInt(Descriptor + 0x80);
 
-                // Mana
-                Energy = BlackMagicInstance.ReadInt(Descriptor + 0x64);
-                MaxEnergy = BlackMagicInstance.ReadInt(Descriptor + 0x84);
+                Mana = BlackMagicInstance.ReadInt(Descriptor + 0x64);
+                MaxMana = BlackMagicInstance.ReadInt(Descriptor + 0x84);
 
-                // Rage
-                if (Energy == 0 && MaxEnergy == 0)
-                {
-                    Energy = BlackMagicInstance.ReadInt(Descriptor + 0x68) / 10;
-                    MaxEnergy = BlackMagicInstance.ReadInt(Descriptor + 0x88) / 10;
-                }
+                Rage = BlackMagicInstance.ReadInt(Descriptor + 0x68) / 10;
+                MaxRage = 100;
+
+                Energy = BlackMagicInstance.ReadInt(BaseAddress + 0xFC0);
+                MaxEnergy = 100;
+
+                RuneEnergy = BlackMagicInstance.ReadInt(BaseAddress + 0x19D4 / 10);
+                MaxRuneEnergy = 100;
 
                 //CombatReach = BlackMagicInstance.ReadInt(BaseUnitFields + (0x42 * 4));
                 //ChannelSpell = BlackMagicInstance.ReadInt(BaseUnitFields + (0x16 * 4));

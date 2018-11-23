@@ -51,8 +51,8 @@ namespace AmeisenBotUtilities
             sb.Append($" >> level: {Level}");
             sb.Append($" >> health: {Health}");
             sb.Append($" >> maxHealth: {MaxHealth}");
-            sb.Append($" >> energy: {Energy}");
-            sb.Append($" >> maxEnergy: {MaxEnergy}");
+            sb.Append($" >> energy: {Mana}");
+            sb.Append($" >> maxEnergy: {MaxMana}");
 
             sb.Append($" >> exp: {Exp}");
             sb.Append($" >> maxExp: {MaxExp}");

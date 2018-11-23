@@ -27,8 +27,8 @@
             Health = me.Health;
             MaxHealth = me.MaxHealth;
 
-            Energy = me.Energy;
-            MaxEnergy = me.MaxEnergy;
+            Energy = me.Mana;
+            MaxEnergy = me.MaxMana;
 
             Exp = me.Exp;
             MaxExp = me.MaxExp;
