@@ -97,7 +97,7 @@ namespace AmeisenBotCombat.SampleClasses
 
             if (CombatUtils.IsSpellUseable("Hamstring"))
             {
-                if (Me.Mana >= 10 && !targetAuras.Contains("hamstring"))
+                if (Me.Rage >= 10 && !targetAuras.Contains("hamstring"))
                 {
                     CombatUtils.CastSpellByName(Me, Target, "Hamstring", false);
                     return;
@@ -106,7 +106,7 @@ namespace AmeisenBotCombat.SampleClasses
 
             if (CombatUtils.IsSpellUseable("Rend"))
             {
-                if (Me.Mana >= 10 && !targetAuras.Contains("rend"))
+                if (Me.Rage >= 10 && !targetAuras.Contains("rend"))
                 {
                     CombatUtils.CastSpellByName(Me, Target, "Rend", false);
                     return;
@@ -116,7 +116,7 @@ namespace AmeisenBotCombat.SampleClasses
 
             if (CombatUtils.IsSpellUseable("Overpower"))
             {
-                if (Me.Mana >= 5)
+                if (Me.Rage >= 5)
                 {
                     CombatUtils.CastSpellByName(Me, Target, "Overpower", false);
                     return;
@@ -125,7 +125,7 @@ namespace AmeisenBotCombat.SampleClasses
 
             if (CombatUtils.IsSpellUseable("Mortal Strike"))
             {
-                if (Me.Mana >= 30)
+                if (Me.Rage >= 30)
                 {
                     CombatUtils.CastSpellByName(Me, Target, "Mortal Strike", false);
                     return;
@@ -134,7 +134,7 @@ namespace AmeisenBotCombat.SampleClasses
 
             if (CombatUtils.IsSpellUseable("Mocking Blow"))
             {
-                if (Me.Mana >= 10)
+                if (Me.Rage >= 10)
                 {
                     CombatUtils.CastSpellByName(Me, Target, "Mocking Blow", false);
                     return;
@@ -143,7 +143,7 @@ namespace AmeisenBotCombat.SampleClasses
 
             if (CombatUtils.IsSpellUseable("Heroic Strike"))
             {
-                if (Me.Mana >= 12)
+                if (Me.Rage >= 12)
                 {
                     CombatUtils.CastSpellByName(Me, Target, "Heroic Strike", false);
                     return;
