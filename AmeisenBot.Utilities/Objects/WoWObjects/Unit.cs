@@ -71,10 +71,10 @@ namespace AmeisenBotUtilities
         {
             base.Update();
 
-            /*if (Name == null)
+            if (Name == null)
             {
                 try { Name = GetMobNameFromBase(BaseAddress); } catch { }
-            }*/
+            }
 
             pos.X = BlackMagicInstance.ReadFloat(BaseAddress + 0x798);
             pos.Y = BlackMagicInstance.ReadFloat(BaseAddress + 0x79C);

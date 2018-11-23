@@ -22,7 +22,14 @@ namespace AmeisenBot.Character
         /// Update the whole character, may takes some time
         /// Updates stuff: Gear, Bags, Stats, Items
         /// </summary>
-        public void UpdateCharacter() => new Thread(new ThreadStart(Character.Update)).Start();
+        public void UpdateCharacterAsync() => new Thread(new ThreadStart(Character.Update)).Start();
+
+        /// <summary>
+        /// Update the whole character, may takes some time
+        /// Updates stuff: Gear, Bags, Stats, Items
+        /// </summary>
+        public void UpdateCharacter() => Character.Update();
+
 
         public void EquipAllBetterItems()
         {
@@ -45,13 +52,58 @@ namespace AmeisenBot.Character
                             }
                         }
                     }
+                    else
+                    {
+                        // we hae no item equipped
+                        List<InventoryItem> bestForSlotItem = GetAllItemsForSlot(item);
+                        if (bestForSlotItem.Count > 0)
+                        {
+                            AmeisenCore.RunSlashCommand($"/equip {bestForSlotItem.First().Name}");
+                            replacedItem = true;
+                        }
+                    }
                 }
             }
             else { AmeisenLogger.Instance.Log(LogLevel.WARNING, "Could not Equip better items, Character is still loading", this); }
 
             if (replacedItem)
             {
-                UpdateCharacter();
+                UpdateCharacterAsync();
+            }
+        }
+
+        private List<InventoryItem> GetAllItemsForSlot(Item item)
+            => Character.InventoryItems.Where(s => s.EquipLocation != "").Where(s => SlotToEquipLocation(item.Slot).Contains(s.EquipLocation)).OrderByDescending(x => x.Level).ToList();
+
+        private string SlotToEquipLocation(int slot)
+        {
+            switch (slot)
+            {
+                case 0: return "INVTYPE_AMMO";
+                case 1: return "INVTYPE_HEAD";
+                case 2: return "INVTYPE_NECK";
+                case 3: return "INVTYPE_SHOULDER";
+                case 4: return "INVTYPE_BODY";
+                case 5: return "INVTYPE_CHEST|INVTYPE_ROBE";
+                case 6: return "INVTYPE_WAIST";
+                case 7: return "INVTYPE_LEGS";
+                case 8: return "INVTYPE_FEET";
+                case 9: return "INVTYPE_WRIST";
+                case 10: return "INVTYPE_HAND";
+                case 11: return "INVTYPE_FINGER";
+                case 12: return "INVTYPE_FINGER";
+                case 13: return "INVTYPE_TRINKET";
+                case 14: return "INVTYPE_TRINKET";
+                case 15: return "INVTYPE_CLOAK";
+                case 16: return "INVTYPE_2HWEAPON|INVTYPE_WEAPON|INVTYPE_WEAPONMAINHAND";
+                case 17: return "INVTYPE_SHIELD|INVTYPE_WEAPONOFFHAND|INVTYPE_HOLDABLE";
+                case 18: return "INVTYPE_RANGED|INVTYPE_THROWN|INVTYPE_RANGEDRIGHT|INVTYPE_RELIC";
+                case 19: return "INVTYPE_TABARD";
+                case 20: return "INVTYPE_BAG|INVTYPE_QUIVER";
+                case 21: return "INVTYPE_BAG|INVTYPE_QUIVER";
+                case 22: return "INVTYPE_BAG|INVTYPE_QUIVER";
+                case 23: return "INVTYPE_BAG|INVTYPE_QUIVER";
+                default: return "none";
             }
         }
 

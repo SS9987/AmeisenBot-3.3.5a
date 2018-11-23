@@ -27,6 +27,7 @@ namespace AmeisenBot.Character.Objects
             MaxStack = int.Parse(rawInventoryItem.maxStack);
             EquipLocation = rawInventoryItem.equiplocation;
             Price = int.Parse(rawInventoryItem.sellprice);
+            Slot = -1;
         }
     }
 }

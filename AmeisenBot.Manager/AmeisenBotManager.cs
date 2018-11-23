@@ -253,6 +253,7 @@ namespace AmeisenBotManager
             AmeisenEventHook.Subscribe(WowEvents.PARTY_INVITE_REQUEST, OnPartyInvitation);
             AmeisenEventHook.Subscribe(WowEvents.CONFIRM_SUMMON, OnSummonRequest);
             AmeisenEventHook.Subscribe(WowEvents.RESURRECT_REQUEST, OnResurrectRequest);
+            AmeisenEventHook.Subscribe(WowEvents.ITEM_PUSH, OnNewItem);
 
             // Start our object updates
             AmeisenObjectManager = new AmeisenObjectManager(AmeisenDataHolder, AmeisenDBManager);
@@ -281,13 +282,25 @@ namespace AmeisenBotManager
 
             // Init our CharacterMangager to keep track of our stats/items/money
             AmeisenCharacterManager = new AmeisenCharacterManager();
-            AmeisenCharacterManager.UpdateCharacter();
+            AmeisenCharacterManager.UpdateCharacterAsync();
 
             // Connect to Server
             if (Settings.serverAutoConnect)
             {
                 ConnectToServer();
             }
+        }
+
+        private void OnNewItem(long timestamp, List<string> args)
+        {
+            AmeisenLogger.Instance.Log(
+                LogLevel.DEBUG,
+                $"[{timestamp}] OnNewItem args: {JsonConvert.SerializeObject(args)}",
+                this
+            );
+
+            AmeisenCharacterManager.UpdateCharacter();
+            AmeisenCharacterManager.EquipAllBetterItems();
         }
 
         /// <summary>
@@ -298,7 +311,7 @@ namespace AmeisenBotManager
         /// <summary>
         /// Refresh the characters equipment & inventory
         /// </summary>
-        public void RefreshCurrentItems() => AmeisenCharacterManager.UpdateCharacter();
+        public void RefreshCurrentItems() => AmeisenCharacterManager.UpdateCharacterAsync();
 
         private void OnResurrectRequest(long timestamp, List<string> args)
         {
