@@ -93,6 +93,9 @@ namespace AmeisenBot.Character.Objects
                 MaxStack = int.Parse(rawItem.maxStack);
                 EquipLocation = rawItem.equiplocation;
                 Price = int.Parse(rawItem.sellprice);
+                Level = int.Parse(rawItem.level);
+                RequiredLevel = int.Parse(rawItem.minLevel);
+                ItemLink = rawItem.link;
             }
             catch { }
 
