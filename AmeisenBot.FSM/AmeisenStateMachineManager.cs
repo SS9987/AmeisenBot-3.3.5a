@@ -99,26 +99,26 @@ namespace AmeisenBotFSM
         {
             while (Active)
             {
-                // Is me supposed to follow
-                FollowCheck();
+                // Am I in combat
+                InCombatCheck();
+
+                // Am I dead?
+                DeadCheck();
 
                 // Bot stuff check
                 BotStuffCheck();
 
-                // Am I in combat
-                InCombatCheck();
-
-                // Do I need to release my spirit
-                ReleaseSpiritCheck();
-
-                // Am I dead?
-                DeadCheck();
+                // Is me supposed to follow
+                FollowCheck();
 
                 // Do i need to buff
                 if (AmeisenDataHolder.IsAllowedToBuff)
                 {
                     CombatClass?.HandleBuffs();
                 }
+
+                // Do I need to release my spirit
+                ReleaseSpiritCheck();
 
                 AmeisenLogger.Instance.Log(LogLevel.VERBOSE, $"FSM: {StateMachine.GetCurrentState()}", this);
                 Thread.Sleep(AmeisenDataHolder.Settings.stateMachineStateUpdateMillis);
@@ -129,12 +129,10 @@ namespace AmeisenBotFSM
         {
             if (AmeisenDataHolder.IsAllowedToDoOwnStuff)
             {
-                if (StateMachine.GetCurrentState() != BotState.Idle)
+                if (StateMachine.GetCurrentState() == BotState.Idle)
                 {
-                    StateMachine.PopAction();
+                    StateMachine.PushAction(BotState.BotStuff);
                 }
-
-                StateMachine.PushAction(BotState.BotStuff);
             }
             else if (StateMachine.GetCurrentState() == BotState.BotStuff)
             {
@@ -163,11 +161,6 @@ namespace AmeisenBotFSM
 
                     if (AmeisenDataHolder.IsAllowedToFollowParty && distance > AmeisenDataHolder.Settings.followDistance)
                     {
-                        if (StateMachine.GetCurrentState() != BotState.Idle)
-                        {
-                            StateMachine.PopAction();
-                        }
-
                         if (StateMachine.GetCurrentState() == BotState.Idle)
                         {
                             StateMachine.PushAction(BotState.Follow);

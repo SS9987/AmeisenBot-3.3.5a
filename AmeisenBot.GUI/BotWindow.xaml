@@ -311,7 +311,7 @@
                 <SolidColorBrush Color="{DynamicResource AccentColor}" />
             </CheckBox.BorderBrush>
         </CheckBox>
-        <CheckBox x:Name="checkBoxDoBotStuff" Content="👾 Do own stuff" Margin="346,340,0,-8" Background="White" HorizontalAlignment="Left" Width="129" BorderThickness="2" Height="20" VerticalAlignment="Top" Click="CheckBoxAssistPartyBuff_Click">
+        <CheckBox x:Name="checkBoxDoBotStuff" Content="👾 Do own stuff" Margin="346,340,0,-8" Background="White" HorizontalAlignment="Left" Width="129" BorderThickness="2" Height="20" VerticalAlignment="Top" Click="CheckBoxDoBotStuff_Click">
             <CheckBox.Foreground>
                 <SolidColorBrush Color="{DynamicResource TextColor}" />
             </CheckBox.Foreground>

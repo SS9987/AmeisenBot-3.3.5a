@@ -58,5 +58,8 @@
         public bool saveWoWWindowPosition = true;
         public bool saveBotWindowPosition = true;
         public bool usePathfinding = true;
+        public string landMounts = "";
+        public string flyingMounts = "";
+        public double useMountFollowDistance = 20;
     }
 }

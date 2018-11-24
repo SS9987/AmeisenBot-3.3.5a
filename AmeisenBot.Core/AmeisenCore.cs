@@ -66,7 +66,7 @@ namespace AmeisenBotCore
 
         public static void SellAllGrayItems() => LuaDoString("local p,N,n=0 for b=0,4 do for s=1,GetContainerNumSlots(b) do n=GetContainerItemLink(b,s) if n and string.find(n,\"9d9d9d\") then N={GetItemInfo(n)} p=p+N[11] UseContainerItem(b,s) print(\"Sold: \"..n) end end end print(\"Total: \"..GetCoinText(p))");
 
-        public static void TargetNpcByName(string name, bool exactMatch = true) => LuaDoString($"TargetUnit({name}, {(exactMatch ? "true" : "false")});");
+        public static void TargetNpcByName(string name, bool exactMatch = true) => LuaDoString($"TargetUnit(\"{name}\", {(exactMatch ? "true" : "false")});");
 
         /// <summary>
         /// AntiAFK
@@ -121,8 +121,26 @@ namespace AmeisenBotCore
             catch { return false; }
         }
 
-        public static void CastSpellById(int spellId, bool petSpell = false)
-            => LuaDoString($"CastSpell({spellId}, {(petSpell ? "BOOKTYPE_PET" : "BOOKTYPE_SPELL")}\")");
+        public static void MountRandomMount(string landMounts, string flyingMounts = "")
+        {
+            if (landMounts.Length > 0 || flyingMounts.Length > 0)
+            {
+                StringBuilder cmd = new StringBuilder();
+                cmd.Append("/castrandom ");
+                if (flyingMounts.Length > 0)
+                {
+                    cmd.Append($"[flyable] {flyingMounts} ; ");
+                }
+                if (landMounts.Length > 0)
+                {
+                    cmd.Append($"{landMounts} ;");
+                }
+                RunSlashCommand(cmd.ToString());
+            }
+        }
+
+        public static void CastSpellById(int spellId)
+            => LuaDoString($"CastSpell({spellId});");
 
         public static UnitReaction GetUnitReaction(LuaUnit luaunit, LuaUnit otherluaunit = LuaUnit.player)
         {
@@ -757,7 +775,7 @@ namespace AmeisenBotCore
         public static bool IsSpellUseable(string spellname)
             => ParseLuaIntResult($"usable, nomana = IsUsableSpell(\"{spellname}\");if usable then resultUseable = 1 else resultUseable = 0 end;", "resultUseable");
 
-        public static bool IsSpellKnown(int spellId, bool isPetSpell = false)
-             => ParseLuaIntResult($"isKnown = IsSpellKnown({spellId}, {isPetSpell})", "isKnown");
+        public static bool IsSpellKnown(int spellId)
+             => ParseLuaIntResult($"abIsKnown = GetSpellInfo({spellId}); if abIsKnown then abIsKnown = 1 else abIsKnown = 0 end;", "abIsKnown");
     }
 }

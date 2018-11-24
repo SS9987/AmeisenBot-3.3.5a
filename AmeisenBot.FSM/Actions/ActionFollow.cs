@@ -81,6 +81,7 @@ namespace AmeisenBotFSM.Actions
                 if (!WaypointQueue.Contains(posToMoveTo))
                 {
                     WaypointQueue.Enqueue(posToMoveTo);
+                    LastEnqued = posToMoveTo;
                 }
             }
 

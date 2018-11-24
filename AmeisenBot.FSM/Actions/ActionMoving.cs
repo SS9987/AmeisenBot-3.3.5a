@@ -24,6 +24,7 @@ namespace AmeisenBotFSM.Actions
         private AmeisenDBManager AmeisenDBManager { get; set; }
         private Vector3 LastPosition { get; set; }
         private double MovedSinceLastTick { get; set; }
+        public Vector3 LastEnqued { get; internal set; }
 
         private Me Me
         {
@@ -43,6 +44,25 @@ namespace AmeisenBotFSM.Actions
         {
             if (WaypointQueue.Count > 0)
             {
+                double distance = Utils.GetDistance(Me.pos, LastEnqued);
+
+                if (distance > AmeisenDataHolder.Settings.useMountFollowDistance && AmeisenCore.IsOutdoors)
+                {
+                    if (!AmeisenCore.IsMounted)
+                    {
+                        AmeisenCore.MountRandomMount(AmeisenDataHolder.Settings.landMounts, AmeisenDataHolder.Settings.flyingMounts);
+                        Thread.Sleep(1500);
+                    }
+                }
+
+                if (distance < AmeisenDataHolder.Settings.useMountFollowDistance + 6)
+                {
+                    if (AmeisenCore.IsMounted)
+                    {
+                        AmeisenCore.MountRandomMount(AmeisenDataHolder.Settings.landMounts, AmeisenDataHolder.Settings.flyingMounts);
+                    }
+                }
+
                 MoveToNode();
             }
         }
@@ -130,7 +150,8 @@ namespace AmeisenBotFSM.Actions
                 else
                 {
                     AmeisenLogger.Instance.Log(LogLevel.DEBUG, "Thicker Path is null", this);
-                    Thread.Sleep(1000);
+                    MoveToNode(targetPosition);
+                    Thread.Sleep(100);
                 }
             }
         }
@@ -159,7 +180,14 @@ namespace AmeisenBotFSM.Actions
         private void MoveToNode(Vector3 targetPosition)
         {
             int currentTry = 0;
-            while (currentTry < 10 && Utils.GetDistance(Me.pos, targetPosition) > AmeisenDataHolder.Settings.followDistance)
+            double followOffset = 0;
+
+            if (AmeisenCore.IsMounted)
+            {
+                followOffset = 5;
+            }
+
+            while (currentTry < 3 && Utils.GetDistance(Me.pos, targetPosition) > AmeisenDataHolder.Settings.followDistance + followOffset)
             {
                 CheckIfWeAreStuckIfYesJump(Me.pos, LastPosition);
 

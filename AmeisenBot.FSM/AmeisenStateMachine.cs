@@ -41,7 +41,7 @@ namespace AmeisenBotFSM
             AmeisenDBManager ameisenDBManager,
             AmeisenMovementEngine ameisenMovementEngine,
             IAmeisenCombatClass combatClass,
-            AmeisenCharacterManager characterManager)
+            AmeisenCharacterManager ameisenCharacterManager)
         {
             StateStack = new Stack<BotState>();
             StateActionMap = new Dictionary<BotState, IAction>
@@ -51,11 +51,11 @@ namespace AmeisenBotFSM
                 { BotState.Moving, new ActionMoving(ameisenDataHolder,ameisenDBManager) },
                 { BotState.Combat, new ActionCombat(ameisenDataHolder,combatClass) },
                 { BotState.Dead, new ActionDead(ameisenDataHolder,ameisenDBManager) },
-                { BotState.BotStuff, new ActionDoBotStuff(ameisenDataHolder, GetBotStuffToDo()) }
+                { BotState.BotStuff, new ActionDoBotStuff(ameisenDataHolder, ameisenDBManager, ameisenCharacterManager, GetBotStuffToDo()) }
             };
 
             BotStuffList = new List<IAction>() {
-                new BotStuffRepairEquip(ameisenDataHolder, ameisenDBManager, characterManager)
+                new BotStuffRepairEquip(ameisenDataHolder, ameisenDBManager, ameisenCharacterManager)
             };
         }
 

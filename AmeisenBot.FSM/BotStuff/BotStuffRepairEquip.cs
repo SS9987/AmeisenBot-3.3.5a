@@ -25,7 +25,7 @@ namespace AmeisenBotFSM.BotStuff
         private Unit Target => AmeisenDataHolder.Target;
 
         public BotStuffRepairEquip(
-            AmeisenDataHolder ameisenDataHolder, 
+            AmeisenDataHolder ameisenDataHolder,
             AmeisenDBManager ameisenDBManager,
             AmeisenCharacterManager ameisenCharacterManager)
             : base(ameisenDataHolder, ameisenDBManager)
@@ -78,19 +78,29 @@ namespace AmeisenBotFSM.BotStuff
 
                 if (AmeisenCore.IsOutdoors)
                 {
-                    AmeisenCore.CastSpellById(MAMMOTH_SPELL);
-                }
+                    AmeisenCore.CastSpellByName("Traveler's Tundra Mammoth", false);
 
-                Thread.Sleep(2000);
-                RepairEquipmentAtUnit(null, true);
+                    Thread.Sleep(2000);
+                    RepairEquipmentAtUnit(null, true);
+                }
             }
         }
 
         private void GoToUnitAndRepair(RememberedUnit closestUnit)
         {
+            Me.Update();
+            if (Utils.GetDistance(Me.pos, closestUnit.Position) < 3)
+            {
+                RepairEquipmentAtUnit(closestUnit);
+            }
+            else
             if (!WaypointQueue.Contains(closestUnit.Position))
             {
                 WaypointQueue.Enqueue(closestUnit.Position);
+            }
+            else
+            {
+                base.DoThings();
             }
         }
 
@@ -105,12 +115,16 @@ namespace AmeisenBotFSM.BotStuff
                 AmeisenCore.TargetNpcByName(unit.Name);
             }
 
-            Target.Update();
-            AmeisenCore.InteractWithGUID(Target.pos, Target.Guid, InteractionType.INTERACT);
-            Thread.Sleep(500);
-            AmeisenCore.RepairAllItems();
-            AmeisenCore.SellAllGrayItems();
-            AmeisenLogger.Instance.Log(LogLevel.DEBUG, "Repaired all items and sold all gray stuff", this);
+            if (Target != null)
+            {
+                Target.Update();
+                AmeisenCore.LuaDoString("InteractUnit(\"target\");");
+                Thread.Sleep(500);
+                AmeisenCore.RepairAllItems();
+                AmeisenCore.SellAllGrayItems();
+                AmeisenLogger.Instance.Log(LogLevel.DEBUG, "Repaired all items and sold all gray stuff", this);
+                Thread.Sleep(4000);
+            }
         }
     }
 }

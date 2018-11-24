@@ -419,5 +419,8 @@ namespace AmeisenBotGUI
         {
             BotManager.EquipAllBetterItems();
         }
+
+        private void CheckBoxDoBotStuff_Click(object sender, RoutedEventArgs e)
+            => BotManager.IsAllowedToDoOwnStuff = (bool)checkBoxDoBotStuff.IsChecked;
     }
 }
