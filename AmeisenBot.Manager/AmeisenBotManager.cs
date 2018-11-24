@@ -211,10 +211,10 @@ namespace AmeisenBotManager
             // Load old WoW Position
             if (AmeisenSettings.Settings.saveBotWindowPosition)
             {
-                if (AmeisenSettings.Settings.wowRectL != 0
-                && AmeisenSettings.Settings.wowRectR != 0
-                && AmeisenSettings.Settings.wowRectT != 0
-                && AmeisenSettings.Settings.wowRectB != 0)
+                if (AmeisenSettings.Settings.wowRectL >= 0
+                && AmeisenSettings.Settings.wowRectR >= 0
+                && AmeisenSettings.Settings.wowRectT >= 0
+                && AmeisenSettings.Settings.wowRectB >= 0)
                 {
                     AmeisenCore.SetWindowPosition(
                     wowExe.process.MainWindowHandle,
@@ -254,6 +254,9 @@ namespace AmeisenBotManager
             AmeisenEventHook.Subscribe(WowEvents.CONFIRM_SUMMON, OnSummonRequest);
             AmeisenEventHook.Subscribe(WowEvents.RESURRECT_REQUEST, OnResurrectRequest);
             AmeisenEventHook.Subscribe(WowEvents.ITEM_PUSH, OnNewItem);
+            AmeisenEventHook.Subscribe(WowEvents.PLAYER_REGEN_DISABLED, OnRegenDisabled);
+            AmeisenEventHook.Subscribe(WowEvents.PLAYER_REGEN_ENABLED, OnRegenEnabled);
+
 
             // Start our object updates
             AmeisenObjectManager = new AmeisenObjectManager(AmeisenDataHolder, AmeisenDBManager);
@@ -290,6 +293,12 @@ namespace AmeisenBotManager
                 ConnectToServer();
             }
         }
+
+        private void OnRegenEnabled(long timestamp, List<string> args)
+            => Me.InCombatEvent = false;
+
+        private void OnRegenDisabled(long timestamp, List<string> args)
+            =>Me.InCombatEvent = true;
 
         private void OnNewItem(long timestamp, List<string> args)
         {

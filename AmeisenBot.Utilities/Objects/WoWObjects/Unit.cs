@@ -14,7 +14,7 @@ namespace AmeisenBotUtilities
         public int RagePercentage => (Rage / MaxRage) * 100;
         public int EnergyPercentage => (Energy / MaxEnergy) * 100;
         public int RuneEnergyPercentage => (RuneEnergy / MaxRuneEnergy) * 100;
-        public bool InCombat => UFlags[(int)UnitFlags.COMBAT];
+        public bool InCombat => UFlags[(int)UnitFlags.COMBAT] || InCombatEvent;
         public bool IsCasting { get; set; }
         public bool IsDead { get; set; }
         public bool IsLootable => UFlags[(int)DynamicUnitFlags.LOOTABLE];
@@ -31,6 +31,7 @@ namespace AmeisenBotUtilities
         public ulong TargetGuid { get; set; }
         public BitVector32 UFlags { get; set; }
         public BitVector32 UFlags2 { get; set; }
+        public bool InCombatEvent { get; set; }
 
         public Unit(uint baseAddress, BlackMagic blackMagic) : base(baseAddress, blackMagic)
         {
@@ -118,25 +119,36 @@ namespace AmeisenBotUtilities
                 Level = BlackMagicInstance.ReadInt(Descriptor + 0xD8);
                 Health = BlackMagicInstance.ReadInt(Descriptor + 0x60);
                 MaxHealth = BlackMagicInstance.ReadInt(Descriptor + 0x80);
-
-                Mana = BlackMagicInstance.ReadInt(Descriptor + 0x64);
-                MaxMana = BlackMagicInstance.ReadInt(Descriptor + 0x84);
-
-                Rage = BlackMagicInstance.ReadInt(Descriptor + 0x68) / 10;
-                MaxRage = 100;
-
-                Energy = BlackMagicInstance.ReadInt(BaseAddress + 0xFC0);
-                MaxEnergy = 100;
-
-                RuneEnergy = BlackMagicInstance.ReadInt(BaseAddress + 0x19D4 / 10);
-                MaxRuneEnergy = 100;
-
-                //CombatReach = BlackMagicInstance.ReadInt(BaseUnitFields + (0x42 * 4));
-                //ChannelSpell = BlackMagicInstance.ReadInt(BaseUnitFields + (0x16 * 4));
-                //SummonedBy = BlackMagicInstance.ReadInt(BaseUnitFields + (0xE * 4));
-                //FactionTemplate = BlackMagicInstance.ReadInt(BaseUnitFields + (0x37 * 4));
             }
             catch { }
+            try
+            {
+                Mana = BlackMagicInstance.ReadInt(Descriptor + 0x64);
+                MaxMana = BlackMagicInstance.ReadInt(Descriptor + 0x84);
+            }
+            catch { }
+            try
+            {
+                Rage = BlackMagicInstance.ReadInt(Descriptor + 0x68) / 10;
+                MaxRage = 100;
+            }
+            catch { }
+            try
+            {
+                Energy = BlackMagicInstance.ReadInt(BaseAddress + 0xFC0);
+                MaxEnergy = 100;
+            }
+            catch { }
+            try
+            {
+                RuneEnergy = BlackMagicInstance.ReadInt(BaseAddress + 0x19D4 / 10);
+                MaxRuneEnergy = 100;
+            }
+            catch { }
+            //CombatReach = BlackMagicInstance.ReadInt(BaseUnitFields + (0x42 * 4));
+            //ChannelSpell = BlackMagicInstance.ReadInt(BaseUnitFields + (0x16 * 4));
+            //SummonedBy = BlackMagicInstance.ReadInt(BaseUnitFields + (0xE * 4));
+            //FactionTemplate = BlackMagicInstance.ReadInt(BaseUnitFields + (0x37 * 4));
 
             try
             {

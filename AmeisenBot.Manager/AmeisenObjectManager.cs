@@ -181,6 +181,7 @@ namespace AmeisenBotManager
                         break;
                     }
                 }
+                t.Update();
             }
 
             // Best place for this :^)

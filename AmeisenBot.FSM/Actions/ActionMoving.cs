@@ -36,6 +36,7 @@ namespace AmeisenBotFSM.Actions
             AmeisenDataHolder = ameisenDataHolder;
             AmeisenDBManager = ameisenDBManager;
             WaypointQueue = new Queue<Vector3>();
+            LastPosition = new Vector3(int.MaxValue, int.MaxValue, int.MaxValue);
         }
 
         public virtual void DoThings()
@@ -48,7 +49,6 @@ namespace AmeisenBotFSM.Actions
 
         public virtual void Start()
         {
-            LastPosition = new Vector3(int.MaxValue, int.MaxValue, int.MaxValue);
         }
 
         public virtual void Stop()
@@ -65,18 +65,19 @@ namespace AmeisenBotFSM.Actions
         /// <returns>if we havent moved 0.5m in the 2 vectors, jump and return true</returns>
         private bool CheckIfWeAreStuckIfYesJump(Vector3 initialPosition, Vector3 activePosition)
         {
+            double oldMovedSinceLastTick = MovedSinceLastTick;
+            MovedSinceLastTick = Utils.GetDistance(initialPosition, activePosition);
+
             // we are possibly stuck at a fence or something alike
             if (MovedSinceLastTick != 0 && MovedSinceLastTick < 1000)
             {
-                if (MovedSinceLastTick < AmeisenDataHolder.Settings.MovementJumpThreshold)
+                if (MovedSinceLastTick - oldMovedSinceLastTick < AmeisenDataHolder.Settings.MovementJumpThreshold)
                 {
                     AmeisenCore.CharacterJumpAsync();
                     AmeisenLogger.Instance.Log(LogLevel.DEBUG, $"Jumping: {MovedSinceLastTick}", this);
                     return true;
                 }
             }
-
-            MovedSinceLastTick = Utils.GetDistance(initialPosition, activePosition);
             return false;
         }
 
@@ -160,7 +161,7 @@ namespace AmeisenBotFSM.Actions
             int currentTry = 0;
             while (currentTry < 10 && Utils.GetDistance(Me.pos, targetPosition) > AmeisenDataHolder.Settings.followDistance)
             {
-                CheckIfWeAreStuckIfYesJump(targetPosition, LastPosition);
+                CheckIfWeAreStuckIfYesJump(Me.pos, LastPosition);
 
                 if (targetPosition.Z == 0)
                 {
