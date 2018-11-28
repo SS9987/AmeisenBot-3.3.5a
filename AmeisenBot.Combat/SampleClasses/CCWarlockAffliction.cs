@@ -98,40 +98,111 @@ namespace AmeisenBotCombat.SampleClasses
                 return;
             }
 
+            if (Target.HealthPercentage < 5)
+            {
+                if (CombatUtils.IsInRange(Me, Target, 30))
+                {
+                    CombatUtils.CastSpellByName(Me, Target, "Drain Soul", false);
+                    return;
+                }
+                else
+                {
+                    CombatUtils.MoveInRange(Me, Target, 30);
+                }
+            }
+
+            if (Me.HealthPercentage < 70)
+            {
+                if (CombatUtils.IsInRange(Me, Target, 30))
+                {
+                    CombatUtils.CastSpellByName(Me, Target, "Death Coil", false);
+                    return;
+                }
+                else
+                {
+                    CombatUtils.MoveInRange(Me, Target, 30);
+                }
+            }
+
             Target?.Update();
             // DoT's to apply
             if (!targetAuras.Contains("curse of agony"))
             {
-                CombatUtils.CastSpellByName(Me, Target, "Curse of Agony", false);
-                return;
+                if (CombatUtils.IsInRange(Me, Target, 30))
+                {
+                    CombatUtils.CastSpellByName(Me, Target, "Curse of Agony", false);
+                    return;
+                }
+                else
+                {
+                    CombatUtils.MoveInRange(Me, Target, 30);
+                }
             }
+
             if (!targetAuras.Contains("corruption"))
             {
-                CombatUtils.CastSpellByName(Me, Target, "Corruption", false);
-                return;
+                if (CombatUtils.IsInRange(Me, Target, 30))
+                {
+                    CombatUtils.CastSpellByName(Me, Target, "Corruption", false);
+                    return;
+                }
+                else
+                {
+                    CombatUtils.MoveInRange(Me, Target, 30);
+                }
             }
+
             if (!targetAuras.Contains("unstable affliction"))
             {
-                CombatUtils.CastSpellByName(Me, Target, "Unstable Affliction", false);
-                return;
+                if (CombatUtils.IsInRange(Me, Target, 30))
+                {
+                    CombatUtils.CastSpellByName(Me, Target, "Unstable Affliction", false);
+                    return;
+                }
+                else
+                {
+                    CombatUtils.MoveInRange(Me, Target, 30);
+                }
             }
+
             if (!targetAuras.Contains("haunt"))
             {
-                CombatUtils.CastSpellByName(Me, Target, "Haunt", false);
-                return;
+                if (CombatUtils.IsInRange(Me, Target, 30))
+                {
+                    CombatUtils.CastSpellByName(Me, Target, "Haunt", false);
+                    return;
+                }
+                else
+                {
+                    CombatUtils.MoveInRange(Me, Target, 30);
+                }
             }
 
             Target?.Update();
             // Active-Damage Spell
             if (Target?.HealthPercentage < 25)
             {
-                CombatUtils.CastSpellByName(Me, Target, "Drain Soul", false);
-                return;
+                if (CombatUtils.IsInRange(Me, Target, 30))
+                {
+                    CombatUtils.CastSpellByName(Me, Target, "Drain Soul", false);
+                    return;
+                }
+                else
+                {
+                    CombatUtils.MoveInRange(Me, Target, 30);
+                }
             }
             else
             {
-                CombatUtils.CastSpellByName(Me, Target, "Shadow Bolt", false);
-                return;
+                if (CombatUtils.IsInRange(Me, Target, 30))
+                {
+                    CombatUtils.CastSpellByName(Me, Target, "Shadow Bolt", false);
+                    return;
+                }
+                else
+                {
+                    CombatUtils.MoveInRange(Me, Target, 30);
+                }
             }
         }
     }

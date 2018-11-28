@@ -16,6 +16,7 @@ namespace AmeisenBotData
         public bool IsAllowedToTank { get; set; }
         public Me Me { get; set; }
         public Unit Target { get; set; }
+        public Unit Pet { get; set; }
         public bool IsAllowedToReleaseSpirit { get; set; }
         public bool IsAllowedToRevive { get; set; }
         public Settings Settings { get; set; }

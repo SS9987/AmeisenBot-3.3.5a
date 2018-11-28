@@ -15,6 +15,7 @@ namespace AmeisenBotUtilities
         public ulong PartyleaderGUID { get; set; }
         public List<ulong> PartymemberGuids { get; set; }
         public uint PlayerBase { get; set; }
+        public ulong PetGuid { get; set; }
 
         public Me(uint baseAddress, BlackMagic blackMagic) : base(baseAddress, blackMagic)
         {
@@ -95,6 +96,7 @@ namespace AmeisenBotUtilities
                 //CurrentState = (UnitState)BlackMagicInstance.ReadInt(castingState + Offsets.localPlayerCharacterStateOffset3);
 
                 TargetGuid = BlackMagicInstance.ReadUInt64(Descriptor + 0x48);
+                PetGuid = BlackMagicInstance.ReadUInt64(Offsets.petGuid);
 
                 PartymemberGuids = new List<ulong>();
                 PartyleaderGUID = BlackMagicInstance.ReadUInt64(Offsets.partyLeader);

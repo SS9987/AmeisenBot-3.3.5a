@@ -19,9 +19,15 @@ namespace AmeisenBotCombat
         /// <param name="waitOnCastToFinish">wait for the cast to finish</param>
         public static void CastSpellByName(Me me, Unit target, string spellname, bool onMyself, bool waitOnCastToFinish = true)
         {
-            SpellInfo spellInfo = GetSpellInfo(spellname);
+            //SpellInfo spellInfo = GetSpellInfo(spellname);
+            if (target != null && target.Guid != 0)
+            {
+                if (!IsFacingMelee(me, target))
+                {
+                    FaceUnit(me, target);
+                }
+            }
 
-            FaceUnit(me, target);
             AmeisenCore.CastSpellByName(spellname, onMyself);
 
             if (waitOnCastToFinish)
@@ -51,8 +57,14 @@ namespace AmeisenBotCombat
         /// <param name="spellname">spell to check for</param>
         /// <returns>wether the spell is useable or not</returns>
         public static bool IsSpellUseable(string spellname)
-            => AmeisenCore.IsSpellUseable(spellname) 
+            => AmeisenCore.IsSpellUseable(spellname)
             && !AmeisenCore.IsOnCooldown(spellname);
+
+        public static void StopMovement(Me me)
+            => AmeisenCore.InteractWithGUID(me.pos, me.Guid, InteractionType.STOP);
+
+        public static void TargetLuaUnit(LuaUnit unit)
+            => AmeisenCore.TargetLuaUnit(unit);
 
         /// <summary>
         /// Get a Units buffs & debuffs
@@ -84,8 +96,17 @@ namespace AmeisenBotCombat
         /// <param name="me">you</param>
         /// <param name="unit">target</param>
         /// <returns>wether you're facing the unit or not</returns>
-        public static bool IsFacing(Me me, Unit unit)
-            => Utils.IsFacing(me.pos, me.Rotation, unit.pos);
+        public static bool IsFacingRanged(Me me, Unit unit, double minRotation = 0.7, double maxRotation = 1.3)
+            => Utils.IsFacing(me.pos, me.Rotation, unit.pos, minRotation, maxRotation);
+
+        /// <summary>
+        /// Check for facing a specific unit
+        /// </summary
+        /// <param name="me">you</param>
+        /// <param name="unit">target</param>
+        /// <returns>wether you're facing the unit or not</returns>
+        public static bool IsFacingMelee(Me me, Unit unit, double minRotation = 0.3, double maxRotation = 1.7)
+            => Utils.IsFacing(me.pos, me.Rotation, unit.pos, minRotation, maxRotation);
 
         /// <summary>
         /// Check the LuaUnit for its enemy-state
@@ -169,15 +190,15 @@ namespace AmeisenBotCombat
         /// <param name="unit">unit to turn to</param>
         public static void FaceUnit(Me me, Unit unit)
         {
-            if (unit != null)
+            /*if (unit != null)
             {
                 unit.Update();
                 AmeisenCore.MovePlayerToXYZ(
                     unit.pos,
                     InteractionType.FACETARGET,
                     0);
-                //AmeisenCore.FaceUnit(me, unit);
-            }
+            }*/
+            AmeisenCore.FaceUnit(me, unit);
         }
 
         /// <summary>
@@ -229,7 +250,7 @@ namespace AmeisenBotCombat
         public static Unit AssistParty(Me me, List<WowObject> activeWowObjects)
         {
             // Get the one with the lowest hp and assist him/her
-            List<Unit> units = PartymembersInCombat(me, activeWowObjects);
+            List<Unit> units = GetPartymembersInCombat(me, activeWowObjects);
             if (units.Count > 0)
             {
                 Unit u = units.OrderBy(o => o.HealthPercentage).ToList()[0];
@@ -280,13 +301,13 @@ namespace AmeisenBotCombat
         public static Unit TargetTargetToHeal(Me me, List<WowObject> activeWowObjects)
         {
             // Get the one with the lowest hp and target him/her
-            List<Unit> units = PartymembersInCombat(me, activeWowObjects);
+            List<Unit> units = GetPartymembers(me, activeWowObjects);
             if (units.Count > 0)
             {
-                Unit u = units.OrderBy(o => o.HealthPercentage).ToList()[0];
-                u.Update();
-                AmeisenCore.TargetGUID(u.Guid);
-                return u;
+                List<Unit> unitsSorted = units.OrderBy(o => o.HealthPercentage).ToList();
+                unitsSorted[0].Update();
+                AmeisenCore.TargetGUID(unitsSorted[0].Guid);
+                return unitsSorted[0];
             }
             return null;
         }
@@ -295,7 +316,7 @@ namespace AmeisenBotCombat
         /// Check if any of our partymembers are in combat
         /// </summary>
         /// <returns>returns all partymembers in combat</returns>
-        public static List<Unit> PartymembersInCombat(Me me, List<WowObject> activeWowObjects)
+        public static List<Unit> GetPartymembersInCombat(Me me, List<WowObject> activeWowObjects)
         {
             List<Unit> inCombatUnits = new List<Unit>();
             try
@@ -304,9 +325,45 @@ namespace AmeisenBotCombat
                 {
                     foreach (WowObject obj in activeWowObjects)
                     {
-                        if (guid == obj.Guid && ((Unit)obj).InCombat)
+                        if (obj.GetType() == typeof(Unit)
+                            || obj.GetType() == typeof(Player)
+                            || obj.GetType() == typeof(Me))
                         {
-                            inCombatUnits.Add(((Unit)obj));
+                            if (guid == obj.Guid && ((Unit)obj).InCombat)
+                            {
+                                inCombatUnits.Add(((Unit)obj));
+                                ((Unit)obj).Update();
+                            }
+                        }
+                    }
+                }
+            }
+            catch { }
+            return inCombatUnits;
+        }
+
+        /// <summary>
+        /// Check if any of our partymembers are in combat
+        /// </summary>
+        /// <returns>returns all partymembers in combat</returns>
+        public static List<Unit> GetPartymembers(Me me, List<WowObject> activeWowObjects)
+        {
+            List<Unit> inCombatUnits = new List<Unit>();
+            try
+            {
+                foreach (ulong guid in me.PartymemberGuids)
+                {
+                    foreach (WowObject obj in activeWowObjects)
+                    {
+                        if (obj.GetType() == typeof(Unit)
+                            || obj.GetType() == typeof(Player)
+                            || obj.GetType() == typeof(Me))
+                        {
+                            if (guid == obj.Guid)
+                            {
+                                inCombatUnits.Add(((Unit)obj));
+                                ((Unit)obj).Update();
+                            }
                         }
                     }
                 }

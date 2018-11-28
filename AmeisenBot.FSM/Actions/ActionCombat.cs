@@ -1,8 +1,6 @@
-﻿using AmeisenBotCombat.SampleClasses;
-using AmeisenBotData;
+﻿using AmeisenBotData;
 using AmeisenBotFSM.Interfaces;
 using AmeisenBotUtilities;
-using AmeisenBotUtilities.Enums;
 using AmeisenCombatEngine.Interfaces;
 using static AmeisenBotFSM.Objects.Delegates;
 
@@ -33,39 +31,8 @@ namespace AmeisenBotFSM.Actions
         public ActionCombat(AmeisenDataHolder ameisenDataHolder, IAmeisenCombatClass combatClass)
         {
             AmeisenDataHolder = ameisenDataHolder;
-
-            // TODO: Add Class/Spec recognition
-            if (combatClass == null)
-            {
-                switch (Me.Class)
-                {
-                    case WowClass.Warlock:
-                        CombatClass = new CCWarlockAffliction
-                        {
-                            AmeisenDataHolder = ameisenDataHolder
-                        };
-                        break;
-
-                    case WowClass.Warrior:
-                        CombatClass = new CCWarriorArms
-                        {
-                            AmeisenDataHolder = ameisenDataHolder
-                        };
-                        break;
-
-                    default:
-                        CombatClass = new CCAutoAttackOnly
-                        {
-                            AmeisenDataHolder = ameisenDataHolder
-                        };
-                        break;
-                }
-            }
-            else
-            {
-                CombatClass = combatClass;
-                CombatClass.AmeisenDataHolder = ameisenDataHolder;
-            }
+            CombatClass = combatClass;
+            CombatClass.AmeisenDataHolder = ameisenDataHolder;
         }
 
         public void DoThings()
@@ -82,11 +49,6 @@ namespace AmeisenBotFSM.Actions
                     if (AmeisenDataHolder.IsAllowedToTank)
                     {
                         CombatClass.HandleTanking();
-                    }
-
-                    if (AmeisenDataHolder.IsAllowedToHeal)
-                    {
-                        CombatClass.HandleHealing();
                     }
                 }
             }

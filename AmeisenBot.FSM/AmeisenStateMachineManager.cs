@@ -110,6 +110,12 @@ namespace AmeisenBotFSM
 
                 // Is me supposed to follow
                 FollowCheck();
+                
+                // Do i need to heal
+                if (AmeisenDataHolder.IsAllowedToHeal)
+                {
+                    CombatClass.HandleHealing();
+                }
 
                 // Do i need to buff
                 if (AmeisenDataHolder.IsAllowedToBuff)
@@ -180,7 +186,7 @@ namespace AmeisenBotFSM
             {
                 if (Me.InCombat
                     || (AmeisenDataHolder.IsAllowedToAssistParty
-                    && CombatUtils.PartymembersInCombat(Me, AmeisenDataHolder.ActiveWoWObjects).Count > 0))
+                    && CombatUtils.GetPartymembersInCombat(Me, AmeisenDataHolder.ActiveWoWObjects).Count > 0))
                 {
                     if (StateMachine.GetCurrentState() != BotState.Idle)
                     {

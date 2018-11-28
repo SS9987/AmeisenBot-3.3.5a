@@ -188,11 +188,11 @@ namespace AmeisenBotUtilities
         /// <param name="myRotation">My rotaion</param>
         /// <param name="targetPosition">Targte position</param>
         /// <returns>true if the target is in our view area, false if not</returns>
-        public static bool IsFacing(Vector3 myPosition, float myRotation, Vector3 targetPosition)
+        public static bool IsFacing(Vector3 myPosition, float myRotation, Vector3 targetPosition, double minRotation, double maxRotation)
         {
             float f = GetFacingAngle(myPosition, myRotation, targetPosition);
 
-            return (f >= (myRotation * 0.7)) && (f <= (myRotation * 1.3)) ? true : false;
+            return (f >= (myRotation * minRotation)) && (f <= (myRotation * maxRotation)) ? true : false;
         }
 
         public static float GetFacingAngle(Vector3 myPosition, float myRotation, Vector3 targetPosition)

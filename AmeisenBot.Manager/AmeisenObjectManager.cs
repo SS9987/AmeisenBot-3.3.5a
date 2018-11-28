@@ -38,6 +38,12 @@ namespace AmeisenBotManager
             set { AmeisenDataHolder.Target = value; }
         }
 
+        private Unit Pet
+        {
+            get { return AmeisenDataHolder.Pet; }
+            set { AmeisenDataHolder.Pet = value; }
+        }
+
         public AmeisenObjectManager(AmeisenDataHolder ameisenDataHolder, AmeisenDBManager ameisenDBManager)
         {
             AmeisenDataHolder = ameisenDataHolder;
@@ -158,6 +164,28 @@ namespace AmeisenBotManager
                 if (t.GetType() == typeof(Me))
                 {
                     Me = (Me)t;
+                }
+
+                if (Me != null && t.Guid == Me.PetGuid)
+                {
+                    t.Update();
+                    if (t.GetType() == typeof(Player))
+                    {
+                        t.Distance = Utils.GetDistance(Me.pos, t.pos);
+                        Pet = (Player)t;
+                        break;
+                    }
+                    else if (t.GetType() == typeof(Unit))
+                    {
+                        t.Distance = Utils.GetDistance(Me.pos, t.pos);
+                        Pet = (Unit)t;
+                        break;
+                    }
+                    else if (t.GetType() == typeof(Me))
+                    {
+                        Pet = (Me)t;
+                        break;
+                    }
                 }
 
                 if (Me != null && t.Guid == Me.TargetGuid)

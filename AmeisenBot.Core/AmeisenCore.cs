@@ -58,6 +58,8 @@ namespace AmeisenBotCore
 
         public static void DeclineResurrect() => LuaDoString("DeclineResurrect();");
 
+        public static void TargetLuaUnit(LuaUnit unit) => LuaDoString($"TargetUnit(\"{unit.ToString()}\");");
+
         public static void AcceptSummon() => LuaDoString("ConfirmSummon();");
 
         public static void DeclineSummon() => LuaDoString("CancelSummon();");
@@ -236,9 +238,16 @@ namespace AmeisenBotCore
             return resultLowered;
         }
 
+        public static void SendMovementUpdate(int opcode, int ticks)
+        {
+            
+        }
+
         public static void FaceUnit(Me me, Unit unit)
         {
             BlackMagic.WriteFloat(me.BaseAddress + 0x7A8, Utils.GetFacingAngle(me.pos, me.Rotation, unit.pos));
+            LuaDoString("TurnRightStart();TurnRightStop();");
+            //SendMovementUpdate(0xDA, Environment.TickCount);
         }
 
         /// <summary>
@@ -404,7 +413,7 @@ namespace AmeisenBotCore
         /// Get our current MapID
         /// </summary>
         /// <returns>mapid</returns>
-        public static int GetMapID() => BlackMagic.ReadInt(Offsets.mapID);
+        public static int GetMapID() => BlackMagic.ReadInt(Offsets.mapId);
 
         /// <summary>
         /// Run through the WoWObjectManager and find the BaseAdress corresponding to the given GUID
@@ -494,7 +503,7 @@ namespace AmeisenBotCore
         /// Get our active ZoneID
         /// </summary>
         /// <returns>zoneid that wer'e currently in</returns>
-        public static int GetZoneID() => BlackMagic.ReadInt(Offsets.zoneID);
+        public static int GetZoneID() => BlackMagic.ReadInt(Offsets.zoneId);
 
         /// <summary>
         /// Move the player to the given guid npc, object or whatever and iteract with it.
@@ -505,7 +514,7 @@ namespace AmeisenBotCore
         public static void InteractWithGUID(Vector3 pos, ulong guid, InteractionType action)
         {
             AmeisenLogger.Instance.Log(LogLevel.DEBUG, $"Interacting[{action}]: X [{pos.X}] Y [{pos.Y}] Z [{pos.Z}] GUID [{guid}]", "AmeisenCore");
-            BlackMagic.WriteUInt64(Offsets.ctmGUID, guid);
+            BlackMagic.WriteUInt64(Offsets.ctmGuid, guid);
             MovePlayerToXYZ(pos, action);
         }
 
@@ -599,13 +608,13 @@ namespace AmeisenBotCore
         /// Get the bot's char's GUID
         /// </summary>
         /// <returns>the GUID</returns>
-        public static ulong ReadPlayerGUID() => BlackMagic.ReadUInt64(Offsets.localPlayerGUID);
+        public static ulong ReadPlayerGUID() => BlackMagic.ReadUInt64(Offsets.localPlayerGuid);
 
         /// <summary>
         /// Get the bot's char's target's GUID
         /// </summary>
         /// <returns>targets guid</returns>
-        public static ulong ReadTargetGUID() => BlackMagic.ReadUInt64(Offsets.localTargetGUID);
+        public static ulong ReadTargetGUID() => BlackMagic.ReadUInt64(Offsets.localTargetGuid);
 
         /// <summary>
         /// Read WoWObject from WoW's memory by its BaseAddress

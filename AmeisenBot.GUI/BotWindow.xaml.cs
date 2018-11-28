@@ -300,7 +300,15 @@ namespace AmeisenBotGUI
                     break;
             }
 
-            labelExp.Content = $"Exp {BotManager.Me.Exp} / {BotManager.Me.MaxExp}";
+            if (BotManager.Me.MaxExp > 100000)
+            {
+                labelExp.Content = $"Exp {BotManager.Me.Exp / 1000}k / {BotManager.Me.MaxExp / 1000}k";
+            }
+            else
+            {
+                labelExp.Content = $"Exp {BotManager.Me.Exp} / {BotManager.Me.MaxExp}";
+            }
+
             progressBarXP.Maximum = BotManager.Me.MaxExp;
             progressBarXP.Value = BotManager.Me.Exp;
         }
@@ -422,5 +430,15 @@ namespace AmeisenBotGUI
 
         private void CheckBoxDoBotStuff_Click(object sender, RoutedEventArgs e)
             => BotManager.IsAllowedToDoOwnStuff = (bool)checkBoxDoBotStuff.IsChecked;
+
+        private void ButtonDebugTest_Click(object sender, RoutedEventArgs e)
+        {
+            AmeisenBotCore.AmeisenCore.FaceUnit(BotManager.Me, BotManager.Target);
+        }
+
+        private void ButtonDebugTest2_Click(object sender, RoutedEventArgs e)
+        {
+            AmeisenBotCore.AmeisenCore.LuaDoString("TurnRightStop();");
+        }
     }
 }

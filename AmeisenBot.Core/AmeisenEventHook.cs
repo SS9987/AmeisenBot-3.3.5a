@@ -1,6 +1,7 @@
 ﻿using AmeisenBotCore.Structs;
 using AmeisenBotLogger;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
@@ -71,7 +72,7 @@ namespace AmeisenBotCore
                 {
                     rawEvents = JsonConvert.DeserializeObject<List<RawEvent>>(eventJson);
                 }
-                catch { AmeisenLogger.Instance.Log(LogLevel.ERROR, "Failed to parse events Json", this); }
+                catch (Exception e){ AmeisenLogger.Instance.Log(LogLevel.ERROR, $"Failed to parse events Json: {e}", this); }
 
                 AmeisenLogger.Instance.Log(LogLevel.VERBOSE, $"Parsed {rawEvents.Count} events", this);
                 if (rawEvents.Count > 0)

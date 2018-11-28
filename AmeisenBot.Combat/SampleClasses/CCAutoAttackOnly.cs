@@ -57,7 +57,7 @@ namespace AmeisenBotCombat.SampleClasses
 
             if (unitToAttack != null)
             {
-                if (!CombatUtils.IsFacing(Me, unitToAttack))
+                if (!CombatUtils.IsFacingMelee(Me, unitToAttack))
                 {
                     CombatUtils.FaceUnit(Me, unitToAttack);
                 }
@@ -65,6 +65,10 @@ namespace AmeisenBotCombat.SampleClasses
                 if (!CombatUtils.IsInRange(Me, unitToAttack, 3.0))
                 {
                     CombatUtils.MoveInRange(Me, unitToAttack, 2.0);
+                }
+                else
+                {
+                    CombatUtils.StopMovement(Me);
                 }
 
                 // start autoattack

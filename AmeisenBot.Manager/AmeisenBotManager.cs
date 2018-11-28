@@ -1,4 +1,5 @@
 ﻿using AmeisenBot.Character;
+using AmeisenBotCombat.SampleClasses;
 using AmeisenBotCore;
 using AmeisenBotData;
 using AmeisenBotDB;
@@ -114,6 +115,7 @@ namespace AmeisenBotManager
         public List<WowExe> RunningWows { get { return AmeisenCore.GetRunningWows(); } }
         public Settings Settings { get { return AmeisenSettings.Settings; } }
         public Unit Target { get { return AmeisenDataHolder.Target; } }
+        public Unit Pet { get { return AmeisenDataHolder.Pet; } }
         public WowExe WowExe { get; private set; }
         public Process WowProcess { get; private set; }
         public int MapID { get { return AmeisenCore.GetMapID(); } }
@@ -264,6 +266,10 @@ namespace AmeisenBotManager
 
             // Load the combatclass
             IAmeisenCombatClass combatClass = CompileAndLoadCombatClass(AmeisenSettings.Settings.combatClassPath);
+            if (combatClass == null)
+            {
+                combatClass = LoadDefaultClassForSpec();
+            }
 
             // Init our MovementEngine to position ourself according to our formation
             AmeisenMovementEngine = new AmeisenMovementEngine(new DefaultFormation())
@@ -294,11 +300,47 @@ namespace AmeisenBotManager
             }
         }
 
+        private IAmeisenCombatClass LoadDefaultClassForSpec()
+        {
+            switch (Me.Class)
+            {
+                case WowClass.Warlock:
+                    return new CCWarlockAffliction
+                    {
+                        AmeisenDataHolder = AmeisenDataHolder
+                    };
+
+                case WowClass.Warrior:
+                    return new CCWarriorArms
+                    {
+                        AmeisenDataHolder = AmeisenDataHolder
+                    };
+
+                case WowClass.Druid:
+                    return new CCDruidRestoration
+                    {
+                        AmeisenDataHolder = AmeisenDataHolder
+                    };
+
+                case WowClass.Hunter:
+                    return new CCHunterBeastmaster
+                    {
+                        AmeisenDataHolder = AmeisenDataHolder
+                    };
+
+                default:
+                    return new CCAutoAttackOnly
+                    {
+                        AmeisenDataHolder = AmeisenDataHolder
+                    };
+            }
+        }
+
         private void OnRegenEnabled(long timestamp, List<string> args)
             => Me.InCombatEvent = false;
 
         private void OnRegenDisabled(long timestamp, List<string> args)
-            =>Me.InCombatEvent = true;
+            => Me.InCombatEvent = true;
 
         private void OnNewItem(long timestamp, List<string> args)
         {
