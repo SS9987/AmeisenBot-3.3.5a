@@ -246,7 +246,7 @@ namespace AmeisenBotCore
         public static void FaceUnit(Me me, Unit unit)
         {
             BlackMagic.WriteFloat(me.BaseAddress + 0x7A8, Utils.GetFacingAngle(me.pos, me.Rotation, unit.pos));
-            LuaDoString("TurnRightStart();TurnRightStop();");
+            LuaDoString("MoveBackwardStart();MoveBackwardStop();MoveBackwardStop();MoveBackwardStop();");
             //SendMovementUpdate(0xDA, Environment.TickCount);
         }
 
@@ -489,11 +489,10 @@ namespace AmeisenBotCore
         public static CastingInfo GetUnitCastingInfo(LuaUnit luaunit)
         {
             CastingInfo info = new CastingInfo();
-            string cmd = $"name, _, _, _, _, endTime _, _, canInterrupt = UnitCastingInfo(\"{luaunit.ToString()}\");";
+            string cmd = $"name, _, _, _, _, endTime = UnitCastingInfo(\"{luaunit.ToString()}\");";
 
             try { info.name = GetLocalizedText(cmd, "name"); } catch { info.name = "none"; }
             try { info.endTime = int.Parse(GetLocalizedText(cmd, "endTime")); } catch { info.endTime = -1; }
-            //try { info.canInterrupt = bool.Parse(GetLocalizedText(cmd, "canInterrupt")); } catch { info.canInterrupt = false; }
 
             AmeisenLogger.Instance.Log(LogLevel.DEBUG, $"CastingInfo: [{info.name}, {info.endTime}]", "AmeisenCore");
             return info;

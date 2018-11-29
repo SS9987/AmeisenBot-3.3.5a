@@ -46,7 +46,7 @@ namespace AmeisenBotCombat.SampleClasses
             Unit unitToAttack = Target;
 
             // Get a target
-            if (Me.TargetGuid == 0)
+            if (Me.TargetGuid == 0 || CombatUtils.IsFriend(LuaUnit.target))
             {
                 unitToAttack = CombatUtils.AssistParty(Me, AmeisenDataHolder.ActiveWoWObjects);
             }
@@ -54,11 +54,22 @@ namespace AmeisenBotCombat.SampleClasses
             if (unitToAttack != null)
             {
                 // Start autoattack
-                if (!Me.InCombat)
+                if (!CombatUtils.IsFacingMelee(Me, unitToAttack))
                 {
                     CombatUtils.FaceUnit(Me, unitToAttack);
-                    CombatUtils.AttackTarget();
                 }
+
+                if (!CombatUtils.IsInRange(Me, unitToAttack, 3.0))
+                {
+                    CombatUtils.MoveInRange(Me, unitToAttack, 2.0);
+                }
+                else
+                {
+                    CombatUtils.StopMovement(Me);
+                }
+
+                // start autoattack
+                CombatUtils.AttackTarget();
 
                 DoAttackRoutine();
             }

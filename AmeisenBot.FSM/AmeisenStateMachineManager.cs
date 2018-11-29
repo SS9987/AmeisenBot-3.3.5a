@@ -99,18 +99,14 @@ namespace AmeisenBotFSM
         {
             while (Active)
             {
+                Thread.Sleep(AmeisenDataHolder.Settings.stateMachineStateUpdateMillis);
+
                 // Am I in combat
-                InCombatCheck();
+                if (InCombatCheck())
+                {
+                    continue;
+                }
 
-                // Am I dead?
-                DeadCheck();
-
-                // Bot stuff check
-                BotStuffCheck();
-
-                // Is me supposed to follow
-                FollowCheck();
-                
                 // Do i need to heal
                 if (AmeisenDataHolder.IsAllowedToHeal)
                 {
@@ -123,15 +119,35 @@ namespace AmeisenBotFSM
                     CombatClass?.HandleBuffs();
                 }
 
+                // Am I dead?
+                if (DeadCheck())
+                {
+                    continue;
+                }
+
+                // Bot stuff check
+                if (BotStuffCheck())
+                {
+                    continue;
+                }
+
+                // Is me supposed to follow
+                if (FollowCheck())
+                {
+                    continue;
+                }
+
                 // Do I need to release my spirit
-                ReleaseSpiritCheck();
+                if (ReleaseSpiritCheck())
+                {
+                    continue;
+                }
 
                 AmeisenLogger.Instance.Log(LogLevel.VERBOSE, $"FSM: {StateMachine.GetCurrentState()}", this);
-                Thread.Sleep(AmeisenDataHolder.Settings.stateMachineStateUpdateMillis);
             }
         }
 
-        private void BotStuffCheck()
+        private bool BotStuffCheck()
         {
             if (AmeisenDataHolder.IsAllowedToDoOwnStuff)
             {
@@ -139,14 +155,16 @@ namespace AmeisenBotFSM
                 {
                     StateMachine.PushAction(BotState.BotStuff);
                 }
+                return true;
             }
             else if (StateMachine.GetCurrentState() == BotState.BotStuff)
             {
                 StateMachine.PopAction();
             }
+            return false;
         }
 
-        private void FollowCheck()
+        private bool FollowCheck()
         {
             if (Me.PartyleaderGUID != 0)
             {
@@ -171,6 +189,7 @@ namespace AmeisenBotFSM
                         {
                             StateMachine.PushAction(BotState.Follow);
                         }
+                        return true;
                     }
                     else if (StateMachine.GetCurrentState() == BotState.Follow)
                     {
@@ -178,9 +197,10 @@ namespace AmeisenBotFSM
                     }
                 }
             }
+            return false;
         }
 
-        private void InCombatCheck()
+        private bool InCombatCheck()
         {
             if (Me != null)
             {
@@ -193,16 +213,21 @@ namespace AmeisenBotFSM
                         StateMachine.PopAction();
                     }
 
-                    StateMachine.PushAction(BotState.Combat);
+                    if (StateMachine.GetCurrentState() != BotState.Combat)
+                    {
+                        StateMachine.PushAction(BotState.Combat);
+                    }
+                    return true;
                 }
                 else if (StateMachine.GetCurrentState() == BotState.Combat)
                 {
                     StateMachine.PopAction();
                 }
             }
+            return false;
         }
 
-        private void ReleaseSpiritCheck()
+        private bool ReleaseSpiritCheck()
         {
             if (AmeisenDataHolder.IsAllowedToReleaseSpirit)
             {
@@ -210,11 +235,13 @@ namespace AmeisenBotFSM
                 {
                     AmeisenCore.ReleaseSpirit();
                     Thread.Sleep(2000);
+                    return true;
                 }
             }
+            return false;
         }
 
-        private void DeadCheck()
+        private bool DeadCheck()
         {
             if (AmeisenDataHolder.IsAllowedToRevive)
             {
@@ -226,12 +253,14 @@ namespace AmeisenBotFSM
                     }
 
                     StateMachine.PushAction(BotState.Dead);
+                    return true;
                 }
                 else if (StateMachine.GetCurrentState() == BotState.Dead)
                 {
                     StateMachine.PopAction();
                 }
             }
+            return false;
         }
     }
 }

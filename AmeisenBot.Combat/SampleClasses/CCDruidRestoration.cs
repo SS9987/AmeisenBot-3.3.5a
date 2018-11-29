@@ -100,10 +100,14 @@ namespace AmeisenBotCombat.SampleClasses
             {
                 CombatUtils.TargetLuaUnit(LuaUnit.player);
             }
-            Me.Update();
-            Target.Update();
 
-            DoHealRoutine();
+            Me.Update();
+            if (Target != null && Target.Guid != 0)
+            {
+                Target.Update();
+
+                DoHealRoutine();
+            }
         }
 
         public void HandleTanking()
@@ -116,6 +120,11 @@ namespace AmeisenBotCombat.SampleClasses
 
             Me?.Update();
             Target?.Update();
+
+            if (Target.HealthPercentage == 0)
+            {
+                return;
+            }
 
             if (Target.HealthPercentage < 60)
             {

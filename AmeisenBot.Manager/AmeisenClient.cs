@@ -34,10 +34,10 @@ namespace AmeisenBotManager
             AmeisenDataHolder = ameisenDataHolder;
             ameisenDataHolder.IsConnectedToServer = false;
 
-            botUpdateTimer = new System.Timers.Timer(1000);
+            botUpdateTimer = new Timer(1000);
             botUpdateTimer.Elapsed += UpdateBot;
 
-            botListUpdateTimer = new System.Timers.Timer(1000);
+            botListUpdateTimer = new Timer(1000);
             botListUpdateTimer.Elapsed += UpdateBotList;
         }
 

@@ -15,6 +15,7 @@ namespace AmeisenBotCore
     {
         public bool isHooked = false;
         public bool isInjectionUsed = false;
+        public int JobCount => hookJobs.Count;
         private const uint ENDSCENE_HOOK_OFFSET = 0x2;
         private uint codeCave;
         private uint codeCaveForInjection;

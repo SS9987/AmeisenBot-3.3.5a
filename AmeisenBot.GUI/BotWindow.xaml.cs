@@ -272,6 +272,11 @@ namespace AmeisenBotGUI
             labelHP.Content = $"Health {BotManager.Me.Health} / {BotManager.Me.MaxHealth}";
             progressBarHP.Maximum = BotManager.Me.MaxHealth;
             progressBarHP.Value = BotManager.Me.Health;
+            
+            labelMoney.Content = $"{BotManager.Money[2]}g {BotManager.Money[1]}s {BotManager.Money[1]}c";
+
+            labelHookQueue.Content = $"HookJobs {BotManager.HookJobsInQueue}/{30}";
+            progressbarHookQueue.Value = BotManager.HookJobsInQueue;
 
             switch (BotManager.Me.Class)
             {

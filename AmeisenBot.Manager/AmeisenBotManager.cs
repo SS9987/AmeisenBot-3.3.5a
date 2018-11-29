@@ -121,6 +121,20 @@ namespace AmeisenBotManager
         public int MapID { get { return AmeisenCore.GetMapID(); } }
         public int ZoneID { get { return AmeisenCore.GetZoneID(); } }
         public string LoadedConfigName { get { return AmeisenSettings.loadedconfName; } }
+        public int HookJobsInQueue => AmeisenHook.JobCount;
+        /// <summary>
+        /// Returns copper, silver, gold as an array
+        /// </summary>
+        public int[] Money
+        {
+            get
+            {
+                int copper = AmeisenCharacterManager.Character.Money % 100;
+                int silver = (AmeisenCharacterManager.Character.Money - copper) % 10000 / 100;
+                int gold = (AmeisenCharacterManager.Character.Money - (silver * 100 + copper)) / 10000;
+                return new int[] { copper, silver, gold };
+            }
+        }
 
         public List<NetworkBot> NetworkBots
         {

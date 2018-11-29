@@ -292,7 +292,7 @@
                 <SolidColorBrush Color="{DynamicResource AccentColor}" />
             </CheckBox.BorderBrush>
         </CheckBox>
-        <Label x:Name="labelFSMState" Content="Idling" HorizontalAlignment="Left" Margin="0,176,0,0" VerticalAlignment="Top">
+        <Label x:Name="labelFSMState" Content="Idling" HorizontalAlignment="Left" Margin="0,176,0,0" VerticalAlignment="Top" Width="59">
             <Label.Foreground>
                 <SolidColorBrush Color="{DynamicResource TextColor}" />
             </Label.Foreground>
@@ -407,5 +407,11 @@
                 <SolidColorBrush Color="{DynamicResource TextColor}" />
             </Button.Foreground>
         </Button>
+        <ProgressBar x:Name="progressbarHookQueue" HorizontalAlignment="Left" Height="76" Margin="160,176,0,0" VerticalAlignment="Top" Width="6" Foreground="Yellow" Background="{x:Null}" BorderBrush="{x:Null}" Orientation="Vertical" Maximum="30"/>
+        <Label x:Name="labelHookQueue" Content="HookJobs: 0/30" HorizontalAlignment="Left" Margin="83,232,0,0" VerticalAlignment="Top" FontSize="10">
+            <Label.Foreground>
+                <SolidColorBrush Color="{DynamicResource TextColor}" />
+            </Label.Foreground>
+        </Label>
     </Grid>
 </Window>

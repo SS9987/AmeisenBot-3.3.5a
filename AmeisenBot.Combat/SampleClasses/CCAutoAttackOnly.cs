@@ -40,7 +40,7 @@ namespace AmeisenBotCombat.SampleClasses
             Unit unitToAttack = Target;
 
             // get a target
-            if (Me.TargetGuid == 0)
+            if (Me.TargetGuid == 0 || CombatUtils.IsFriend(LuaUnit.target))
             //|| !CombatUtils.IsHostile(LuaUnit.target)
             //|| !CombatUtils.CanAttack(LuaUnit.target))
             {

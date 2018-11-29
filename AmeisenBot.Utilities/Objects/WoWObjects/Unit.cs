@@ -9,11 +9,11 @@ namespace AmeisenBotUtilities
         public BitVector32 DynamicUFlags { get; set; }
         public int Mana { get; set; }
         public int Health { get; set; }
-        public int HealthPercentage => (Health / MaxHealth) * 100;
-        public int ManaPercentage => (Mana / MaxMana) * 100;
-        public int RagePercentage => (Rage / MaxRage) * 100;
-        public int EnergyPercentage => (Energy / MaxEnergy) * 100;
-        public int RuneEnergyPercentage => (RuneEnergy / MaxRuneEnergy) * 100;
+        public double HealthPercentage => ((double)Health / (double)MaxHealth) * 100.0;
+        public double ManaPercentage => ((double)Mana / (double)MaxMana) * 100.0;
+        public double RagePercentage => ((double)Rage / (double)MaxRage) * 100.0;
+        public double EnergyPercentage => ((double)Energy / (double)MaxEnergy) * 100.0;
+        public double RuneEnergyPercentage => ((double)RuneEnergy / (double)MaxRuneEnergy) * 100.0;
         public bool InCombat => UFlags[(int)UnitFlags.COMBAT] || InCombatEvent;
         public bool IsCasting { get; set; }
         public bool IsDead { get; set; }
