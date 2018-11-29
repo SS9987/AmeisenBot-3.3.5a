@@ -65,9 +65,9 @@ namespace AmeisenBotCombat.SampleClasses
                     CombatUtils.FaceUnit(Me, unitToAttack);
                 }
 
-                if (!CombatUtils.IsInRange(Me, unitToAttack, 3.0))
+                if (!CombatUtils.IsInRange(Me, unitToAttack, 30.0))
                 {
-                    CombatUtils.MoveInRange(Me, unitToAttack, 2.0);
+                    CombatUtils.MoveInRange(Me, unitToAttack, 27.0);
                 }
                 else
                 {
@@ -134,7 +134,8 @@ namespace AmeisenBotCombat.SampleClasses
             Me?.Update();
             Target?.Update();
 
-            if (Utils.GetDistance(Me.pos, Target.pos) < 15)
+            // gtfo from here
+            if (Utils.GetDistance(Me.pos, Target.pos) < 5)
             {
                 if (CombatUtils.IsSpellUseable("Frost Trap"))
                 {

@@ -59,9 +59,9 @@ namespace AmeisenBotCombat.SampleClasses
                     CombatUtils.FaceUnit(Me, unitToAttack);
                 }
 
-                if (!CombatUtils.IsInRange(Me, unitToAttack, 3.0))
+                if (!CombatUtils.IsInRange(Me, unitToAttack, 30.0))
                 {
-                    CombatUtils.MoveInRange(Me, unitToAttack, 2.0);
+                    CombatUtils.MoveInRange(Me, unitToAttack, 27.0);
                 }
                 else
                 {
