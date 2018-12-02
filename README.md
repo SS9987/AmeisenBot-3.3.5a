@@ -6,12 +6,10 @@ This project will be developed like "Kraut und Rüben" (Herb and beet?) as we sa
 
 ⚠️ Currently this thing is only a playground for me to try out memory-hacking related stuff, but maybe it turns into something useable in the near future...
 
----
 ## Credits
 
 ❤️ **Blackmagic** (Memory Editing) - https://github.com/acidburn974/Blackmagic
 
----
 ## Usage
 
 Although i don't recommend to run this thing in this stage, **you can do it!**
@@ -163,7 +161,6 @@ namespace AmeisenBotCombat
 
 ```
 
----
 ## Modules
 **AmeisenBot.Combat**: CombatClass utilities & template
 
@@ -193,7 +190,6 @@ namespace AmeisenBotCombat
 
 **WoWLoginAutomator**: Auto-Login into WoW 3.3.5a
 
----
 ## Screenshots
 
 **Maybe outdated!**
