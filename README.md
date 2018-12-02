@@ -7,11 +7,9 @@ This project will be developed like "Kraut und Rüben" (Herb and beet?) as we sa
 ⚠️ Currently this thing is only a playground for me to try out memory-hacking related stuff, but maybe it turns into something useable in the near future...
 
 ---
-## Info
+## Credits
 
-❤️ **Libaries used:** Blackmagic (Memory Editing) - https://github.com/acidburn974/Blackmagic
-
-❤️ **Framework used:** UIKit (Web Interface) - https://github.com/uikit/uikit
+❤️ **Blackmagic** (Memory Editing) - https://github.com/acidburn974/Blackmagic
 
 ---
 ## Usage
@@ -26,10 +24,6 @@ Start the "AmeisenServer.exe", it will open a sketchy HTTP-Api at port 16200...
 
 🌵 **How to enable AutoLogin:**
 Place the "WoW-LoginAutomator.exe" in the same folder as the bot, thats all...
-
-💩 **Web Interface:**
-To use this piece of turd, junk, trash, don't know how to call this thing, Open the "index.html" thats hidden deep in the shittiest corner of this project...
-💡 *Pro Tip: look for a file called: "groessterMuellEUWest.javashit"*
 
 🔪 **How to make a CombatClass:**
 Template \*.cs file:
@@ -195,13 +189,14 @@ namespace AmeisenBotCombat
 
 **AmeisenBot.Utilities**: Memory offsets, data structs and a few math related funtions
 
-
 **AmeisenPathLib**: Pathfinding using A*
 
 **WoWLoginAutomator**: Auto-Login into WoW 3.3.5a
 
 ---
 ## Screenshots
+
+**Maybe outdated!**
 
 ### Character selection without AutoLogin
 
@@ -226,11 +221,3 @@ namespace AmeisenBotCombat
 ### Debug UI
 
 ![alt text](https://github.com/Jnnshschl/WoW-3.3.5a-Bot/blob/master/images/debug.PNG?raw=true "Debug GUI")
-
-### Server
-
-![alt text](https://github.com/Jnnshschl/WoW-3.3.5a-Bot/blob/master/images/server.PNG?raw=true "Server")
-
-### Web Interface 💩💩💩
-
-![alt text](https://github.com/Jnnshschl/WoW-3.3.5a-Bot/blob/master/images/webinterface.PNG?raw=true "Web Interface")
