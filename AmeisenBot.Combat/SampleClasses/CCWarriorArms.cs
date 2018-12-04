@@ -3,12 +3,14 @@ using AmeisenBotLogger;
 using AmeisenBotUtilities;
 using AmeisenCombatEngine.Interfaces;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace AmeisenBotCombat.SampleClasses
 {
     public class CCWarriorArms : IAmeisenCombatClass
     {
         public AmeisenDataHolder AmeisenDataHolder { get; set; }
+        private Thread MovementThread { get; set; }
 
         private Me Me
         {
@@ -22,15 +24,49 @@ namespace AmeisenBotCombat.SampleClasses
             set { AmeisenDataHolder.Target = value; }
         }
 
+        public bool InCombat { get; private set; }
+
         public void Init()
         {
+            InCombat = true;
+            MovementThread = new Thread(new ThreadStart(HandleMovement));
+            MovementThread.Start();
+
             AmeisenLogger.Instance.Log(LogLevel.DEBUG, "CombatClass: In combat now", this);
             CombatUtils.CastSpellByName(Me, Target, "Battle Stance", false);
         }
 
         public void Exit()
         {
+            InCombat = false;
+            MovementThread.Join();
+
             AmeisenLogger.Instance.Log(LogLevel.DEBUG, "CombatClass: Out of combat now", this);
+        }
+
+        private void HandleMovement()
+        {
+            while (InCombat)
+            {
+                if (Me != null && Target != null)
+                {
+                    if (!CombatUtils.IsFacingMelee(Me, Target))
+                    {
+                        CombatUtils.FaceUnit(Me, Target);
+                    }
+
+                    if (!CombatUtils.IsInRange(Me, Target, 3.0))
+                    {
+                        CombatUtils.MoveInRange(Me, Target, 2.0);
+                    }
+                    else
+                    {
+                        CombatUtils.StopMovement(Me);
+                    }
+                }
+
+                Thread.Sleep(100);
+            }
         }
 
         public void HandleAttacking()
@@ -38,14 +74,12 @@ namespace AmeisenBotCombat.SampleClasses
             Me?.Update();
             Target?.Update();
 
-            Unit unitToAttack = Target;
-
             // get a target
             if (Me.TargetGuid == 0 || Target.Health == 0 || CombatUtils.IsFriend(LuaUnit.target))
             //|| !CombatUtils.IsHostile(LuaUnit.target)
             //|| !CombatUtils.CanAttack(LuaUnit.target))
             {
-                unitToAttack = CombatUtils.AssistParty(Me, AmeisenDataHolder.ActiveWoWObjects);
+                Target = CombatUtils.AssistParty(Me, AmeisenDataHolder.ActiveWoWObjects);
             }
 
             Me?.Update();
@@ -56,26 +90,11 @@ namespace AmeisenBotCombat.SampleClasses
                 CombatUtils.TargetNearestEnemy();
                 Me.Update();
                 Target.Update();
-                unitToAttack = Target;
             }
 
-            unitToAttack.Update();
-            if (unitToAttack != null)
+            Target.Update();
+            if (Target != null)
             {
-                if (!CombatUtils.IsFacingMelee(Me, unitToAttack))
-                {
-                    CombatUtils.FaceUnit(Me, unitToAttack);
-                }
-
-                if (!CombatUtils.IsInRange(Me, unitToAttack, 3.0))
-                {
-                    CombatUtils.MoveInRange(Me, unitToAttack, 2.0);
-                }
-                else
-                {
-                    CombatUtils.StopMovement(Me);
-                }
-
                 // start autoattack
                 CombatUtils.AttackTarget();
 
