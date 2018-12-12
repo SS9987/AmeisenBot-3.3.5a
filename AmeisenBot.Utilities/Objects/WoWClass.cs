@@ -1,15 +1,19 @@
-﻿namespace AmeisenBotUtilities
+﻿using AmeisenCombatEngineCore.Enums;
+using AmeisenCombatEngineCore.Objects;
+using System.Collections.Generic;
+
+namespace AmeisenBotUtilities
 {
     public abstract class WoWClass
     {
         public abstract class DeathKnight
         {
-            public readonly int classID = 6;
+            public static readonly int classID = 6;
         }
 
         public abstract class Druid
         {
-            public readonly int classID = 11;
+            public static readonly int classID = 11;
 
             public enum ShapeshiftForms
             {
@@ -24,27 +28,27 @@
 
         public abstract class Hunter
         {
-            public readonly int classID = 3;
+            public static readonly int classID = 3;
         }
 
         public abstract class Mage
         {
-            public readonly int classID = 8;
+            public static readonly int classID = 8;
         }
 
         public abstract class Paladin
         {
-            public readonly int classID = 2;
+            public static readonly int classID = 2;
         }
 
         public abstract class Priest
         {
-            public readonly int classID = 5;
+            public static readonly int classID = 5;
         }
 
         public abstract class Rogue
         {
-            public readonly int classID = 4;
+            public static readonly int classID = 4;
 
             public enum ShapeshiftForms
             {
@@ -54,17 +58,22 @@
 
         public abstract class Shaman
         {
-            public readonly int classID = 7;
+            public static readonly int classID = 7;
         }
 
         public abstract class Warlock
         {
-            public readonly int classID = 9;
+            public static readonly int classID = 9;
+
+            public static List<Spell> Spells = new List<Spell>()
+            {
+                new Spell("Shadow Bolt", 385, 30, 1000, SpellType.Damage, SpellExecution.Cast, new Dictionary<SpellType, double>(){ { SpellType.Damage, 16 } })
+            };
         }
 
         public abstract class Warrior
         {
-            public readonly int classID = 1;
+            public static readonly int classID = 1;
 
             public enum ShapeshiftForms
             {

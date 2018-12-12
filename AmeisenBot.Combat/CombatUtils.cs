@@ -329,10 +329,10 @@ namespace AmeisenBotCombat
                             || obj.GetType() == typeof(Player)
                             || obj.GetType() == typeof(Me))
                         {
+                            ((Unit)obj).Update();
                             if (guid == obj.Guid && ((Unit)obj).InCombat)
                             {
                                 inCombatUnits.Add(((Unit)obj));
-                                ((Unit)obj).Update();
                             }
                         }
                     }

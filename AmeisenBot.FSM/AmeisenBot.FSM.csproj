@@ -89,7 +89,7 @@
       <Name>AmeisenBot.Utilities</Name>
     </ProjectReference>
     <ProjectReference Include="..\AmeisenCombatEngine\AmeisenCombatEngine\AmeisenCombatEngine.Core.csproj">
-      <Project>{AC364F4C-36E2-42BD-BADD-56D5E69966F6}</Project>
+      <Project>{ac364f4c-36e2-42bd-badd-56d5e69966f6}</Project>
       <Name>AmeisenCombatEngine.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\AmeisenMovement\AmeisenMovement.Core\AmeisenMovement.Core.csproj">

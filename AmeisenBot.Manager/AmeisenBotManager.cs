@@ -327,6 +327,8 @@ namespace AmeisenBotManager
 
             switch (Me.Class)
             {
+                case WowClass.Warlock: return new CPDefault(WoWClass.Warlock.Spells, new SpellSimple(WoWClass.Warlock.Spells), new MovementCloseCombat());
+
                 default: return new CPDefault(Spells, new SpellSimple(Spells), new MovementCloseCombat());
             }
         }

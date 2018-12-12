@@ -487,7 +487,6 @@ namespace AmeisenBotCore
             string cmd = $"name, _, _, _, _, endTime = UnitCastingInfo(\"{luaunit.ToString()}\");";
 
             try { info.name = GetLocalizedText(cmd, "name"); } catch { info.name = "none"; }
-            try { info.endTime = int.Parse(GetLocalizedText(cmd, "endTime")); } catch { info.endTime = -1; }
 
             AmeisenLogger.Instance.Log(LogLevel.DEBUG, $"CastingInfo: [{info.name}, {info.endTime}]", "AmeisenCore");
             return info;

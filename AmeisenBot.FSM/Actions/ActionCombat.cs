@@ -1,5 +1,4 @@
-﻿using System;
-using AmeisenBotCombat;
+﻿using AmeisenBotCombat;
 using AmeisenBotCombat.Interfaces;
 using AmeisenBotData;
 using AmeisenBotFSM.Interfaces;
@@ -9,6 +8,7 @@ using AmeisenCombatEngineCore;
 using AmeisenCombatEngineCore.Enums;
 using AmeisenCombatEngineCore.FSM.Enums;
 using AmeisenCombatEngineCore.Objects;
+using System;
 using static AmeisenBotFSM.Objects.Delegates;
 
 namespace AmeisenBotFSM.Actions
@@ -41,8 +41,8 @@ namespace AmeisenBotFSM.Actions
             {
                 Me.Update();
 
-                double energy = Me.Energy;
-                double maxEnergy = Me.MaxEnergy;
+                double energy = Me.Mana;
+                double maxEnergy = Me.MaxMana;
 
                 if (Me.Class == WowClass.Warrior)
                 {
@@ -81,42 +81,56 @@ namespace AmeisenBotFSM.Actions
         {
             get
             {
-                Target.Update();
-
-                double energy = Target.Energy;
-                double maxEnergy = Target.MaxEnergy;
-
-                /*
-                if (Target.Class == WowClass.Warrior)
+                if (Target != null)
                 {
-                    energy = Target.Rage;
-                    maxEnergy = Target.MaxRage;
-                }
+                    Target.Update();
 
-                if (Target.Class == WowClass.Rogue)
-                {
-                    energy = Target.Energy;
-                    maxEnergy = Target.MaxEnergy;
-                }
+                    double energy = Target.Energy;
+                    double maxEnergy = Target.MaxEnergy;
 
-                if (Target.Class == WowClass.DeathKnight)
-                {
-                    energy = Target.RuneEnergy;
-                    maxEnergy = Target.MaxRuneEnergy;
-                }
-                */
+                    /*
+                    if (Target.Class == WowClass.Warrior)
+                    {
+                        energy = Target.Rage;
+                        maxEnergy = Target.MaxRage;
+                    }
 
+                    if (Target.Class == WowClass.Rogue)
+                    {
+                        energy = Target.Energy;
+                        maxEnergy = Target.MaxEnergy;
+                    }
+
+                    if (Target.Class == WowClass.DeathKnight)
+                    {
+                        energy = Target.RuneEnergy;
+                        maxEnergy = Target.MaxRuneEnergy;
+                    }
+                    */
+
+                    return new AmeisenCombatEngineCore.Objects.Unit(
+                        Target.Health,
+                        Target.MaxHealth,
+                        energy,
+                        maxEnergy,
+                        CombatState.Standing,
+                        new AmeisenCombatEngineCore.Structs.Vector3(
+                            Target.pos.X,
+                            Target.pos.Y,
+                            Target.pos.Z)
+                        );
+                }
                 return new AmeisenCombatEngineCore.Objects.Unit(
-                    Target.Health,
-                    Target.MaxHealth,
-                    energy,
-                    maxEnergy,
-                    CombatState.Standing,
-                    new AmeisenCombatEngineCore.Structs.Vector3(
-                        Target.pos.X,
-                        Target.pos.Y,
-                        Target.pos.Z)
-                    );
+                        0,
+                        0,
+                        0,
+                        0,
+                        CombatState.Standing,
+                        new AmeisenCombatEngineCore.Structs.Vector3(
+                            0,
+                            0,
+                            0)
+                        );
             }
         }
 
@@ -136,7 +150,29 @@ namespace AmeisenBotFSM.Actions
 
         public void DoThings()
         {
-            CombatEngine.DoIteration();
+            if (Target == null || Target.Guid == 0)
+            {
+                CombatUtils.AssistParty(Me, AmeisenDataHolder.ActiveWoWObjects);
+                Target?.Update();
+
+                if (Target == null || Target.Guid == 0)
+                {
+                    CombatUtils.TargetNearestEnemy();
+                    Target?.Update();
+
+                    if (Target == null || Target.Guid == 0)
+                    {
+                        return;
+                    }
+                }
+            }
+
+            if (!Me.InCombat)
+            {
+                CombatUtils.AttackTarget();
+            }
+
+            CombatEngine.DoIteration(MeUnit, TargetUnit);
         }
 
         public void Start() { }
