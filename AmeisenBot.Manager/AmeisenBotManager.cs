@@ -1,4 +1,7 @@
 ﻿using AmeisenBot.Character;
+using AmeisenBot.Character.Objects;
+using AmeisenBotCombat.CombatPackages;
+using AmeisenBotCombat.Interfaces;
 using AmeisenBotCombat.SampleClasses;
 using AmeisenBotCore;
 using AmeisenBotData;
@@ -10,6 +13,8 @@ using AmeisenBotUtilities;
 using AmeisenBotUtilities.Enums;
 using AmeisenBotUtilities.Objects;
 using AmeisenCombatEngine.Interfaces;
+using AmeisenCombatEngineCore.Objects;
+using AmeisenCombatEngineCore.Strategies;
 using AmeisenMovement;
 using AmeisenMovement.Formations;
 using Magic;
@@ -23,6 +28,7 @@ using System.IO;
 using System.Net;
 using System.Text;
 using System.Windows;
+using Unit = AmeisenBotUtilities.Unit;
 
 namespace AmeisenBotManager
 {
@@ -118,6 +124,7 @@ namespace AmeisenBotManager
         public Unit Pet { get { return AmeisenDataHolder.Pet; } }
         public WowExe WowExe { get; private set; }
         public Process WowProcess { get; private set; }
+        public MeCharacter Character => AmeisenCharacterManager.Character;
         public int MapID { get { return AmeisenCore.GetMapID(); } }
         public int ZoneID { get { return AmeisenCore.GetZoneID(); } }
         public string LoadedConfigName { get { return AmeisenSettings.loadedconfName; } }
@@ -196,7 +203,7 @@ namespace AmeisenBotManager
         {
             AmeisenSettings.Settings.combatClassPath = fileName;
             AmeisenSettings.SaveToFile(AmeisenSettings.loadedconfName);
-            IAmeisenCombatClass combatClass = CompileAndLoadCombatClass(fileName);
+            IAmeisenCombatPackage combatClass = CompileAndLoadCombatClass(fileName);
             AmeisenStateMachineManager.StateMachine.LoadNewCombatClass(AmeisenDataHolder, combatClass);
             CurrentCombatClass = combatClass.ToString();
         }
@@ -279,7 +286,7 @@ namespace AmeisenBotManager
             AmeisenObjectManager.Start();
 
             // Load the combatclass
-            IAmeisenCombatClass combatClass = CompileAndLoadCombatClass(AmeisenSettings.Settings.combatClassPath);
+            IAmeisenCombatPackage combatClass = CompileAndLoadCombatClass(AmeisenSettings.Settings.combatClassPath);
             if (combatClass == null)
             {
                 combatClass = LoadDefaultClassForSpec();
@@ -314,39 +321,13 @@ namespace AmeisenBotManager
             }
         }
 
-        private IAmeisenCombatClass LoadDefaultClassForSpec()
+        private IAmeisenCombatPackage LoadDefaultClassForSpec()
         {
+            List<Spell> Spells = new List<Spell>();
+
             switch (Me.Class)
             {
-                case WowClass.Warlock:
-                    return new CCWarlockAffliction
-                    {
-                        AmeisenDataHolder = AmeisenDataHolder
-                    };
-
-                case WowClass.Warrior:
-                    return new CCWarriorArms
-                    {
-                        AmeisenDataHolder = AmeisenDataHolder
-                    };
-
-                case WowClass.Druid:
-                    return new CCDruidRestoration
-                    {
-                        AmeisenDataHolder = AmeisenDataHolder
-                    };
-
-                case WowClass.Hunter:
-                    return new CCHunterBeastmaster
-                    {
-                        AmeisenDataHolder = AmeisenDataHolder
-                    };
-
-                default:
-                    return new CCAutoAttackOnly
-                    {
-                        AmeisenDataHolder = AmeisenDataHolder
-                    };
+                default: return new CPDefault(Spells, new SpellSimple(Spells), new MovementCloseCombat());
             }
         }
 
@@ -529,7 +510,7 @@ namespace AmeisenBotManager
         /// </summary>
         /// <param name="combatclassPath">*.cs CombatClass file</param>
         /// <returns>Instance of the built Class, if its null somethings gone wrong</returns>
-        private IAmeisenCombatClass CompileAndLoadCombatClass(string combatclassPath)
+        private IAmeisenCombatPackage CompileAndLoadCombatClass(string combatclassPath)
         {
             if (File.Exists(combatclassPath))
             {
@@ -553,7 +534,7 @@ namespace AmeisenBotManager
         /// </summary>
         /// <param name="combatclassPath">path to the *.cs file</param>
         /// <returns></returns>
-        private IAmeisenCombatClass CompileCombatClass(string combatclassPath)
+        private IAmeisenCombatPackage CompileCombatClass(string combatclassPath)
         {
             AmeisenLogger.Instance.Log(LogLevel.DEBUG, $"Compiling CombatClass: {Path.GetFileName(combatclassPath)}", this);
 
@@ -584,7 +565,7 @@ namespace AmeisenBotManager
             }
 
             // Create Instance of CombatClass
-            IAmeisenCombatClass result = (IAmeisenCombatClass)results.CompiledAssembly.CreateInstance("AmeisenBotCombat.CombatClass");
+            IAmeisenCombatPackage result = (IAmeisenCombatPackage)results.CompiledAssembly.CreateInstance("AmeisenBotCombat.CombatClass");
 
             AmeisenLogger.Instance.Log(LogLevel.DEBUG, $"Successfully compiled CombatClass: {Path.GetFileName(combatclassPath)}", this);
             return result;

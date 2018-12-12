@@ -9,11 +9,11 @@ namespace AmeisenBotUtilities
         public BitVector32 DynamicUFlags { get; set; }
         public int Mana { get; set; }
         public int Health { get; set; }
-        public double HealthPercentage => ((double)Health / (double)MaxHealth) * 100.0;
-        public double ManaPercentage => ((double)Mana / (double)MaxMana) * 100.0;
-        public double RagePercentage => ((double)Rage / (double)MaxRage) * 100.0;
-        public double EnergyPercentage => ((double)Energy / (double)MaxEnergy) * 100.0;
-        public double RuneEnergyPercentage => ((double)RuneEnergy / (double)MaxRuneEnergy) * 100.0;
+        public double HealthPercentage => (Health / (double)MaxHealth) * 100.0;
+        public double ManaPercentage => (Mana / (double)MaxMana) * 100.0;
+        public double RagePercentage => (Rage / (double)MaxRage) * 100.0;
+        public double EnergyPercentage => (Energy / (double)MaxEnergy) * 100.0;
+        public double RuneEnergyPercentage => (RuneEnergy / (double)MaxRuneEnergy) * 100.0;
         public bool InCombat => UFlags[(int)UnitFlags.COMBAT] || InCombatEvent;
         public bool IsCasting { get; set; }
         public bool IsDead { get; set; }
@@ -46,7 +46,6 @@ namespace AmeisenBotUtilities
         {
             uint objName = BlackMagicInstance.ReadUInt(objBase + 0x964);
             objName = BlackMagicInstance.ReadUInt(objName + 0x05C);
-
             return BlackMagicInstance.ReadASCIIString(objName, 24);
         }
 
@@ -95,17 +94,9 @@ namespace AmeisenBotUtilities
 
             int currentlyCastingID = BlackMagicInstance.ReadInt(BaseAddress + 0xA6C);
             int currentlyChannelingID = BlackMagicInstance.ReadInt(BaseAddress + 0xA80);
-
             int combined = currentlyCastingID + currentlyChannelingID;
-
-            if (combined > 0)
-            {
-                IsCasting = true;
-            }
-            else
-            {
-                IsCasting = false;
-            }
+            
+            IsCasting = combined > 0;
 
             // too cpu heavy
             /*try
@@ -121,52 +112,45 @@ namespace AmeisenBotUtilities
                 MaxHealth = BlackMagicInstance.ReadInt(Descriptor + 0x80);
             }
             catch { }
+
             try
             {
                 Mana = BlackMagicInstance.ReadInt(Descriptor + 0x64);
                 MaxMana = BlackMagicInstance.ReadInt(Descriptor + 0x84);
             }
             catch { }
+
             try
             {
                 Rage = BlackMagicInstance.ReadInt(Descriptor + 0x68) / 10;
                 MaxRage = 100;
             }
             catch { }
+
             try
             {
                 Energy = BlackMagicInstance.ReadInt(BaseAddress + 0xFC0);
                 MaxEnergy = 100;
             }
             catch { }
+
             try
             {
                 RuneEnergy = BlackMagicInstance.ReadInt(BaseAddress + 0x19D4 / 10);
                 MaxRuneEnergy = 100;
             }
             catch { }
+
             //CombatReach = BlackMagicInstance.ReadInt(BaseUnitFields + (0x42 * 4));
             //ChannelSpell = BlackMagicInstance.ReadInt(BaseUnitFields + (0x16 * 4));
             //SummonedBy = BlackMagicInstance.ReadInt(BaseUnitFields + (0xE * 4));
             //FactionTemplate = BlackMagicInstance.ReadInt(BaseUnitFields + (0x37 * 4));
 
-            try
-            {
-                UFlags = (BitVector32)BlackMagicInstance.ReadObject(Descriptor + 0xEC, typeof(BitVector32));
-            }
-            catch { }
+            try { UFlags = (BitVector32)BlackMagicInstance.ReadObject(Descriptor + 0xEC, typeof(BitVector32)); } catch { }
 
-            try
-            {
-                UFlags2 = (BitVector32)BlackMagicInstance.ReadObject(Descriptor + 0xF0, typeof(BitVector32));
-            }
-            catch { }
+            try { UFlags2 = (BitVector32)BlackMagicInstance.ReadObject(Descriptor + 0xF0, typeof(BitVector32)); } catch { }
 
-            try
-            {
-                IsDead = BlackMagicInstance.ReadByte(Descriptor + 0x12B) == 1;
-            }
-            catch { }
+            try { IsDead = BlackMagicInstance.ReadByte(Descriptor + 0x12B) == 1; } catch { }
         }
     }
 }

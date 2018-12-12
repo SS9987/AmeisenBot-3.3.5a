@@ -17,7 +17,8 @@
                 AQUA,
                 CAT,
                 TRAVEL,
-                MOONKIN
+                MOONKIN,
+                TREE
             }
         }
 

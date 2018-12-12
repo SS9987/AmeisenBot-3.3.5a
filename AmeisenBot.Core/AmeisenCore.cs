@@ -238,16 +238,11 @@ namespace AmeisenBotCore
             return resultLowered;
         }
 
-        public static void SendMovementUpdate(int opcode, int ticks)
-        {
-            
-        }
-
         public static void FaceUnit(Me me, Unit unit)
         {
             BlackMagic.WriteFloat(me.BaseAddress + 0x7A8, Utils.GetFacingAngle(me.pos, me.Rotation, unit.pos));
-            LuaDoString("MoveBackwardStart();MoveBackwardStop();MoveBackwardStop();MoveBackwardStop();");
-            //SendMovementUpdate(0xDA, Environment.TickCount);
+            //LuaDoString("MoveBackwardStart();MoveBackwardStop();MoveBackwardStop();MoveBackwardStop();"); This is trash lel
+            SendKey(new IntPtr(0x53),2,8); // the "S" key to go a bit backwards TODO: find better method
         }
 
         /// <summary>
@@ -747,7 +742,7 @@ namespace AmeisenBotCore
         /// Send a vKey to WoW example: "0x20" for Spacebar (VK_SPACE)
         /// </summary>
         /// <param name="vKey">virtual key id</param>
-        private static void SendKey(IntPtr vKey)
+        private static void SendKey(IntPtr vKey, int minDelay = 20, int maxDelay = 40)
         {
             const uint KEYDOWN = 0x100;
             const uint KEYUP = 0x101;
@@ -756,7 +751,7 @@ namespace AmeisenBotCore
 
             // 0x20 = Spacebar (VK_SPACE)
             SafeNativeMethods.SendMessage(windowHandle, KEYDOWN, vKey, new IntPtr(0));
-            Thread.Sleep(new Random().Next(20, 40)); // make it look more human-like :^)
+            Thread.Sleep(new Random().Next(minDelay, maxDelay)); // make it look more human-like :^)
             SafeNativeMethods.SendMessage(windowHandle, KEYUP, vKey, new IntPtr(0));
         }
 

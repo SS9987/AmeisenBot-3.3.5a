@@ -1,4 +1,5 @@
 ﻿using AmeisenBot.Character;
+using AmeisenBotCombat.Interfaces;
 using AmeisenBotData;
 using AmeisenBotDB;
 using AmeisenBotFSM.Actions;
@@ -40,7 +41,7 @@ namespace AmeisenBotFSM
             AmeisenDataHolder ameisenDataHolder,
             AmeisenDBManager ameisenDBManager,
             AmeisenMovementEngine ameisenMovementEngine,
-            IAmeisenCombatClass combatClass,
+            IAmeisenCombatPackage combatPackage,
             AmeisenCharacterManager ameisenCharacterManager)
         {
             StateStack = new Stack<BotState>();
@@ -49,7 +50,7 @@ namespace AmeisenBotFSM
                 { BotState.Idle, new ActionIdle(ameisenDataHolder) },
                 { BotState.Follow, new ActionFollow(ameisenDataHolder,ameisenDBManager, ameisenMovementEngine) },
                 { BotState.Moving, new ActionMoving(ameisenDataHolder,ameisenDBManager) },
-                { BotState.Combat, new ActionCombat(ameisenDataHolder,combatClass) },
+                { BotState.Combat, new ActionCombat(ameisenDataHolder,combatPackage) },
                 { BotState.Dead, new ActionDead(ameisenDataHolder,ameisenDBManager) },
                 { BotState.BotStuff, new ActionDoBotStuff(ameisenDataHolder, ameisenDBManager, ameisenCharacterManager, GetBotStuffToDo()) }
             };
@@ -59,8 +60,8 @@ namespace AmeisenBotFSM
             };
         }
 
-        public void LoadNewCombatClass(AmeisenDataHolder ameisenDataHolder, IAmeisenCombatClass combatClass)
-            => StateActionMap[BotState.Combat] = new ActionCombat(ameisenDataHolder, combatClass);
+        public void LoadNewCombatClass(AmeisenDataHolder ameisenDataHolder, IAmeisenCombatPackage combatPackage)
+            => StateActionMap[BotState.Combat] = new ActionCombat(ameisenDataHolder, combatPackage);
 
         /// <summary>
         /// Returns our current BotState to see what the bot is doing right now

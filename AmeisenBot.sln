@@ -31,7 +31,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AmeisenPath.Core", "Ameisen
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WoWLoginAutomator", "WoW-LoginAutomator\WoWLoginAutomator\WoWLoginAutomator.csproj", "{14811D57-C812-4651-85FA-7C65B974724B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AmeisenBot.Character", "AmeisenBot.Character\AmeisenBot.Character.csproj", "{23D5C950-8A33-414F-A366-99715073AA0B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AmeisenBot.Character", "AmeisenBot.Character\AmeisenBot.Character.csproj", "{23D5C950-8A33-414F-A366-99715073AA0B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AmeisenCombatEngine.Core", "AmeisenCombatEngine\AmeisenCombatEngine\AmeisenCombatEngine.Core.csproj", "{AC364F4C-36E2-42BD-BADD-56D5E69966F6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -223,6 +225,18 @@ Global
 		{23D5C950-8A33-414F-A366-99715073AA0B}.Release|x64.Build.0 = Release|Any CPU
 		{23D5C950-8A33-414F-A366-99715073AA0B}.Release|x86.ActiveCfg = Release|Any CPU
 		{23D5C950-8A33-414F-A366-99715073AA0B}.Release|x86.Build.0 = Release|Any CPU
+		{AC364F4C-36E2-42BD-BADD-56D5E69966F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC364F4C-36E2-42BD-BADD-56D5E69966F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC364F4C-36E2-42BD-BADD-56D5E69966F6}.Debug|x64.ActiveCfg = Debug|x64
+		{AC364F4C-36E2-42BD-BADD-56D5E69966F6}.Debug|x64.Build.0 = Debug|x64
+		{AC364F4C-36E2-42BD-BADD-56D5E69966F6}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{AC364F4C-36E2-42BD-BADD-56D5E69966F6}.Debug|x86.Build.0 = Debug|Any CPU
+		{AC364F4C-36E2-42BD-BADD-56D5E69966F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC364F4C-36E2-42BD-BADD-56D5E69966F6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC364F4C-36E2-42BD-BADD-56D5E69966F6}.Release|x64.ActiveCfg = Release|x64
+		{AC364F4C-36E2-42BD-BADD-56D5E69966F6}.Release|x64.Build.0 = Release|x64
+		{AC364F4C-36E2-42BD-BADD-56D5E69966F6}.Release|x86.ActiveCfg = Release|Any CPU
+		{AC364F4C-36E2-42BD-BADD-56D5E69966F6}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

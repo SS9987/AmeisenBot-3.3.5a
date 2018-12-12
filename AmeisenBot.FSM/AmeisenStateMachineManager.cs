@@ -1,5 +1,6 @@
 ﻿using AmeisenBot.Character;
 using AmeisenBotCombat;
+using AmeisenBotCombat.Interfaces;
 using AmeisenBotCore;
 using AmeisenBotData;
 using AmeisenBotDB;
@@ -19,7 +20,7 @@ namespace AmeisenBotFSM
         public AmeisenStateMachine StateMachine { get; private set; }
         private AmeisenDataHolder AmeisenDataHolder { get; set; }
         private AmeisenDBManager AmeisenDBManager { get; set; }
-        private IAmeisenCombatClass CombatClass { get; set; }
+        private IAmeisenCombatPackage CombatPackage { get; set; }
         private Thread MainWorker { get; set; }
         private Thread StateWatcherWorker { get; set; }
 
@@ -39,18 +40,18 @@ namespace AmeisenBotFSM
             AmeisenDataHolder ameisenDataHolder,
             AmeisenDBManager ameisenDBManager,
             AmeisenMovementEngine ameisenMovementEngine,
-            IAmeisenCombatClass combatClass,
+            IAmeisenCombatPackage combatPackage,
             AmeisenCharacterManager characterManager)
         {
             Active = false;
 
             AmeisenDataHolder = ameisenDataHolder;
             AmeisenDBManager = ameisenDBManager;
-            CombatClass = combatClass;
+            CombatPackage = combatPackage;
 
             MainWorker = new Thread(new ThreadStart(DoWork));
             StateWatcherWorker = new Thread(new ThreadStart(WatchForStateChanges));
-            StateMachine = new AmeisenStateMachine(ameisenDataHolder, ameisenDBManager, ameisenMovementEngine, combatClass, characterManager);
+            StateMachine = new AmeisenStateMachine(ameisenDataHolder, ameisenDBManager, ameisenMovementEngine, combatPackage, characterManager);
         }
 
         /// <summary>
@@ -105,18 +106,6 @@ namespace AmeisenBotFSM
                 if (InCombatCheck())
                 {
                     continue;
-                }
-
-                // Do i need to heal
-                if (AmeisenDataHolder.IsAllowedToHeal)
-                {
-                    CombatClass.HandleHealing();
-                }
-
-                // Do i need to buff
-                if (AmeisenDataHolder.IsAllowedToBuff)
-                {
-                    CombatClass?.HandleBuffs();
                 }
 
                 // Am I dead?

@@ -164,28 +164,15 @@ namespace AmeisenBotManager
                 if (t.GetType() == typeof(Me))
                 {
                     Me = (Me)t;
+                    break;
                 }
 
                 if (Me != null && t.Guid == Me.PetGuid)
                 {
                     t.Update();
-                    if (t.GetType() == typeof(Player))
-                    {
-                        t.Distance = Utils.GetDistance(Me.pos, t.pos);
-                        Pet = (Player)t;
-                        break;
-                    }
-                    else if (t.GetType() == typeof(Unit))
-                    {
-                        t.Distance = Utils.GetDistance(Me.pos, t.pos);
-                        Pet = (Unit)t;
-                        break;
-                    }
-                    else if (t.GetType() == typeof(Me))
-                    {
-                        Pet = (Me)t;
-                        break;
-                    }
+                    t.Distance = Utils.GetDistance(Me.pos, t.pos);
+                    Pet = (Unit)t;
+                    break;
                 }
 
                 if (Me != null && t.Guid == Me.TargetGuid)
@@ -209,7 +196,6 @@ namespace AmeisenBotManager
                         break;
                     }
                 }
-                t.Update();
             }
 
             // Best place for this :^)

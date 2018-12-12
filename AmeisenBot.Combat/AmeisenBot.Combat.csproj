@@ -42,8 +42,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CombatClassTemplate.cs" />
+    <Compile Include="CombatPackages\CPDefault.cs" />
     <Compile Include="CombatUtils.cs" />
     <Compile Include="Interfaces\IAmeisenCombatClass.cs" />
+    <Compile Include="Interfaces\IAmeisenCombatPackage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SampleClasses\CCAutoAttackOnly.cs" />
     <Compile Include="SampleClasses\CCDruidRestoration.cs" />
@@ -68,6 +70,11 @@
       <Project>{5369E077-2DC4-4DE5-9020-2C7DDB41686F}</Project>
       <Name>AmeisenBot.Utilities</Name>
     </ProjectReference>
+    <ProjectReference Include="..\AmeisenCombatEngine\AmeisenCombatEngine\AmeisenCombatEngine.Core.csproj">
+      <Project>{AC364F4C-36E2-42BD-BADD-56D5E69966F6}</Project>
+      <Name>AmeisenCombatEngine.Core</Name>
+    </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

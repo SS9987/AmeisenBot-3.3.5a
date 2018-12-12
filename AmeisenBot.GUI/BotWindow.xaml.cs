@@ -85,8 +85,7 @@ namespace AmeisenBotGUI
 
         private void ButtonCobatClassEditor_Click(object sender, RoutedEventArgs e)
         {
-            // Going to be reworked
-            //new CombatClassWindow(BotManager).Show();
+            new GearWindow(BotManager).Show();
         }
 
         private void ButtonExit_Click(object sender, RoutedEventArgs e)

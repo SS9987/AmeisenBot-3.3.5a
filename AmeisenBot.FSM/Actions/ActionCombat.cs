@@ -1,7 +1,14 @@
-﻿using AmeisenBotData;
+﻿using System;
+using AmeisenBotCombat;
+using AmeisenBotCombat.Interfaces;
+using AmeisenBotData;
 using AmeisenBotFSM.Interfaces;
 using AmeisenBotUtilities;
-using AmeisenCombatEngine.Interfaces;
+using AmeisenBotUtilities.Enums;
+using AmeisenCombatEngineCore;
+using AmeisenCombatEngineCore.Enums;
+using AmeisenCombatEngineCore.FSM.Enums;
+using AmeisenCombatEngineCore.Objects;
 using static AmeisenBotFSM.Objects.Delegates;
 
 namespace AmeisenBotFSM.Actions
@@ -11,8 +18,10 @@ namespace AmeisenBotFSM.Actions
         public Start StartAction { get { return Start; } }
         public DoThings StartDoThings { get { return DoThings; } }
         public Exit StartExit { get { return Stop; } }
+
         private AmeisenDataHolder AmeisenDataHolder { get; set; }
-        private IAmeisenCombatClass CombatClass { get; set; }
+        private IAmeisenCombatPackage CombatPackage { get; set; }
+        private CombatEngine CombatEngine { get; set; }
 
         private Me Me
         {
@@ -20,43 +29,118 @@ namespace AmeisenBotFSM.Actions
             set { AmeisenDataHolder.Me = value; }
         }
 
-        private Unit Target
+        private AmeisenBotUtilities.Unit Target
         {
             get { return AmeisenDataHolder.Target; }
             set { AmeisenDataHolder.Target = value; }
         }
 
-        public void LoadNewCombatClass(IAmeisenCombatClass combatClass) => CombatClass = combatClass;
+        private AmeisenCombatEngineCore.Objects.Unit MeUnit
+        {
+            get
+            {
+                Me.Update();
 
-        public ActionCombat(AmeisenDataHolder ameisenDataHolder, IAmeisenCombatClass combatClass)
+                double energy = Me.Energy;
+                double maxEnergy = Me.MaxEnergy;
+
+                if (Me.Class == WowClass.Warrior)
+                {
+                    energy = Me.Rage;
+                    maxEnergy = Me.MaxRage;
+                }
+
+                if (Me.Class == WowClass.Rogue)
+                {
+                    energy = Me.Energy;
+                    maxEnergy = Me.MaxEnergy;
+                }
+
+                if (Me.Class == WowClass.DeathKnight)
+                {
+                    energy = Me.RuneEnergy;
+                    maxEnergy = Me.MaxRuneEnergy;
+                }
+
+                return new AmeisenCombatEngineCore.Objects.Unit(
+                    Me.Health,
+                    Me.MaxHealth,
+                    energy,
+                    maxEnergy,
+                    CombatState.Standing,
+                    new AmeisenCombatEngineCore.Structs.Vector3(
+                        Me.pos.X,
+                        Me.pos.Y,
+                        Me.pos.Z)
+                    );
+            }
+        }
+
+
+        private AmeisenCombatEngineCore.Objects.Unit TargetUnit
+        {
+            get
+            {
+                Target.Update();
+
+                double energy = Target.Energy;
+                double maxEnergy = Target.MaxEnergy;
+
+                /*
+                if (Target.Class == WowClass.Warrior)
+                {
+                    energy = Target.Rage;
+                    maxEnergy = Target.MaxRage;
+                }
+
+                if (Target.Class == WowClass.Rogue)
+                {
+                    energy = Target.Energy;
+                    maxEnergy = Target.MaxEnergy;
+                }
+
+                if (Target.Class == WowClass.DeathKnight)
+                {
+                    energy = Target.RuneEnergy;
+                    maxEnergy = Target.MaxRuneEnergy;
+                }
+                */
+
+                return new AmeisenCombatEngineCore.Objects.Unit(
+                    Target.Health,
+                    Target.MaxHealth,
+                    energy,
+                    maxEnergy,
+                    CombatState.Standing,
+                    new AmeisenCombatEngineCore.Structs.Vector3(
+                        Target.pos.X,
+                        Target.pos.Y,
+                        Target.pos.Z)
+                    );
+            }
+        }
+
+        public ActionCombat(AmeisenDataHolder ameisenDataHolder, IAmeisenCombatPackage combatPackage)
         {
             AmeisenDataHolder = ameisenDataHolder;
-            CombatClass = combatClass;
-            CombatClass.AmeisenDataHolder = ameisenDataHolder;
+            CombatPackage = combatPackage;
+            CombatEngine = new CombatEngine(MeUnit, TargetUnit, combatPackage.Spells, combatPackage.SpellStrategy, combatPackage.MovementStrategy);
+            CombatEngine.OnCastSpell += HandleSpellCast;
+        }
+
+        private void HandleSpellCast(object sender, EventArgs e)
+        {
+            CombatUtils.CastSpellByName(Me, Target, ((CastSpellEventArgs)e).Spell.SpellName, false, true);
+            ((CastSpellEventArgs)e).Spell.StartCooldown();
         }
 
         public void DoThings()
         {
-            try
-            {
-                if (CombatClass != null)
-                {
-                    if (AmeisenDataHolder.IsAllowedToAttack)
-                    {
-                        CombatClass.HandleAttacking();
-                    }
-
-                    if (AmeisenDataHolder.IsAllowedToTank)
-                    {
-                        CombatClass.HandleTanking();
-                    }
-                }
-            }
-            catch { }
+            CombatEngine.DoIteration();
         }
 
-        public void Start() => CombatClass?.Init();
+        public void Start() { }
 
-        public void Stop() => CombatClass?.Exit();
+        public void Stop() { }
     }
 }

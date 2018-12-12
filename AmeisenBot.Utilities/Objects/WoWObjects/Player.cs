@@ -74,12 +74,12 @@ namespace AmeisenBotUtilities
 
         public override void Update()
         {
-            base.Update();
-
             if (Name == null)
             {
                 try { Name = GetPlayerNameFromGuid(Guid); } catch { }
             }
+
+            base.Update();
         }
     }
 }

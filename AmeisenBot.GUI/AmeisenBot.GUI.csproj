@@ -81,6 +81,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="GearWindow.xaml.cs">
+      <DependentUpon>GearWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\BotView.xaml.cs">
       <DependentUpon>BotView.xaml</DependentUpon>
     </Compile>
@@ -102,6 +105,10 @@
     <Compile Include="SettingsWindow.xaml.cs">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
     </Compile>
+    <Page Include="GearWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\BotView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -189,6 +196,10 @@
     <Resource Include="Icon.ico" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\AmeisenBot.Character\AmeisenBot.Character.csproj">
+      <Project>{23D5C950-8A33-414F-A366-99715073AA0B}</Project>
+      <Name>AmeisenBot.Character</Name>
+    </ProjectReference>
     <ProjectReference Include="..\AmeisenBot.Combat\AmeisenBot.Combat.csproj">
       <Project>{cd72ad54-7c40-4ec0-8878-0771922a2961}</Project>
       <Name>AmeisenBot.Combat</Name>
