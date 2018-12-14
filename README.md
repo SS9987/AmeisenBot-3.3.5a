@@ -17,148 +17,13 @@ Although i don't recommend to run this thing in this stage, **you can do it!**
 🕹️ **How to use the Bot:**
 Compile it, Start it, profit i guess?
 
-🖥️ **How to use the Server:**
-Start the "AmeisenServer.exe", it will open a sketchy HTTP-Api at port 16200...
-
 🌵 **How to enable AutoLogin:**
 Place the "WoW-LoginAutomator.exe" in the same folder as the bot, thats all...
 
 🔪 **How to make a CombatClass:**
 Template \*.cs file:
 ```c#
-using AmeisenBotData;
-using AmeisenBotLogger;
-using AmeisenBotUtilities;
-using AmeisenCombatEngine.Interfaces;
-using System.Collections.Generic;
-
-namespace AmeisenBotCombat
-{
-    public class CombatClass : IAmeisenCombatClass
-    {
-        public AmeisenDataHolder AmeisenDataHolder { get; set; }
-        private Me Me
-        {
-            get { return AmeisenDataHolder.Me; }
-            set { AmeisenDataHolder.Me = value; }
-        }
-        private Unit Target
-        {
-            get { return AmeisenDataHolder.Target; }
-            set { AmeisenDataHolder.Target = value; }
-        }
-
-        public void Init()
-        {
-            AmeisenLogger.Instance.Log(LogLevel.DEBUG, "CombatClass: In combat now", this);
-        }
-
-        public void Exit()
-        {
-            AmeisenLogger.Instance.Log(LogLevel.DEBUG, "CombatClass: Out of combat now", this);
-        }
-
-        public void HandleAttacking()
-        {
-            if (Me != null)
-            {
-                Me.Update();
-            }
-            if (Target != null)
-            {
-                Target.Update();
-            }
-
-            Unit unitToAttack = Target;
-
-            // Get a target
-            if (Me.TargetGuid == 0)
-            {
-                unitToAttack = CombatUtils.AssistParty(Me, AmeisenDataHolder.ActiveWoWObjects);
-            }
-
-            if (unitToAttack != null)
-            {
-                // Start autoattack
-                if (!Me.InCombat)
-                {
-                    CombatUtils.FaceTarget(unitToAttack);
-                    CombatUtils.AttackTarget();
-                }
-
-                DoAttackRoutine();
-            }
-        }
-
-        private void DoAttackRoutine()
-        {
-            List<string> targetAuras = CombatUtils.GetAuras(LuaUnit.target);
-
-            Me.Update();
-            // Restore Mana
-            if (Me.EnergyPercentage < 30 && Me.HealthPercentage > 50)
-            {
-                CombatUtils.CastSpellByName("Life Tap", true);
-            }
-
-            if(targetAuras != null)
-                Target.Update();
-            // DoT's to apply
-            if (!targetAuras.Contains("Curse of Agony"))
-            {
-                CombatUtils.CastSpellByName("Curse of Agony", false);
-            }
-            if (!targetAuras.Contains("Corruption"))
-            {
-                CombatUtils.CastSpellByName("Corruption", false);
-            }
-            if (!targetAuras.Contains("Unstable Affliction"))
-            {
-                CombatUtils.CastSpellByName("Unstable Affliction", false);
-            }
-            if (!targetAuras.Contains("Haunt"))
-            {
-                CombatUtils.CastSpellByName("Haunt", false);
-            }
-
-            if(targetAuras != null) {
-                Target.Update();
-                // Active-Damage Spell
-                if (Target.HealthPercentage < 25)
-                {
-                    CombatUtils.CastSpellByName("Drain Soul", false);
-                }
-                else
-                {
-                    CombatUtils.CastSpellByName("Shadow Bolt", false);
-                }
-            }
-        }
-
-        public void HandleBuffs()
-        {
-            List<string> myAuras = CombatUtils.GetAuras(LuaUnit.player);
-
-            if (!myAuras.Contains("Demon Armor"))
-            {
-                CombatUtils.CastSpellByName("Demon Armor", true);
-            }
-            if (!myAuras.Contains("Blood Pact"))
-            {
-                CombatUtils.CastSpellByName("Summon Imp", true);
-            }
-        }
-
-        public void HandleHealing()
-        {
-        }
-
-        public void HandleTanking()
-        {
-        }
-    }
-}
-
+...
 ```
 
 ## Modules
@@ -179,8 +44,6 @@ namespace AmeisenBotCombat
 **AmeisenBot.Manager**: Create a new Bot instance here and manage it
 
 **AmeisenBot.Mapping**: Mapping related stuff like loading/saving nodes
-
-**AmeisenBot.Server**: This thing is planned to be a server for the bots to communicate to each other.
 
 **AmeisenBot.Test**: Maybe some tests will appear in this module in the near future
 
