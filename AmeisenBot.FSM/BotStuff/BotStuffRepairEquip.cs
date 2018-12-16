@@ -1,4 +1,5 @@
 ﻿using AmeisenBot.Character;
+using AmeisenBot.Clients;
 using AmeisenBotCore;
 using AmeisenBotData;
 using AmeisenBotDB;
@@ -27,8 +28,9 @@ namespace AmeisenBotFSM.BotStuff
         public BotStuffRepairEquip(
             AmeisenDataHolder ameisenDataHolder,
             AmeisenDBManager ameisenDBManager,
-            AmeisenCharacterManager ameisenCharacterManager)
-            : base(ameisenDataHolder, ameisenDBManager)
+            AmeisenCharacterManager ameisenCharacterManager,
+            AmeisenNavmeshClient ameisenNavmeshClient)
+            : base(ameisenDataHolder, ameisenDBManager, ameisenNavmeshClient)
         {
             AmeisenDBManager = ameisenDBManager;
             AmeisenDataHolder = ameisenDataHolder;

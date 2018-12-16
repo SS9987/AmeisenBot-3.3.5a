@@ -31,6 +31,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -59,6 +60,10 @@
     <ProjectReference Include="..\AmeisenBot.Character\AmeisenBot.Character.csproj">
       <Project>{23D5C950-8A33-414F-A366-99715073AA0B}</Project>
       <Name>AmeisenBot.Character</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AmeisenBot.Clients\AmeisenBot.Clients.csproj">
+      <Project>{41FE9DFE-9564-43FD-8D18-155D623DC7A8}</Project>
+      <Name>AmeisenBot.Clients</Name>
     </ProjectReference>
     <ProjectReference Include="..\AmeisenBot.Combat\AmeisenBot.Combat.csproj">
       <Project>{CD72AD54-7C40-4EC0-8878-0771922A2961}</Project>
@@ -103,6 +108,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

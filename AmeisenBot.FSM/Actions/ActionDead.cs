@@ -1,4 +1,5 @@
-﻿using AmeisenBotCore;
+﻿using AmeisenBot.Clients;
+using AmeisenBotCore;
 using AmeisenBotData;
 using AmeisenBotDB;
 using AmeisenBotUtilities;
@@ -23,7 +24,9 @@ namespace AmeisenBotFSM.Actions
             set { AmeisenDataHolder.Me = value; }
         }
 
-        public ActionDead(AmeisenDataHolder ameisenDataHolder, AmeisenDBManager ameisenDBManager) : base(ameisenDataHolder, ameisenDBManager)
+        public ActionDead(AmeisenDataHolder ameisenDataHolder,
+            AmeisenDBManager ameisenDBManager,
+            AmeisenNavmeshClient ameisenNavmeshClient) : base(ameisenDataHolder, ameisenDBManager, ameisenNavmeshClient)
         {
             AmeisenDataHolder = ameisenDataHolder;
             AmeisenDBManager = ameisenDBManager;

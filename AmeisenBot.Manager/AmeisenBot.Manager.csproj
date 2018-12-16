@@ -37,8 +37,8 @@
     <Reference Include="BlackMagic">
       <HintPath>..\Blackmagic\BlackMagic.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -67,6 +67,10 @@
     <ProjectReference Include="..\AmeisenBot.Character\AmeisenBot.Character.csproj">
       <Project>{23D5C950-8A33-414F-A366-99715073AA0B}</Project>
       <Name>AmeisenBot.Character</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AmeisenBot.Clients\AmeisenBot.Clients.csproj">
+      <Project>{41FE9DFE-9564-43FD-8D18-155D623DC7A8}</Project>
+      <Name>AmeisenBot.Clients</Name>
     </ProjectReference>
     <ProjectReference Include="..\AmeisenBot.Combat\AmeisenBot.Combat.csproj">
       <Project>{CD72AD54-7C40-4EC0-8878-0771922A2961}</Project>

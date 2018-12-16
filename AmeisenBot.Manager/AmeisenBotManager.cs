@@ -1,8 +1,8 @@
 ﻿using AmeisenBot.Character;
 using AmeisenBot.Character.Objects;
+using AmeisenBot.Clients;
 using AmeisenBotCombat.CombatPackages;
 using AmeisenBotCombat.Interfaces;
-using AmeisenBotCombat.SampleClasses;
 using AmeisenBotCore;
 using AmeisenBotData;
 using AmeisenBotDB;
@@ -12,7 +12,6 @@ using AmeisenBotLogger;
 using AmeisenBotUtilities;
 using AmeisenBotUtilities.Enums;
 using AmeisenBotUtilities.Objects;
-using AmeisenCombatEngine.Interfaces;
 using AmeisenCombatEngineCore.Objects;
 using AmeisenCombatEngineCore.Strategies;
 using AmeisenMovement;
@@ -171,6 +170,7 @@ namespace AmeisenBotManager
         public BotState CurrentFSMState { get { return AmeisenStateMachineManager.StateMachine.GetCurrentState(); } }
         private AmeisenDataHolder AmeisenDataHolder { get; set; }
         private AmeisenClient AmeisenClient { get; set; }
+        private AmeisenNavmeshClient AmeisenNavmeshClient { get; set; }
         private AmeisenHook AmeisenHook { get; set; }
         private AmeisenObjectManager AmeisenObjectManager { get; set; }
         private AmeisenSettings AmeisenSettings { get; set; }
@@ -254,6 +254,9 @@ namespace AmeisenBotManager
                 ConnectToDB();
             }
 
+            // Connect to NavmeshServer
+            AmeisenNavmeshClient = new AmeisenNavmeshClient("127.0.0.1", 47110);
+
             // Attach to Proccess
             Blackmagic = new BlackMagic(wowExe.process.Id);
             IsBlackmagicAttached = Blackmagic.IsProcessOpen;
@@ -304,7 +307,8 @@ namespace AmeisenBotManager
                 AmeisenDBManager,
                 AmeisenMovementEngine,
                 combatClass,
-                AmeisenCharacterManager);
+                AmeisenCharacterManager,
+                AmeisenNavmeshClient);
 
             // Deafult Idle state
             AmeisenStateMachineManager.StateMachine.PushAction(BotState.Idle);

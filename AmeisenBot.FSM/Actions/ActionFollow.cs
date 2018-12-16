@@ -1,4 +1,5 @@
-﻿using AmeisenBotData;
+﻿using AmeisenBot.Clients;
+using AmeisenBotData;
 using AmeisenBotDB;
 using AmeisenBotUtilities;
 using AmeisenMovement;
@@ -32,7 +33,8 @@ namespace AmeisenBotFSM.Actions
         public ActionFollow(
             AmeisenDataHolder ameisenDataHolder,
             AmeisenDBManager ameisenDBManager,
-            AmeisenMovementEngine ameisenMovementEngine) : base(ameisenDataHolder, ameisenDBManager)
+            AmeisenMovementEngine ameisenMovementEngine,
+            AmeisenNavmeshClient ameisenNavmeshClient) : base(ameisenDataHolder, ameisenDBManager, ameisenNavmeshClient)
         {
             AmeisenDataHolder = ameisenDataHolder;
             AmeisenDBManager = ameisenDBManager;

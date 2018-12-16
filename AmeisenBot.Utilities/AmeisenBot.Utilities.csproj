@@ -36,8 +36,8 @@
     <Reference Include="BlackMagic">
       <HintPath>..\Blackmagic\BlackMagic.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="System" />
@@ -79,6 +79,7 @@
     <Compile Include="Objects\WoWObjects\Unit.cs" />
     <Compile Include="Objects\WoWObjects\WoWObject.cs" />
     <Compile Include="Structs\Credentials.cs" />
+    <Compile Include="Structs\PathRequest.cs" />
     <Compile Include="Structs\Vector3.cs" />
     <Compile Include="Structs\AuraInfo.cs" />
     <Compile Include="Structs\SpellInfo.cs" />
@@ -87,13 +88,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\AmeisenCombatEngine\AmeisenCombatEngine\AmeisenCombatEngine.Core.csproj">
       <Project>{AC364F4C-36E2-42BD-BADD-56D5E69966F6}</Project>
       <Name>AmeisenCombatEngine.Core</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

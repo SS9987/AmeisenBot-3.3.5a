@@ -1,12 +1,15 @@
-﻿using AmeisenBotCore;
+﻿using AmeisenBot.Clients;
+using AmeisenBotCore;
 using AmeisenBotData;
 using AmeisenBotDB;
 using AmeisenBotFSM.Interfaces;
 using AmeisenBotLogger;
 using AmeisenBotMapping.objects;
 using AmeisenBotUtilities;
+using AmeisenBotUtilities.Structs;
 using AmeisenPathCore;
 using AmeisenPathCore.Objects;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -22,6 +25,7 @@ namespace AmeisenBotFSM.Actions
         public Queue<Vector3> WaypointQueue { get; set; }
         private AmeisenDataHolder AmeisenDataHolder { get; set; }
         private AmeisenDBManager AmeisenDBManager { get; set; }
+        private AmeisenNavmeshClient AmeisenNavmeshClient { get; set; }
         private Vector3 LastPosition { get; set; }
         private double MovedSinceLastTick { get; set; }
         public Vector3 LastEnqued { get; internal set; }
@@ -32,10 +36,12 @@ namespace AmeisenBotFSM.Actions
             set { AmeisenDataHolder.Me = value; }
         }
 
-        public ActionMoving(AmeisenDataHolder ameisenDataHolder, AmeisenDBManager ameisenDBManager)
+        public ActionMoving(AmeisenDataHolder ameisenDataHolder, AmeisenDBManager ameisenDBManager, AmeisenNavmeshClient ameisenNavmeshClient)
         {
             AmeisenDataHolder = ameisenDataHolder;
             AmeisenDBManager = ameisenDBManager;
+            AmeisenNavmeshClient = ameisenNavmeshClient;
+
             WaypointQueue = new Queue<Vector3>();
             LastPosition = new Vector3(int.MaxValue, int.MaxValue, int.MaxValue);
         }
@@ -131,17 +137,15 @@ namespace AmeisenBotFSM.Actions
 
         private void UsePathfinding(Vector3 initialPosition, Vector3 targetPosition)
         {
-            List<Node> path = FindWayToNode(initialPosition, targetPosition);
+            List<Vector3> navmeshPath = AmeisenNavmeshClient.RequestPath(new PathRequest(initialPosition, targetPosition, Me.MapID));
 
-            if (path != null)
+            if (navmeshPath != null)
             {
-                ProcessPath(path);
+                ProcessNavmeshPath(navmeshPath);
             }
             else
             {
-                AmeisenLogger.Instance.Log(LogLevel.DEBUG, "Path is null", this);
-                // retry with thicker path
-                path = FindWayToNode(initialPosition, targetPosition, true);
+                List<Node> path = FindWayToNode(initialPosition, targetPosition);
 
                 if (path != null)
                 {
@@ -149,10 +153,30 @@ namespace AmeisenBotFSM.Actions
                 }
                 else
                 {
-                    AmeisenLogger.Instance.Log(LogLevel.DEBUG, "Thicker Path is null", this);
-                    MoveToNode(targetPosition);
-                    Thread.Sleep(100);
+                    AmeisenLogger.Instance.Log(LogLevel.DEBUG, "Path is null", this);
+                    // retry with thicker path
+                    path = FindWayToNode(initialPosition, targetPosition, true);
+
+                    if (path != null)
+                    {
+                        ProcessPath(path);
+                    }
+                    else
+                    {
+                        AmeisenLogger.Instance.Log(LogLevel.DEBUG, "Thicker Path is null", this);
+                        MoveToNode(targetPosition);
+                        Thread.Sleep(100);
+                    }
                 }
+            }
+        }
+
+        private void ProcessNavmeshPath(List<Vector3> navmeshPath)
+        {
+            AmeisenLogger.Instance.Log(LogLevel.DEBUG, "Found Navmesh Path...", this);
+            foreach (Vector3 node in navmeshPath)
+            {
+                WaypointQueue.Enqueue(node);
             }
         }
 
@@ -164,10 +188,9 @@ namespace AmeisenBotFSM.Actions
         /// <param name="path">path to process</param>
         private void ProcessPath(List<Node> path)
         {
-            AmeisenLogger.Instance.Log(LogLevel.DEBUG, "Found path...", this);
+            AmeisenLogger.Instance.Log(LogLevel.DEBUG, "Found Database Path...", this);
             foreach (Node node in path)
             {
-                Me.Update();
                 WaypointQueue.Enqueue(new Vector3(node.Position.X, node.Position.Y, node.Position.Z));
             }
         }

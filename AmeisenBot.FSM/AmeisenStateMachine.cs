@@ -1,4 +1,5 @@
 ﻿using AmeisenBot.Character;
+using AmeisenBot.Clients;
 using AmeisenBotCombat.Interfaces;
 using AmeisenBotData;
 using AmeisenBotDB;
@@ -42,21 +43,22 @@ namespace AmeisenBotFSM
             AmeisenDBManager ameisenDBManager,
             AmeisenMovementEngine ameisenMovementEngine,
             IAmeisenCombatPackage combatPackage,
-            AmeisenCharacterManager ameisenCharacterManager)
+            AmeisenCharacterManager ameisenCharacterManager,
+            AmeisenNavmeshClient ameisenNavmeshClient)
         {
             StateStack = new Stack<BotState>();
             StateActionMap = new Dictionary<BotState, IAction>
             {
                 { BotState.Idle, new ActionIdle(ameisenDataHolder) },
-                { BotState.Follow, new ActionFollow(ameisenDataHolder,ameisenDBManager, ameisenMovementEngine) },
-                { BotState.Moving, new ActionMoving(ameisenDataHolder,ameisenDBManager) },
+                { BotState.Follow, new ActionFollow(ameisenDataHolder,ameisenDBManager, ameisenMovementEngine,ameisenNavmeshClient) },
+                { BotState.Moving, new ActionMoving(ameisenDataHolder,ameisenDBManager,ameisenNavmeshClient) },
                 { BotState.Combat, new ActionCombat(ameisenDataHolder,combatPackage) },
-                { BotState.Dead, new ActionDead(ameisenDataHolder,ameisenDBManager) },
+                { BotState.Dead, new ActionDead(ameisenDataHolder,ameisenDBManager,ameisenNavmeshClient) },
                 { BotState.BotStuff, new ActionDoBotStuff(ameisenDataHolder, ameisenDBManager, ameisenCharacterManager, GetBotStuffToDo()) }
             };
 
             BotStuffList = new List<IAction>() {
-                new BotStuffRepairEquip(ameisenDataHolder, ameisenDBManager, ameisenCharacterManager)
+                new BotStuffRepairEquip(ameisenDataHolder, ameisenDBManager, ameisenCharacterManager,ameisenNavmeshClient)
             };
         }
 

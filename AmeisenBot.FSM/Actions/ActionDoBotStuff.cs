@@ -4,6 +4,7 @@ using AmeisenBotDB;
 using AmeisenBotFSM.BotStuff;
 using AmeisenBotFSM.Interfaces;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using static AmeisenBotFSM.Objects.Delegates;
 
@@ -61,7 +62,7 @@ namespace AmeisenBotFSM.Actions
 
         private IAction DecideWhatToDo()
         {
-            return new BotStuffRepairEquip(AmeisenDataHolder, AmeisenDBManager, AmeisenCharacterManager);
+            return StuffToDo.First();
         }
     }
 }
