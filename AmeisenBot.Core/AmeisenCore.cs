@@ -85,6 +85,18 @@ namespace AmeisenBotCore
             LuaDoString($"CastShapeshiftForm(\"{index}\");");
         }
 
+        public static void MoveLeftRight()
+        {
+            if (new Random().Next(0, 2) == 1)
+            {
+                SendKey(new IntPtr(0x51), 60, 380); // the "S" key to go a bit backwards TODO: find better method
+            }
+            else
+            {
+                SendKey(new IntPtr(0x45), 60, 380); // the "S" key to go a bit backwards TODO: find better method
+            }
+        }
+
         /// <summary>
         /// Cast a spell by its name
         /// </summary>
@@ -242,7 +254,7 @@ namespace AmeisenBotCore
         {
             BlackMagic.WriteFloat(me.BaseAddress + 0x7A8, Utils.GetFacingAngle(me.pos, me.Rotation, unit.pos));
             //LuaDoString("MoveBackwardStart();MoveBackwardStop();MoveBackwardStop();MoveBackwardStop();"); This is trash lel
-            SendKey(new IntPtr(0x53),2,8); // the "S" key to go a bit backwards TODO: find better method
+            SendKey(new IntPtr(0x53), 2, 8); // the "S" key to go a bit backwards TODO: find better method
         }
 
         /// <summary>

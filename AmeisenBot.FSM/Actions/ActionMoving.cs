@@ -96,6 +96,7 @@ namespace AmeisenBotFSM.Actions
                 if (MovedSinceLastTick < AmeisenDataHolder.Settings.MovementJumpThreshold)
                 {
                     AmeisenCore.CharacterJumpAsync();
+                    AmeisenCore.MoveLeftRight();
                     AmeisenLogger.Instance.Log(LogLevel.DEBUG, $"Jumping: {MovedSinceLastTick}", this);
                     return true;
                 }
