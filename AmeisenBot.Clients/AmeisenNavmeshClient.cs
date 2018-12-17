@@ -55,7 +55,7 @@ namespace AmeisenBot.Clients
             {
                 sWriter.WriteLine(JsonConvert.SerializeObject(pathRequest) + " &gt;");
                 sWriter.Flush();
-
+                
                 pathJson = sReader.ReadLine().Replace("&gt;", "");
                 path = JsonConvert.DeserializeObject<List<Vector3>>(pathJson);
                 return path;

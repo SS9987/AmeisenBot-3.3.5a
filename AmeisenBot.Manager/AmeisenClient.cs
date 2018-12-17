@@ -47,7 +47,10 @@ namespace AmeisenBotManager
             {
                 IRestResponse response = SendRequest(me, ip, port, HttpMethod.Post, true);
 
-                if(response == null) return false;
+                if (response == null)
+                {
+                    return false;
+                }
 
                 if (response.StatusCode == HttpStatusCode.Created
                     || response.StatusCode == HttpStatusCode.OK)
@@ -101,6 +104,10 @@ namespace AmeisenBotManager
                 request.AddParameter("picture", base64Image);
 
                 return client.Execute(request);
+            }
+            else
+            {
+                Register(me, ip, port);
             }
             return null;
         }

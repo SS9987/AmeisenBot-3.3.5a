@@ -6,7 +6,7 @@
     public class Settings
     {
         public string accentColor = "#FFAAAAAA";
-        public string ameisenServerIP = "127.0.0.1";
+        public string ameisenServerIp = "127.0.0.1";
         public string ameisenServerName = Utils.GenerateRandonString(12, "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890");
         public int ameisenServerPort = 16200;
         public bool assistParty = true;
@@ -15,13 +15,15 @@
         public bool behaviourBuff = true;
         public bool behaviourHeal = false;
         public bool behaviourTank = false;
-        public int botMaxThreads = 2;
         public string combatClassPath = "none";
         public bool databaseAutoConnect = true;
-        public string databaseIP = "127.0.0.1";
+        public string databaseIp = "127.0.0.1";
         public string databaseName = "ameisenbot";
         public string databasePasswort = "AmeisenPassword";
         public int databasePort = 3306;
+        public bool navigationServerAutoConnect = true;
+        public string navigationServerIp = "127.0.0.1";
+        public int navigationServerPort = 3306;
         public string databaseUsername = "ameisenbot";
         public int dataRefreshRate = 250;
         public string energyColor = "#FFFFA160";

@@ -3,6 +3,7 @@ using AmeisenBotData;
 using AmeisenBotDB;
 using AmeisenBotFSM.BotStuff;
 using AmeisenBotFSM.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -62,7 +63,7 @@ namespace AmeisenBotFSM.Actions
 
         private IAction DecideWhatToDo()
         {
-            return StuffToDo.First();
+            return StuffToDo[new Random().Next(0, StuffToDo.Count)];
         }
     }
 }

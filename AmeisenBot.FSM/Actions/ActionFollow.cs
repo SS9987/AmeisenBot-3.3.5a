@@ -126,26 +126,26 @@ namespace AmeisenBotFSM.Actions
 
         private int GetMyPartyPosition()
         {
-            int pos = 1;
+            int pos = 0;
             Random rnd = new Random();
 
             if (AmeisenDataHolder.ActiveNetworkBots != null)
             {
                 foreach (NetworkBot bot in AmeisenDataHolder.ActiveNetworkBots)
                 {
+                    pos++;
                     if (bot.GetMe().Guid == Me.Guid)
                     {
-                        return pos;
-                    }
-                    else
-                    {
-                        pos++;
+                        break;
                     }
                 }
             }
             else
             {
-                return rnd.Next(1, 6);
+                if (pos == 0)
+                {
+                    pos = rnd.Next(1, 6);
+                }
             }
 
             return pos;

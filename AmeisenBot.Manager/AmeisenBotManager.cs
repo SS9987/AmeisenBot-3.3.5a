@@ -255,7 +255,13 @@ namespace AmeisenBotManager
             }
 
             // Connect to NavmeshServer
-            AmeisenNavmeshClient = new AmeisenNavmeshClient("127.0.0.1", 47110);
+            if (AmeisenSettings.Settings.navigationServerAutoConnect)
+            {
+                AmeisenNavmeshClient = new AmeisenNavmeshClient(
+                    AmeisenSettings.Settings.navigationServerIp,
+                    AmeisenSettings.Settings.navigationServerPort
+                );
+            }
 
             // Attach to Proccess
             Blackmagic = new BlackMagic(wowExe.process.Id);
@@ -443,13 +449,13 @@ namespace AmeisenBotManager
 
         private bool ConnectToServer() => AmeisenClient.Register(
                 Me,
-                IPAddress.Parse(AmeisenSettings.Settings.ameisenServerIP),
+                IPAddress.Parse(AmeisenSettings.Settings.ameisenServerIp),
                 AmeisenSettings.Settings.ameisenServerPort
             );
 
         private bool ConnectToDB() => AmeisenDBManager.ConnectToMySQL(
                 string.Format(sqlConnectionString,
-                AmeisenSettings.Settings.databaseIP,
+                AmeisenSettings.Settings.databaseIp,
                 AmeisenSettings.Settings.databasePort,
                 AmeisenSettings.Settings.databaseName,
                 AmeisenSettings.Settings.databaseUsername,
@@ -464,7 +470,7 @@ namespace AmeisenBotManager
             // Disconnect from Server
             AmeisenClient.Unregister(
                 Me,
-                IPAddress.Parse(AmeisenSettings.Settings.ameisenServerIP),
+                IPAddress.Parse(AmeisenSettings.Settings.ameisenServerIp),
                 AmeisenSettings.Settings.ameisenServerPort);
 
             // Save WoW's window positions

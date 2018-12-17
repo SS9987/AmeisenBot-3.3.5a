@@ -57,7 +57,7 @@ namespace AmeisenBotGUI
 
         private void LoadAmeisenServerSettings()
         {
-            textboxIP.Text = Settings.ameisenServerIP;
+            textboxIP.Text = Settings.ameisenServerIp;
             textboxPort.Text = Settings.ameisenServerPort.ToString();
             checkboxAutoConnect.IsChecked = Settings.serverAutoConnect;
         }
@@ -95,7 +95,7 @@ namespace AmeisenBotGUI
 
         private void LoadDatabaseSettings()
         {
-            textboxDBIP.Text = Settings.databaseIP;
+            textboxDBIP.Text = Settings.databaseIp;
             textboxDBPort.Text = Settings.databasePort.ToString();
             textboxDBDatabase.Text = Settings.databaseName;
             textboxDBUsername.Text = Settings.databaseUsername;
@@ -121,14 +121,14 @@ namespace AmeisenBotGUI
 
         private void SaveAmeisenServerSettings()
         {
-            Settings.ameisenServerIP = textboxIP.Text;
+            Settings.ameisenServerIp = textboxIP.Text;
             Settings.ameisenServerPort = Convert.ToInt32(textboxPort.Text);
             Settings.serverAutoConnect = (bool)checkboxAutoConnect.IsChecked;
         }
 
         private void SaveDatabaseSettings()
         {
-            Settings.databaseIP = textboxDBIP.Text;
+            Settings.databaseIp = textboxDBIP.Text;
             Settings.databasePort = Convert.ToInt32(textboxDBPort.Text);
             Settings.databaseName = textboxDBDatabase.Text;
             Settings.databaseUsername = textboxDBUsername.Text;

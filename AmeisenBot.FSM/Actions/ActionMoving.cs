@@ -9,7 +9,6 @@ using AmeisenBotUtilities;
 using AmeisenBotUtilities.Structs;
 using AmeisenPathCore;
 using AmeisenPathCore.Objects;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -113,7 +112,7 @@ namespace AmeisenBotFSM.Actions
             {
                 Me.Update();
                 Vector3 initialPosition = Me.pos;
-                Vector3 targetPosition = WaypointQueue.Dequeue();
+                Vector3 targetPosition = WaypointQueue.Peek();
 
                 if (WaypointQueue.Count < 2 && Utils.GetDistance(initialPosition, targetPosition) >= AmeisenDataHolder.Settings.PathfindingUsageThreshold)
                 {
@@ -202,7 +201,6 @@ namespace AmeisenBotFSM.Actions
         /// <param name="targetPosition">position to move to</param>
         private void MoveToNode(Vector3 targetPosition)
         {
-            int currentTry = 0;
             double followOffset = 0;
 
             if (AmeisenCore.IsMounted)
@@ -210,7 +208,7 @@ namespace AmeisenBotFSM.Actions
                 followOffset = 5;
             }
 
-            while (currentTry < 3 && Utils.GetDistance(Me.pos, targetPosition) > AmeisenDataHolder.Settings.followDistance + followOffset)
+            while (Utils.GetDistance(Me.pos, targetPosition) > 3 + followOffset)
             {
                 CheckIfWeAreStuckIfYesJump(Me.pos, LastPosition);
 
@@ -222,9 +220,13 @@ namespace AmeisenBotFSM.Actions
                 AmeisenCore.MovePlayerToXYZ(targetPosition, InteractionType.MOVE);
                 Thread.Sleep(100);
 
+                if (Utils.GetDistance(Me.pos, targetPosition) < 3 + followOffset)
+                {
+                    WaypointQueue.Dequeue();
+                }
+
                 Me.Update();
                 LastPosition = Me.pos;
-                currentTry++;
             }
         }
 
