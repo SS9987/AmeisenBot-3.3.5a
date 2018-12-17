@@ -49,23 +49,21 @@ namespace AmeisenBotFSM.Actions
         {
             if (WaypointQueue.Count > 0)
             {
-                double distance = Utils.GetDistance(Me.pos, LastEnqued);
+                double distance = Utils.GetDistance(Me.pos, WaypointQueue.Peek());
 
-                if (distance > AmeisenDataHolder.Settings.useMountFollowDistance && AmeisenCore.IsOutdoors)
+                if (AmeisenDataHolder.Settings.landMounts != ""
+                    && distance > AmeisenDataHolder.Settings.useMountFollowDistance
+                    && AmeisenCore.IsOutdoors
+                    && !AmeisenCore.IsMounted)
                 {
-                    if (!AmeisenCore.IsMounted)
-                    {
-                        AmeisenCore.MountRandomMount(AmeisenDataHolder.Settings.landMounts, AmeisenDataHolder.Settings.flyingMounts);
-                        Thread.Sleep(1500);
-                    }
+                    AmeisenCore.MountRandomMount(AmeisenDataHolder.Settings.landMounts, AmeisenDataHolder.Settings.flyingMounts);
+                    Thread.Sleep(1500);
                 }
 
-                if (distance < AmeisenDataHolder.Settings.useMountFollowDistance + 6)
+                if (distance < AmeisenDataHolder.Settings.useMountFollowDistance + 6
+                    && AmeisenCore.IsMounted)
                 {
-                    if (AmeisenCore.IsMounted)
-                    {
-                        AmeisenCore.MountRandomMount(AmeisenDataHolder.Settings.landMounts, AmeisenDataHolder.Settings.flyingMounts);
-                    }
+                    AmeisenCore.MountRandomMount(AmeisenDataHolder.Settings.landMounts, AmeisenDataHolder.Settings.flyingMounts);
                 }
 
                 MoveToNode();
@@ -90,13 +88,12 @@ namespace AmeisenBotFSM.Actions
         /// <returns>if we havent moved 0.5m in the 2 vectors, jump and return true</returns>
         private bool CheckIfWeAreStuckIfYesJump(Vector3 initialPosition, Vector3 activePosition)
         {
-            double oldMovedSinceLastTick = MovedSinceLastTick;
             MovedSinceLastTick = Utils.GetDistance(initialPosition, activePosition);
 
             // we are possibly stuck at a fence or something alike
             if (MovedSinceLastTick != 0 && MovedSinceLastTick < 1000)
             {
-                if (MovedSinceLastTick - oldMovedSinceLastTick < AmeisenDataHolder.Settings.MovementJumpThreshold)
+                if (MovedSinceLastTick < AmeisenDataHolder.Settings.MovementJumpThreshold)
                 {
                     AmeisenCore.CharacterJumpAsync();
                     AmeisenLogger.Instance.Log(LogLevel.DEBUG, $"Jumping: {MovedSinceLastTick}", this);
@@ -114,27 +111,29 @@ namespace AmeisenBotFSM.Actions
                 Vector3 initialPosition = Me.pos;
                 Vector3 targetPosition = WaypointQueue.Peek();
 
-                if (WaypointQueue.Count < 2 && Utils.GetDistance(initialPosition, targetPosition) >= AmeisenDataHolder.Settings.PathfindingUsageThreshold)
+                if (Utils.GetDistance(initialPosition, targetPosition) > AmeisenDataHolder.Settings.followDistance)
                 {
-                    if (AmeisenDataHolder.Settings.usePathfinding
-                        && AmeisenDataHolder.IsConnectedToDB)
+                    CheckIfWeAreStuckIfYesJump(Me.pos, LastPosition);
+
+                    if (targetPosition.Z == 0)
                     {
-                        UsePathfinding(initialPosition, targetPosition);
+                        targetPosition.Z = Me.pos.Z;
                     }
-                    else
-                    {
-                        MoveToNode(targetPosition);
-                    }
+
+                    AmeisenCore.MovePlayerToXYZ(targetPosition, InteractionType.MOVE);
+
+                    Me.Update();
+                    LastPosition = Me.pos;
                 }
                 else
                 {
-                    MoveToNode(targetPosition);
+                    WaypointQueue.Dequeue();
                 }
             }
             else { }
         }
 
-        private void UsePathfinding(Vector3 initialPosition, Vector3 targetPosition)
+        internal void UsePathfinding(Vector3 initialPosition, Vector3 targetPosition)
         {
             List<Vector3> navmeshPath = AmeisenNavmeshClient.RequestPath(new PathRequest(initialPosition, targetPosition, Me.MapID));
 
@@ -159,12 +158,6 @@ namespace AmeisenBotFSM.Actions
                     if (path != null)
                     {
                         ProcessPath(path);
-                    }
-                    else
-                    {
-                        AmeisenLogger.Instance.Log(LogLevel.DEBUG, "Thicker Path is null", this);
-                        MoveToNode(targetPosition);
-                        Thread.Sleep(100);
                     }
                 }
             }
@@ -191,42 +184,6 @@ namespace AmeisenBotFSM.Actions
             foreach (Node node in path)
             {
                 WaypointQueue.Enqueue(new Vector3(node.Position.X, node.Position.Y, node.Position.Z));
-            }
-        }
-
-        /// <summary>
-        /// Move to a node with a max of 10 tries, if we aren't in the node range
-        /// after this, there is something fishy going on
-        /// </summary>
-        /// <param name="targetPosition">position to move to</param>
-        private void MoveToNode(Vector3 targetPosition)
-        {
-            double followOffset = 0;
-
-            if (AmeisenCore.IsMounted)
-            {
-                followOffset = 5;
-            }
-
-            while (Utils.GetDistance(Me.pos, targetPosition) > 3 + followOffset)
-            {
-                CheckIfWeAreStuckIfYesJump(Me.pos, LastPosition);
-
-                if (targetPosition.Z == 0)
-                {
-                    targetPosition.Z = Me.pos.Z;
-                }
-
-                AmeisenCore.MovePlayerToXYZ(targetPosition, InteractionType.MOVE);
-                Thread.Sleep(100);
-
-                if (Utils.GetDistance(Me.pos, targetPosition) < 3 + followOffset)
-                {
-                    WaypointQueue.Dequeue();
-                }
-
-                Me.Update();
-                LastPosition = Me.pos;
             }
         }
 

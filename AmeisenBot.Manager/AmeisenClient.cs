@@ -105,10 +105,6 @@ namespace AmeisenBotManager
 
                 return client.Execute(request);
             }
-            else
-            {
-                Register(me, ip, port);
-            }
             return null;
         }
 

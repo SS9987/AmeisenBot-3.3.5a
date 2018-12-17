@@ -43,6 +43,13 @@ namespace AmeisenBotFSM.Actions
 
         public override void DoThings()
         {
+            if (WaypointQueue.Count > 0)
+            {
+                // Do the movement stuff
+                base.DoThings();
+                return;
+            }
+
             ActiveUnits = GetUnitsToFollow();
             RefreshActiveUnit();
             Me?.Update();
@@ -70,7 +77,7 @@ namespace AmeisenBotFSM.Actions
             //AmeisenMovementEngine.MemberCount = GetPartymemberCount();
             Vector4 targetPos = AmeisenMovementEngine.GetPosition(
                                     new Vector4(ActiveUnit.pos.X, ActiveUnit.pos.Y, ActiveUnit.pos.Z, ActiveUnit.Rotation),
-                                    AmeisenDataHolder.Settings.followDistance / 2,
+                                    AmeisenDataHolder.Settings.followDistance / 3,
                                     GetMyPartyPosition());
 
             Vector3 posToMoveTo = new Vector3(targetPos.X, targetPos.Y, targetPos.Z);
@@ -79,16 +86,14 @@ namespace AmeisenBotFSM.Actions
             if (Utils.GetDistance(Me.pos, ActiveUnit.pos)
                 > AmeisenDataHolder.Settings.followDistance)
             {
+                UsePathfinding(Me.pos, posToMoveTo);
+
                 // Dont add waypoints twice
                 if (!WaypointQueue.Contains(posToMoveTo))
                 {
                     WaypointQueue.Enqueue(posToMoveTo);
-                    LastEnqued = posToMoveTo;
                 }
             }
-
-            // Do the movement stuff
-            base.DoThings();
         }
 
         /// <summary>

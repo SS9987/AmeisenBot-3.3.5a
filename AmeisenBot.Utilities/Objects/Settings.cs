@@ -23,7 +23,7 @@
         public int databasePort = 3306;
         public bool navigationServerAutoConnect = true;
         public string navigationServerIp = "127.0.0.1";
-        public int navigationServerPort = 3306;
+        public int navigationServerPort = 47110;
         public string databaseUsername = "ameisenbot";
         public int dataRefreshRate = 250;
         public string energyColor = "#FFFFA160";
