@@ -138,7 +138,7 @@ namespace AmeisenBotFSM.Actions
         {
             AmeisenDataHolder = ameisenDataHolder;
             CombatPackage = combatPackage;
-            CombatEngine = new CombatEngine(MeUnit, TargetUnit, combatPackage.Spells, combatPackage.SpellStrategy, combatPackage.MovementStrategy);
+            CombatEngine = new CombatEngine(combatPackage.Spells, combatPackage.SpellStrategy, combatPackage.MovementStrategy);
             CombatEngine.OnCastSpell += HandleSpellCast;
         }
 
