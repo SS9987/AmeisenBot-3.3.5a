@@ -481,9 +481,9 @@ namespace AmeisenBotCore
             SpellInfo info = new SpellInfo();
             string cmd = $"_, _, _, cost, _, _, castTime, _ = GetSpellInfo(\"{spell}\");";
 
-            info.name = spell; //try { info.name = GetLocalizedText("name"); } catch { info.castTime = -1; }
-            try { info.castTime = int.Parse(GetLocalizedText(cmd, "castTime")); } catch { info.castTime = -1; }
-            try { info.cost = int.Parse(GetLocalizedText(cmd, "cost")); } catch { info.cost = -1; }
+            info.name = spell;
+            info.castTime = Utils.TryParseInt(GetLocalizedText(cmd, "castTime"));
+            //info.cost = Utils.TryParseInt(GetLocalizedText(cmd, "cost"));
 
             return info;
         }
@@ -496,11 +496,11 @@ namespace AmeisenBotCore
         public static CastingInfo GetUnitCastingInfo(LuaUnit luaunit)
         {
             CastingInfo info = new CastingInfo();
-            string cmd = $"name, _, _, _, _, endTime = UnitCastingInfo(\"{luaunit.ToString()}\");";
+            string cmd = $"name, _, _, _, _, endTime = UnitCastingInfo(\"{luaunit.ToString()}\"); remainingDuration = time() - endTime;";
 
-            try { info.name = GetLocalizedText(cmd, "name"); } catch { info.name = "none"; }
+            info.duration = Utils.TryParseInt(GetLocalizedText(cmd, "remainingDuration"));
 
-            AmeisenLogger.Instance.Log(LogLevel.DEBUG, $"CastingInfo: [{info.name}, {info.endTime}]", "AmeisenCore");
+            AmeisenLogger.Instance.Log(LogLevel.DEBUG, $"CastingInfo: [{info.name}, {info.duration}]", "AmeisenCore");
             return info;
         }
 

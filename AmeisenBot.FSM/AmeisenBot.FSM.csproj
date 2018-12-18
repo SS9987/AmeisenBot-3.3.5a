@@ -47,6 +47,7 @@
     <Compile Include="Actions\ActionDoBotStuff.cs" />
     <Compile Include="Actions\ActionFollow.cs" />
     <Compile Include="Actions\ActionIdle.cs" />
+    <Compile Include="Actions\ActionLoot.cs" />
     <Compile Include="Actions\ActionMoving.cs" />
     <Compile Include="AmeisenStateMachine.cs" />
     <Compile Include="AmeisenStateMachineManager.cs" />

@@ -8,7 +8,6 @@ using AmeisenBotFSM.BotStuff;
 using AmeisenBotFSM.Enums;
 using AmeisenBotFSM.Interfaces;
 using AmeisenBotLogger;
-using AmeisenCombatEngine.Interfaces;
 using AmeisenMovement;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
@@ -50,11 +49,12 @@ namespace AmeisenBotFSM
             StateActionMap = new Dictionary<BotState, IAction>
             {
                 { BotState.Idle, new ActionIdle(ameisenDataHolder) },
-                { BotState.Follow, new ActionFollow(ameisenDataHolder,ameisenDBManager, ameisenMovementEngine,ameisenNavmeshClient) },
-                { BotState.Moving, new ActionMoving(ameisenDataHolder,ameisenDBManager,ameisenNavmeshClient) },
-                { BotState.Combat, new ActionCombat(ameisenDataHolder,combatPackage) },
-                { BotState.Dead, new ActionDead(ameisenDataHolder,ameisenDBManager,ameisenNavmeshClient) },
-                { BotState.BotStuff, new ActionDoBotStuff(ameisenDataHolder, ameisenDBManager, ameisenCharacterManager, GetBotStuffToDo()) }
+                { BotState.Follow, new ActionFollow(ameisenDataHolder, ameisenDBManager, ameisenMovementEngine, ameisenNavmeshClient) },
+                { BotState.Moving, new ActionMoving(ameisenDataHolder, ameisenDBManager, ameisenNavmeshClient) },
+                { BotState.Combat, new ActionCombat(ameisenDataHolder, combatPackage) },
+                { BotState.Dead, new ActionDead(ameisenDataHolder, ameisenDBManager, ameisenNavmeshClient) },
+                { BotState.Loot, new ActionLoot(ameisenDataHolder, ameisenDBManager, ameisenNavmeshClient) },
+                { BotState.BotStuff, new ActionDoBotStuff(ameisenDataHolder, ameisenDBManager, ameisenCharacterManager, ameisenNavmeshClient) }
             };
 
             BotStuffList = new List<IAction>() {

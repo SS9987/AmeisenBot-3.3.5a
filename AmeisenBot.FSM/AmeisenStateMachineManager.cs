@@ -8,7 +8,6 @@ using AmeisenBotDB;
 using AmeisenBotFSM.Enums;
 using AmeisenBotLogger;
 using AmeisenBotUtilities;
-using AmeisenCombatEngine.Interfaces;
 using AmeisenMovement;
 using System.Threading;
 
@@ -112,6 +111,12 @@ namespace AmeisenBotFSM
                     continue;
                 }
 
+                // Is there loot waiting for me
+                if (IsLootThere())
+                {
+                    continue;
+                }
+
                 // Am I dead?
                 if (DeadCheck())
                 {
@@ -138,6 +143,23 @@ namespace AmeisenBotFSM
 
                 AmeisenLogger.Instance.Log(LogLevel.VERBOSE, $"FSM: {StateMachine.GetCurrentState()}", this);
             }
+        }
+
+        private bool IsLootThere()
+        {
+            if (AmeisenDataHolder.LootableUnits.Count > 0)
+            {
+                if (StateMachine.GetCurrentState() == BotState.Idle)
+                {
+                    StateMachine.PushAction(BotState.Loot);
+                }
+                return true;
+            }
+            else if (StateMachine.GetCurrentState() == BotState.Loot)
+            {
+                StateMachine.PopAction();
+            }
+            return false;
         }
 
         private bool BotStuffCheck()

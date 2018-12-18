@@ -161,9 +161,16 @@ namespace AmeisenBotManager
 
             foreach (WowObject t in ActiveWoWObjects)
             {
+                if (t == null && t.Guid == 0)
+                {
+                    t.Update();
+                }
+
                 if (t.GetType() == typeof(Me))
                 {
+                    t.Update();
                     Me = (Me)t;
+                    continue;
                 }
 
                 if (Me != null && t.Guid == Me.PetGuid)
@@ -171,6 +178,7 @@ namespace AmeisenBotManager
                     t.Update();
                     t.Distance = Utils.GetDistance(Me.pos, t.pos);
                     Pet = (Unit)t;
+                    continue;
                 }
 
                 if (Me != null && t.Guid == Me.TargetGuid)
@@ -180,19 +188,20 @@ namespace AmeisenBotManager
                     {
                         t.Distance = Utils.GetDistance(Me.pos, t.pos);
                         Target = (Player)t;
+                        continue;
                     }
                     else if (t.GetType() == typeof(Unit))
                     {
                         t.Distance = Utils.GetDistance(Me.pos, t.pos);
                         Target = (Unit)t;
+                        continue;
                     }
                     else if (t.GetType() == typeof(Me))
                     {
                         Target = (Me)t;
+                        continue;
                     }
                 }
-
-                t.Update();
             }
 
             // Best place for this :^)

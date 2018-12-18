@@ -180,6 +180,11 @@ namespace AmeisenBotManager
         private AmeisenEventHook AmeisenEventHook { get; set; }
         private AmeisenCharacterManager AmeisenCharacterManager { get; set; }
         public string CurrentCombatClass { get; set; }
+        private Queue<Unit> LootableUnits
+        {
+            get => AmeisenDataHolder.LootableUnits;
+            set => AmeisenDataHolder.LootableUnits = value;
+        }
 
         /// <summary>
         /// Create a new AmeisenBotManager to manage the bot's functionality
@@ -344,7 +349,33 @@ namespace AmeisenBotManager
         }
 
         private void OnRegenEnabled(long timestamp, List<string> args)
-            => Me.InCombatEvent = false;
+        {
+            Me.InCombatEvent = false;
+            CheckForLoot();
+        }
+
+        private void CheckForLoot()
+        {
+            foreach (WowObject obj in ActiveWoWObjects)
+            {
+                if (obj.GetType() == typeof(Player)
+                    || obj.GetType() == typeof(Unit)
+                    || obj.GetType() == typeof(Me))
+                {
+                    if (!((Unit)obj).IsDead)
+                    {
+                        continue; // We cant loot alive targets lel
+                    }
+
+                    obj.Update();
+                    if (((Unit)obj).IsLootable)
+                    {
+                        LootableUnits.Enqueue((Unit)obj);
+                    }
+                    continue;
+                }
+            }
+        }
 
         private void OnRegenDisabled(long timestamp, List<string> args)
             => Me.InCombatEvent = true;

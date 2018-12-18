@@ -19,7 +19,7 @@ namespace AmeisenBotCombat
         /// <param name="waitOnCastToFinish">wait for the cast to finish</param>
         public static void CastSpellByName(Me me, Unit target, string spellname, bool onMyself, bool waitOnCastToFinish = true)
         {
-            //SpellInfo spellInfo = GetSpellInfo(spellname);
+            SpellInfo spellInfo = GetSpellInfo(spellname);
             if (target != null && target.Guid != 0)
             {
                 if (!IsFacingMelee(me, target))
@@ -32,30 +32,26 @@ namespace AmeisenBotCombat
 
             if (waitOnCastToFinish)
             {
-                Thread.Sleep(100);
+                Thread.Sleep(spellInfo.castTime + 50);
 
-                while (AmeisenCore.GetUnitCastingInfo(LuaUnit.player).endTime > 1)
+                while (AmeisenCore.GetUnitCastingInfo(LuaUnit.player).endTime >= 100)
                 {
-                    Thread.Sleep(25);
+                    Thread.Sleep(100);
                 }
             }
         }
 
         /// <summary>
-        /// Get the spellinfo of a spell that contains casttime, mana etc.
+        /// Get the spellinfo of a spell that contains casttime
         /// </summary>
         /// <param name="spellname">spell to check</param>
         /// <returns>spellinfo</returns>
         public static SpellInfo GetSpellInfo(string spellname)
             => AmeisenCore.GetSpellInfo(spellname);
 
-        public static void TargetNearestEnemy() => AmeisenCore.LuaDoString("TargetNearestEnemy();");
+        public static void TargetNearestEnemy() 
+            => AmeisenCore.LuaDoString("TargetNearestEnemy();");
 
-        /// <summary>
-        /// Checks for a spell beeing useable
-        /// </summary>
-        /// <param name="spellname">spell to check for</param>
-        /// <returns>wether the spell is useable or not</returns>
         public static bool IsSpellUseable(string spellname)
             => AmeisenCore.IsSpellUseable(spellname)
             && !AmeisenCore.IsOnCooldown(spellname);
@@ -91,7 +87,7 @@ namespace AmeisenBotCombat
             => AmeisenCore.GetDebuffs(luaUnit);
 
         /// <summary>
-        /// Check for facing a specific unit
+        /// Check for ranged combat facing a specific unit
         /// </summary
         /// <param name="me">you</param>
         /// <param name="unit">target</param>
@@ -105,7 +101,7 @@ namespace AmeisenBotCombat
         /// <param name="me">you</param>
         /// <param name="unit">target</param>
         /// <returns>wether you're facing the unit or not</returns>
-        public static bool IsFacingMelee(Me me, Unit unit, double minRotation = 0.3, double maxRotation = 1.7)
+        public static bool IsFacingMelee(Me me, Unit unit, double minRotation = 0.2, double maxRotation = 1.8)
             => Utils.IsFacing(me.pos, me.Rotation, unit.pos, minRotation, maxRotation);
 
         /// <summary>
@@ -239,7 +235,8 @@ namespace AmeisenBotCombat
                        InteractionType.STOP);
         }
 
-        public static void AttackTarget() => AmeisenCore.RunSlashCommand("/startattack");
+        public static void AttackTarget() 
+            => AmeisenCore.RunSlashCommand("/startattack");
 
         /// <summary>
         /// Get a target to attack by scanniung hwat your partymembers attack

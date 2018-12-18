@@ -24,6 +24,7 @@ namespace AmeisenBotData
         public bool IsAllowedToDoOwnStuff { get; set; }
         public bool IsConnectedToDB { get; set; }
         public bool IsConnectedToServer { get; set; }
+        public Queue<Unit> LootableUnits { get; set; }
 
         public AmeisenDataHolder()
         {

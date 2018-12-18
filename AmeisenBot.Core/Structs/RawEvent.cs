@@ -5,7 +5,7 @@ namespace AmeisenBotCore.Structs
     public struct RawEvent
     {
         public long time;
-        public string @event;
+        public string eventname;
         public List<string> args;
     }
 }

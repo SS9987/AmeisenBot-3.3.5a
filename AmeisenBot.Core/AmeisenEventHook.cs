@@ -79,10 +79,10 @@ namespace AmeisenBotCore
                 {
                     foreach (RawEvent rawEvent in rawEvents)
                     {
-                        if (EventDictionary.ContainsKey(rawEvent.@event))
+                        if (EventDictionary.ContainsKey(rawEvent.eventname))
                         {
-                            EventDictionary[rawEvent.@event].Invoke(rawEvent.time, rawEvent.args);
-                            AmeisenLogger.Instance.Log(LogLevel.VERBOSE, $"Fired OnEventFired: {rawEvent.@event}", this);
+                            EventDictionary[rawEvent.eventname].Invoke(rawEvent.time, rawEvent.args);
+                            AmeisenLogger.Instance.Log(LogLevel.VERBOSE, $"Fired OnEventFired: {rawEvent.eventname}", this);
                         }
                     }
                 }

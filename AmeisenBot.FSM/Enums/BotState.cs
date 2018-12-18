@@ -8,6 +8,7 @@
         Moving,
         Combat,
         Dead,
+        Loot,
         BotStuff,
     }
 }
