@@ -13,7 +13,7 @@ using System.Threading;
 
 namespace AmeisenBotFSM.BotStuff
 {
-    public class BotStuffRepairEquip : ActionMoving
+    public class BotStuffCleanBags : ActionMoving
     {
         private const int MAMMOTH_SPELL = 61425;
 
@@ -27,7 +27,7 @@ namespace AmeisenBotFSM.BotStuff
 
         public bool HasPath { get; private set; }
 
-        public BotStuffRepairEquip(
+        public BotStuffCleanBags(
             AmeisenDataHolder ameisenDataHolder,
             AmeisenDBManager ameisenDBManager,
             AmeisenCharacterManager ameisenCharacterManager,
@@ -56,7 +56,7 @@ namespace AmeisenBotFSM.BotStuff
             if (!IGotTheDamnMammoth)
             {
                 AmeisenLogger.Instance.Log(LogLevel.DEBUG, "Searching for Units to repair equipment...", this);
-                List<RememberedUnit> possibleUnits = AmeisenDBManager.GetRememberedUnits(UnitTrait.REPAIR);
+                List<RememberedUnit> possibleUnits = AmeisenDBManager.GetRememberedUnits(UnitTrait.SELL);
                 AmeisenLogger.Instance.Log(LogLevel.DEBUG, $"Found {possibleUnits.Count} Units to repair at", this);
 
                 RememberedUnit closestUnit = null;
@@ -74,24 +74,24 @@ namespace AmeisenBotFSM.BotStuff
 
                 if (closestUnit != null)
                 {
-                    AmeisenLogger.Instance.Log(LogLevel.DEBUG, $"Unit to repair equip found: {closestUnit.Name}", this);
+                    AmeisenLogger.Instance.Log(LogLevel.DEBUG, $"Unit to sell trash found: {closestUnit.Name}", this);
                     GoToUnitAndRepair(closestUnit);
                 }
                 else
                 {
-                    AmeisenLogger.Instance.Log(LogLevel.DEBUG, "No Unit to repair equip found...", this);
+                    AmeisenLogger.Instance.Log(LogLevel.DEBUG, "No Unit to sell trash found...", this);
                 }
             }
             else
             {
-                AmeisenLogger.Instance.Log(LogLevel.DEBUG, "I got the mammoth to repair...", this);
+                AmeisenLogger.Instance.Log(LogLevel.DEBUG, "I got the mammoth to sell trash...", this);
 
                 if (AmeisenCore.IsOutdoors)
                 {
                     AmeisenCore.CastSpellByName("Traveler's Tundra Mammoth", false);
 
                     Thread.Sleep(2000);
-                    RepairEquipmentAtUnit(null, true);
+                    SellTrashAtUnit(null, true);
                 }
             }
         }
@@ -101,7 +101,7 @@ namespace AmeisenBotFSM.BotStuff
             Me.Update();
             if (Utils.GetDistance(Me.pos, closestUnit.Position) < 3)
             {
-                RepairEquipmentAtUnit(closestUnit);
+                SellTrashAtUnit(closestUnit);
             }
             else
             {
@@ -110,7 +110,7 @@ namespace AmeisenBotFSM.BotStuff
             }
         }
 
-        private void RepairEquipmentAtUnit(RememberedUnit unit, bool mammoth = false)
+        private void SellTrashAtUnit(RememberedUnit unit, bool mammoth = false)
         {
             if (mammoth)
             {
@@ -126,9 +126,8 @@ namespace AmeisenBotFSM.BotStuff
                 Target.Update();
                 AmeisenCore.LuaDoString("InteractUnit(\"target\");");
                 Thread.Sleep(500);
-                AmeisenCore.RepairAllItems();
                 AmeisenCore.SellAllGrayItems();
-                AmeisenLogger.Instance.Log(LogLevel.DEBUG, "Repaired all items and sold all gray stuff", this);
+                AmeisenLogger.Instance.Log(LogLevel.DEBUG, "Sold all gray stuff", this);
                 Thread.Sleep(1000);
             }
             HasPath = false;

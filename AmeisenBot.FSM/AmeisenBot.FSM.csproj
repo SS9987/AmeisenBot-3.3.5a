@@ -50,6 +50,7 @@
     <Compile Include="Actions\ActionMoving.cs" />
     <Compile Include="AmeisenStateMachine.cs" />
     <Compile Include="AmeisenStateMachineManager.cs" />
+    <Compile Include="BotStuff\BotStuffCleanBags.cs" />
     <Compile Include="BotStuff\BotStuffRepairEquip.cs" />
     <Compile Include="Enums\BotState.cs" />
     <Compile Include="Objects\Delegates.cs" />

@@ -89,10 +89,10 @@ namespace AmeisenBotFSM.Actions
                 UsePathfinding(Me.pos, posToMoveTo);
 
                 // Dont add waypoints twice
-                if (!WaypointQueue.Contains(posToMoveTo))
+                /*if (!WaypointQueue.Contains(posToMoveTo))
                 {
                     WaypointQueue.Enqueue(posToMoveTo);
-                }
+                }*/
             }
         }
 
