@@ -46,9 +46,9 @@
         public bool revive = true;
         public int stateMachineUpdateMillis = 10;
         public int stateMachineStateUpdateMillis = 100;
-        public int PathfindingSearchRadius = 2;
-        public double PathfindingUsageThreshold = 10;
-        public double MovementJumpThreshold = 0.1;
+        public int pathfindingSearchRadius = 2;
+        public double pathfindingUsageThreshold = 10;
+        public double movementJumpThreshold = 0.1;
         public bool randomEmotes = true;
         public bool doOwnStuff = false;
         public double oldXindowPosX = 0;

@@ -1,5 +1,4 @@
-﻿using AmeisenBotData;
-using AmeisenBotManager;
+﻿using AmeisenBotManager;
 using AmeisenBotUtilities;
 using Microsoft.Win32;
 using System;
@@ -120,11 +119,28 @@ namespace AmeisenBotGUI
             LoadAmeisenServerSettings();
             LoadAmeisenNavServerSettings();
             LoadDatabaseSettings();
+            LoadMovementSettings();
 
             checkboxSaveBotPosition.IsChecked = Settings.saveBotWindowPosition;
             checkboxSaveWoWPosition.IsChecked = Settings.saveWoWWindowPosition;
 
             // Colors are already loaded
+        }
+
+        private void LoadMovementSettings()
+        {
+            textboxPathfindingThreshold.Text = Settings.pathfindingUsageThreshold.ToString();
+            textboxJumpThreshold.Text = Settings.movementJumpThreshold.ToString();
+            textboxPathfindingFactor.Text = Settings.pathfindingSearchRadius.ToString();
+            checkboxUsePathfinding.IsChecked = Settings.usePathfinding;
+        }
+
+        private void SaveMovementSettings()
+        {
+            Settings.pathfindingUsageThreshold = double.Parse(textboxPathfindingThreshold.Text);
+            Settings.movementJumpThreshold = double.Parse(textboxJumpThreshold.Text);
+            Settings.pathfindingSearchRadius = int.Parse(textboxPathfindingFactor.Text);
+            Settings.usePathfinding = (bool)checkboxUsePathfinding.IsChecked;
         }
 
         private void SaveAmeisenServerSettings()
@@ -133,7 +149,7 @@ namespace AmeisenBotGUI
             Settings.ameisenServerPort = Convert.ToInt32(textboxPort.Text);
             Settings.serverAutoConnect = (bool)checkboxAutoConnect.IsChecked;
         }
-               
+
         private void SaveAmeisenNavServerSettings()
         {
             Settings.navigationServerIp = textboxIPNavServer.Text;
@@ -182,6 +198,8 @@ namespace AmeisenBotGUI
             SaveAmeisenServerSettings();
             SaveAmeisenNavServerSettings();
             SaveDatabaseSettings();
+            SaveMovementSettings();
+
             SaveMapUISettings();
             SaveMainUISettings();
 

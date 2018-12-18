@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Settings" Height="530" Width="600" BorderThickness="2" WindowStyle="None" MouseDown="Window_MouseDown" ScrollViewer.VerticalScrollBarVisibility="Disabled" ResizeMode="NoResize" Loaded="Window_Loaded" Closing="Window_Closing" Icon="Icon.ico">
+        Title="Settings" Height="560" Width="600" BorderThickness="2" WindowStyle="None" MouseDown="Window_MouseDown" ScrollViewer.VerticalScrollBarVisibility="Disabled" ResizeMode="NoResize" Loaded="Window_Loaded" Closing="Window_Closing" Icon="Icon.ico">
     <Window.Background>
         <SolidColorBrush Color="{DynamicResource BackgroundColor}" />
     </Window.Background>
@@ -88,17 +88,17 @@
                 <SolidColorBrush Color="{DynamicResource TextColor}" />
             </Label.Foreground>
         </Label>
-        <Label Content="Bot Picture" HorizontalAlignment="Left" Margin="1,187,0,0" VerticalAlignment="Top" BorderBrush="White" BorderThickness="0,0,0,1" Cursor="None" FontSize="16" Width="160">
+        <Label Content="Bot Picture" HorizontalAlignment="Left" Margin="-1,180,0,0" VerticalAlignment="Top" BorderBrush="White" BorderThickness="0,0,0,1" Cursor="None" FontSize="16" Width="160">
             <Label.Foreground>
                 <SolidColorBrush Color="{DynamicResource TextColor}" />
             </Label.Foreground>
         </Label>
-        <Label x:Name="labelSelectedPicture" Content="Picture: " HorizontalAlignment="Left" Margin="11,224,0,0" VerticalAlignment="Top" Background="{x:Null}">
+        <Label x:Name="labelSelectedPicture" Content="Picture: " HorizontalAlignment="Left" Margin="11,217,0,0" VerticalAlignment="Top" Background="{x:Null}">
             <Label.Foreground>
                 <SolidColorBrush Color="{DynamicResource TextColor}" />
             </Label.Foreground>
         </Label>
-        <Button x:Name="buttonSelectPicture" Content="Select ..." HorizontalAlignment="Left" Margin="11,254,0,0" VerticalAlignment="Top" Width="77" BorderThickness="2" Click="ButtonSelectPicture_Click">
+        <Button x:Name="buttonSelectPicture" Content="Select ..." HorizontalAlignment="Left" Margin="11,247,0,0" VerticalAlignment="Top" Width="77" BorderThickness="2" Click="ButtonSelectPicture_Click">
             <Button.Foreground>
                 <SolidColorBrush Color="{DynamicResource TextColor}" />
             </Button.Foreground>
@@ -163,7 +163,7 @@
                 <SolidColorBrush Color="{DynamicResource TextColor}" />
             </CheckBox.Background>
         </CheckBox>
-        <Label Content="MySQL Database" HorizontalAlignment="Left" Margin="200,313,0,0" VerticalAlignment="Top" BorderBrush="White" BorderThickness="0,0,0,1" Cursor="None" FontSize="16" Width="160">
+        <Label Content="MySQL Database" HorizontalAlignment="Left" Margin="200,306,0,0" VerticalAlignment="Top" BorderBrush="White" BorderThickness="0,0,0,1" Cursor="None" FontSize="16" Width="160">
             <Label.Foreground>
                 <SolidColorBrush Color="{DynamicResource TextColor}" />
             </Label.Foreground>
@@ -437,12 +437,12 @@
                 <SolidColorBrush Color="{DynamicResource WalkableNodeColorHigh}" />
             </Button.Background>
         </Button>
-        <Label Content="Remember Positions" HorizontalAlignment="Left" Margin="2,281,0,0" VerticalAlignment="Top" BorderBrush="White" BorderThickness="0,0,0,1" Cursor="None" FontSize="16" Width="160">
+        <Label Content="Remember Positions" HorizontalAlignment="Left" Margin="0,270,0,0" VerticalAlignment="Top" BorderBrush="White" BorderThickness="0,0,0,1" Cursor="None" FontSize="16" Width="160">
             <Label.Foreground>
                 <SolidColorBrush Color="{DynamicResource TextColor}" />
             </Label.Foreground>
         </Label>
-        <CheckBox x:Name="checkboxSaveBotPosition" Content="Bot" HorizontalAlignment="Left" Margin="11,318,0,0" VerticalAlignment="Top" BorderThickness="2">
+        <CheckBox x:Name="checkboxSaveBotPosition" Content="Bot" HorizontalAlignment="Left" Margin="10,307,0,0" VerticalAlignment="Top" BorderThickness="2">
             <CheckBox.Foreground>
                 <SolidColorBrush Color="{DynamicResource TextColor}" />
             </CheckBox.Foreground>
@@ -453,7 +453,7 @@
                 <SolidColorBrush Color="{DynamicResource TextColor}" />
             </CheckBox.Background>
         </CheckBox>
-        <CheckBox x:Name="checkboxSaveWoWPosition" Content="WoW" HorizontalAlignment="Left" Margin="64,318,0,0" VerticalAlignment="Top" BorderThickness="2">
+        <CheckBox x:Name="checkboxSaveWoWPosition" Content="WoW" HorizontalAlignment="Left" Margin="63,307,0,0" VerticalAlignment="Top" BorderThickness="2">
             <CheckBox.Foreground>
                 <SolidColorBrush Color="{DynamicResource TextColor}" />
             </CheckBox.Foreground>
@@ -464,12 +464,12 @@
                 <SolidColorBrush Color="{DynamicResource TextColor}" />
             </CheckBox.Background>
         </CheckBox>
-        <Label Content="AmeisenNav Server" HorizontalAlignment="Left" Margin="204,187,0,0" VerticalAlignment="Top" BorderBrush="White" BorderThickness="0,0,0,1" Cursor="None" FontSize="16" Width="160">
+        <Label Content="AmeisenNav Server" HorizontalAlignment="Left" Margin="204,180,0,0" VerticalAlignment="Top" BorderBrush="White" BorderThickness="0,0,0,1" Cursor="None" FontSize="16" Width="160">
             <Label.Foreground>
                 <SolidColorBrush Color="{DynamicResource TextColor}" />
             </Label.Foreground>
         </Label>
-        <TextBox x:Name="textboxIPNavServer" HorizontalAlignment="Left" Height="23" Margin="279,224,0,0" TextWrapping="Wrap" Text="127.0.0.1" VerticalAlignment="Top" Width="85" BorderThickness="2">
+        <TextBox x:Name="textboxIPNavServer" HorizontalAlignment="Left" Height="23" Margin="279,217,0,0" TextWrapping="Wrap" Text="127.0.0.1" VerticalAlignment="Top" Width="85" BorderThickness="2">
             <TextBox.SelectionBrush>
                 <SolidColorBrush Color="{DynamicResource AccentColor}" />
             </TextBox.SelectionBrush>
@@ -483,7 +483,7 @@
                 <SolidColorBrush Color="{DynamicResource BackgroundColor}" />
             </TextBox.Background>
         </TextBox>
-        <TextBox x:Name="textboxPortNavServer" HorizontalAlignment="Left" Height="23" Margin="279,252,0,0" TextWrapping="Wrap" Text="47110" VerticalAlignment="Top" Width="85" BorderThickness="2">
+        <TextBox x:Name="textboxPortNavServer" HorizontalAlignment="Left" Height="23" Margin="279,245,0,0" TextWrapping="Wrap" Text="47110" VerticalAlignment="Top" Width="85" BorderThickness="2">
             <TextBox.SelectionBrush>
                 <SolidColorBrush Color="{DynamicResource AccentColor}" />
             </TextBox.SelectionBrush>
@@ -497,17 +497,105 @@
                 <SolidColorBrush Color="{DynamicResource BackgroundColor}" />
             </TextBox.Background>
         </TextBox>
-        <Label Content="IP-Address:" HorizontalAlignment="Left" Margin="204,221,0,0" VerticalAlignment="Top">
+        <Label Content="IP-Address:" HorizontalAlignment="Left" Margin="204,214,0,0" VerticalAlignment="Top">
             <Label.Foreground>
                 <SolidColorBrush Color="{DynamicResource TextColor}" />
             </Label.Foreground>
         </Label>
-        <Label Content="Port:" HorizontalAlignment="Left" Margin="204,249,0,0" VerticalAlignment="Top">
+        <Label Content="Port:" HorizontalAlignment="Left" Margin="204,242,0,0" VerticalAlignment="Top">
             <Label.Foreground>
                 <SolidColorBrush Color="{DynamicResource TextColor}" />
             </Label.Foreground>
         </Label>
-        <CheckBox x:Name="checkboxAutoConnectNavServer" Content="Auto-Connect on start" Margin="208,280,0,0" VerticalAlignment="Top" Width="156" HorizontalAlignment="Left" BorderThickness="2" IsChecked="True">
+        <CheckBox x:Name="checkboxAutoConnectNavServer" Content="Auto-Connect on start" Margin="208,273,0,0" VerticalAlignment="Top" Width="156" HorizontalAlignment="Left" BorderThickness="2" IsChecked="True">
+            <CheckBox.Foreground>
+                <SolidColorBrush Color="{DynamicResource TextColor}" />
+            </CheckBox.Foreground>
+            <CheckBox.BorderBrush>
+                <SolidColorBrush Color="{DynamicResource AccentColor}" />
+            </CheckBox.BorderBrush>
+            <CheckBox.Background>
+                <SolidColorBrush Color="{DynamicResource TextColor}" />
+            </CheckBox.Background>
+        </CheckBox>
+        <Label Content="Movement Settings" HorizontalAlignment="Left" Margin="0,329,0,0" VerticalAlignment="Top" BorderBrush="White" BorderThickness="0,0,0,1" Cursor="None" FontSize="16" Width="160">
+            <Label.Foreground>
+                <SolidColorBrush Color="{DynamicResource TextColor}" />
+            </Label.Foreground>
+        </Label>
+        <Label Content="Pathfinding Threshold:" HorizontalAlignment="Left" Margin="6,389,0,0" VerticalAlignment="Top">
+            <Label.Foreground>
+                <SolidColorBrush Color="{DynamicResource TextColor}" />
+            </Label.Foreground>
+        </Label>
+        <TextBox x:Name="textboxPathfindingThreshold" HorizontalAlignment="Left" Height="23" Margin="10,415,0,0" TextWrapping="Wrap" Text="10" VerticalAlignment="Top" Width="106" BorderThickness="2">
+            <TextBox.SelectionBrush>
+                <SolidColorBrush Color="{DynamicResource AccentColor}" />
+            </TextBox.SelectionBrush>
+            <TextBox.Foreground>
+                <SolidColorBrush Color="{DynamicResource TextColor}" />
+            </TextBox.Foreground>
+            <TextBox.BorderBrush>
+                <SolidColorBrush Color="{DynamicResource AccentColor}" />
+            </TextBox.BorderBrush>
+            <TextBox.Background>
+                <SolidColorBrush Color="{DynamicResource BackgroundColor}" />
+            </TextBox.Background>
+        </TextBox>
+        <Label Content="m" HorizontalAlignment="Left" Margin="116,415,0,0" VerticalAlignment="Top">
+            <Label.Foreground>
+                <SolidColorBrush Color="{DynamicResource TextColor}" />
+            </Label.Foreground>
+        </Label>
+        <Label Content="Jump Threshold:" HorizontalAlignment="Left" Margin="6,437,0,0" VerticalAlignment="Top">
+            <Label.Foreground>
+                <SolidColorBrush Color="{DynamicResource TextColor}" />
+            </Label.Foreground>
+        </Label>
+        <TextBox x:Name="textboxJumpThreshold" HorizontalAlignment="Left" Height="23" Margin="10,463,0,0" TextWrapping="Wrap" Text="0.1" VerticalAlignment="Top" Width="106" BorderThickness="2">
+            <TextBox.SelectionBrush>
+                <SolidColorBrush Color="{DynamicResource AccentColor}" />
+            </TextBox.SelectionBrush>
+            <TextBox.Foreground>
+                <SolidColorBrush Color="{DynamicResource TextColor}" />
+            </TextBox.Foreground>
+            <TextBox.BorderBrush>
+                <SolidColorBrush Color="{DynamicResource AccentColor}" />
+            </TextBox.BorderBrush>
+            <TextBox.Background>
+                <SolidColorBrush Color="{DynamicResource BackgroundColor}" />
+            </TextBox.Background>
+        </TextBox>
+        <Label Content="m" HorizontalAlignment="Left" Margin="116,463,0,0" VerticalAlignment="Top">
+            <Label.Foreground>
+                <SolidColorBrush Color="{DynamicResource TextColor}" />
+            </Label.Foreground>
+        </Label>
+        <Label Content="A* Search Factor:" HorizontalAlignment="Left" Margin="6,485,0,0" VerticalAlignment="Top">
+            <Label.Foreground>
+                <SolidColorBrush Color="{DynamicResource TextColor}" />
+            </Label.Foreground>
+        </Label>
+        <TextBox x:Name="textboxPathfindingFactor" HorizontalAlignment="Left" Height="23" Margin="10,511,0,0" TextWrapping="Wrap" Text="2" VerticalAlignment="Top" Width="106" BorderThickness="2">
+            <TextBox.SelectionBrush>
+                <SolidColorBrush Color="{DynamicResource AccentColor}" />
+            </TextBox.SelectionBrush>
+            <TextBox.Foreground>
+                <SolidColorBrush Color="{DynamicResource TextColor}" />
+            </TextBox.Foreground>
+            <TextBox.BorderBrush>
+                <SolidColorBrush Color="{DynamicResource AccentColor}" />
+            </TextBox.BorderBrush>
+            <TextBox.Background>
+                <SolidColorBrush Color="{DynamicResource BackgroundColor}" />
+            </TextBox.Background>
+        </TextBox>
+        <Label Content="x" HorizontalAlignment="Left" Margin="118,511,0,0" VerticalAlignment="Top">
+            <Label.Foreground>
+                <SolidColorBrush Color="{DynamicResource TextColor}" />
+            </Label.Foreground>
+        </Label>
+        <CheckBox x:Name="checkboxUsePathfinding" Content="Use Pathfinding" Margin="10,366,0,0" VerticalAlignment="Top" Width="156" HorizontalAlignment="Left" BorderThickness="2" IsChecked="True">
             <CheckBox.Foreground>
                 <SolidColorBrush Color="{DynamicResource TextColor}" />
             </CheckBox.Foreground>

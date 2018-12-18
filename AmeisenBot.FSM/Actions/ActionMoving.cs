@@ -93,7 +93,7 @@ namespace AmeisenBotFSM.Actions
             // we are possibly stuck at a fence or something alike
             if (MovedSinceLastTick != 0 && MovedSinceLastTick < 1000)
             {
-                if (MovedSinceLastTick < AmeisenDataHolder.Settings.MovementJumpThreshold)
+                if (MovedSinceLastTick < AmeisenDataHolder.Settings.movementJumpThreshold)
                 {
                     AmeisenCore.CharacterJumpAsync();
                     AmeisenCore.MoveLeftRight();
@@ -240,10 +240,10 @@ namespace AmeisenBotFSM.Actions
 
             AmeisenLogger.Instance.Log(LogLevel.DEBUG, $"Trying to find path from {initialPosition.X},{initialPosition.Y},{initialPosition.Z} to: {targetPosition.X},{targetPosition.Y},{targetPosition.Z} Distance: {distance}", this);
 
-            maxX += 10 * AmeisenDataHolder.Settings.PathfindingSearchRadius;
-            minX -= 10 * AmeisenDataHolder.Settings.PathfindingSearchRadius;
-            maxY += 10 * AmeisenDataHolder.Settings.PathfindingSearchRadius;
-            minY -= 10 * AmeisenDataHolder.Settings.PathfindingSearchRadius;
+            maxX += 10 * AmeisenDataHolder.Settings.pathfindingSearchRadius;
+            minX -= 10 * AmeisenDataHolder.Settings.pathfindingSearchRadius;
+            maxY += 10 * AmeisenDataHolder.Settings.pathfindingSearchRadius;
+            minY -= 10 * AmeisenDataHolder.Settings.pathfindingSearchRadius;
 
             // Offsets to rebase nodes from negative values to positive X
             int offsetX = minX * -1;
