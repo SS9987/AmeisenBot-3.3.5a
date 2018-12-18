@@ -30,6 +30,8 @@ namespace AmeisenBotFSM.Actions
             set { AmeisenDataHolder.Me = value; }
         }
 
+        public int PartyPosition { get; private set; }
+
         public ActionFollow(
             AmeisenDataHolder ameisenDataHolder,
             AmeisenDBManager ameisenDBManager,
@@ -39,6 +41,7 @@ namespace AmeisenBotFSM.Actions
             AmeisenDataHolder = ameisenDataHolder;
             AmeisenDBManager = ameisenDBManager;
             AmeisenMovementEngine = ameisenMovementEngine;
+            PartyPosition = 0;
         }
 
         public override void DoThings()
@@ -52,6 +55,7 @@ namespace AmeisenBotFSM.Actions
 
             ActiveUnits = GetUnitsToFollow();
             RefreshActiveUnit();
+
             Me?.Update();
             ActiveUnit?.Update();
 
@@ -75,24 +79,22 @@ namespace AmeisenBotFSM.Actions
                 AmeisenDataHolder.Settings.followDistance);*/
 
             //AmeisenMovementEngine.MemberCount = GetPartymemberCount();
-            Vector4 targetPos = AmeisenMovementEngine.GetPosition(
-                                    new Vector4(ActiveUnit.pos.X, ActiveUnit.pos.Y, ActiveUnit.pos.Z, ActiveUnit.Rotation),
-                                    AmeisenDataHolder.Settings.followDistance / 3,
-                                    GetMyPartyPosition());
 
-            Vector3 posToMoveTo = new Vector3(targetPos.X, targetPos.Y, targetPos.Z);
+            /*Vector4 targetPos = AmeisenMovementEngine.GetPosition(
+                                    new Vector4(ActiveUnit.pos.X, ActiveUnit.pos.Y, ActiveUnit.pos.Z, ActiveUnit.Rotation),
+                                    AmeisenDataHolder.Settings.followDistance / 6,
+                                    GetMyPartyPosition());*/
+
+
+            Vector3 posToMoveTo = ActiveUnit.pos;// new Vector3(targetPos.X, targetPos.Y, targetPos.Z);
 
             // When we are far enough away, follow
-            if (Utils.GetDistance(Me.pos, ActiveUnit.pos)
-                > AmeisenDataHolder.Settings.followDistance)
+            if (Utils.GetDistance(Me.pos, ActiveUnit.pos) > AmeisenDataHolder.Settings.followDistance)
             {
-                UsePathfinding(Me.pos, posToMoveTo);
-
-                // Dont add waypoints twice
-                /*if (!WaypointQueue.Contains(posToMoveTo))
+                if (!WaypointQueue.Contains(posToMoveTo))
                 {
                     WaypointQueue.Enqueue(posToMoveTo);
-                }*/
+                }
             }
         }
 
@@ -131,14 +133,18 @@ namespace AmeisenBotFSM.Actions
 
         private int GetMyPartyPosition()
         {
-            int pos = 0;
             Random rnd = new Random();
+
+            if (PartyPosition != 0)
+            {
+                return PartyPosition;
+            }
 
             if (AmeisenDataHolder.ActiveNetworkBots != null)
             {
                 foreach (NetworkBot bot in AmeisenDataHolder.ActiveNetworkBots)
                 {
-                    pos++;
+                    PartyPosition++;
                     if (bot.GetMe().Guid == Me.Guid)
                     {
                         break;
@@ -147,13 +153,13 @@ namespace AmeisenBotFSM.Actions
             }
             else
             {
-                if (pos == 0)
+                if (PartyPosition == 0)
                 {
-                    pos = rnd.Next(1, 6);
+                    PartyPosition = rnd.Next(1, 6);
                 }
             }
 
-            return pos;
+            return PartyPosition;
         }
 
         private int GetPartymemberCount()

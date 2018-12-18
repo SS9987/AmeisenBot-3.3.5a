@@ -11,6 +11,7 @@ using AmeisenPathCore;
 using AmeisenPathCore.Objects;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using static AmeisenBotFSM.Objects.Delegates;
 
@@ -49,7 +50,7 @@ namespace AmeisenBotFSM.Actions
         {
             if (WaypointQueue.Count > 0)
             {
-                double distance = Utils.GetDistance(Me.pos, WaypointQueue.Peek());
+                /*double distance = Utils.GetDistance(Me.pos, WaypointQueue.Peek());
 
                 if (AmeisenDataHolder.Settings.landMounts != ""
                     && distance > AmeisenDataHolder.Settings.useMountFollowDistance
@@ -64,7 +65,7 @@ namespace AmeisenBotFSM.Actions
                     && AmeisenCore.IsMounted)
                 {
                     AmeisenCore.MountRandomMount(AmeisenDataHolder.Settings.landMounts, AmeisenDataHolder.Settings.flyingMounts);
-                }
+                }*/
 
                 MoveToNode();
             }
@@ -110,37 +111,67 @@ namespace AmeisenBotFSM.Actions
             {
                 Me.Update();
                 Vector3 initialPosition = Me.pos;
-                Vector3 targetPosition = WaypointQueue.Peek();
+                Vector3 targetPosition = WaypointQueue.Dequeue();
 
-                if (Utils.GetDistance(initialPosition, targetPosition) > AmeisenDataHolder.Settings.followDistance)
+                double distance = Utils.GetDistance(initialPosition, targetPosition);
+
+                if (distance > AmeisenDataHolder.Settings.followDistance)
                 {
-                    CheckIfWeAreStuckIfYesJump(Me.pos, LastPosition);
+                    //CheckIfWeAreStuckIfYesJump(Me.pos, LastPosition);
 
                     if (targetPosition.Z == 0)
                     {
                         targetPosition.Z = Me.pos.Z;
                     }
 
-                    AmeisenCore.MovePlayerToXYZ(targetPosition, InteractionType.MOVE);
+                    List<Vector3> navmeshPath = new List<Vector3>() { targetPosition };
+
+                    if (distance > AmeisenDataHolder.Settings.pathfindingUsageThreshold)
+                    {
+                        navmeshPath = UsePathfinding(Me.pos, targetPosition);
+
+                        foreach (Vector3 pos in navmeshPath)
+                        {
+                            Me.Update();
+                            double posDistance = Utils.GetDistance(Me.pos, pos);
+                            int tries = 0;
+
+                            while (tries < 40 && posDistance > 3)
+                            {
+                                AmeisenCore.MovePlayerToXYZ(pos, InteractionType.MOVE);
+                                posDistance = Utils.GetDistance(Me.pos, pos);
+                                Thread.Sleep(50);
+                                tries++;
+                            }
+
+                            if (tries == 39)
+                            {
+                                break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        AmeisenCore.MovePlayerToXYZ(navmeshPath.First(), InteractionType.MOVE);
+                    }
+
+                    Thread.Sleep(50);
 
                     Me.Update();
                     LastPosition = Me.pos;
-                }
-                else
-                {
-                    WaypointQueue.Dequeue();
                 }
             }
             else { }
         }
 
-        internal void UsePathfinding(Vector3 initialPosition, Vector3 targetPosition)
+        internal List<Vector3> UsePathfinding(Vector3 initialPosition, Vector3 targetPosition)
         {
             List<Vector3> navmeshPath = AmeisenNavmeshClient.RequestPath(new PathRequest(initialPosition, targetPosition, Me.MapID));
 
             if (navmeshPath != null)
             {
-                ProcessNavmeshPath(navmeshPath);
+                //ProcessNavmeshPath(navmeshPath);
+                return navmeshPath;
             }
             else
             {
@@ -148,7 +179,7 @@ namespace AmeisenBotFSM.Actions
 
                 if (path != null)
                 {
-                    ProcessPath(path);
+                    return ProcessPath(path);
                 }
                 else
                 {
@@ -158,10 +189,12 @@ namespace AmeisenBotFSM.Actions
 
                     if (path != null)
                     {
-                        ProcessPath(path);
+                        return ProcessPath(path);
                     }
                 }
             }
+
+            return navmeshPath;
         }
 
         private void ProcessNavmeshPath(List<Vector3> navmeshPath)
@@ -179,13 +212,16 @@ namespace AmeisenBotFSM.Actions
         /// will set PathCalculated to true
         /// </summary>
         /// <param name="path">path to process</param>
-        private void ProcessPath(List<Node> path)
+        private List<Vector3> ProcessPath(List<Node> path)
         {
+            List<Vector3> newPath = new List<Vector3>();
+
             AmeisenLogger.Instance.Log(LogLevel.DEBUG, "Found Database Path...", this);
             foreach (Node node in path)
             {
-                WaypointQueue.Enqueue(new Vector3(node.Position.X, node.Position.Y, node.Position.Z));
+                newPath.Add(new Vector3(node.Position.X, node.Position.Y, node.Position.Z));
             }
+            return newPath;
         }
 
         /// <summary>

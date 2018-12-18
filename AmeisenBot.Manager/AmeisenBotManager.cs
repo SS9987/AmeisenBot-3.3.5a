@@ -232,6 +232,7 @@ namespace AmeisenBotManager
         public void StartBot(WowExe wowExe)
         {
             WowExe = wowExe;
+            LootableUnits = new Queue<Unit>();
 
             // Load Settings
             AmeisenSettings.LoadFromFile(wowExe.characterName);

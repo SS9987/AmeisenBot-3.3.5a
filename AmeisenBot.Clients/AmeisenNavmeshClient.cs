@@ -24,7 +24,11 @@ namespace AmeisenBot.Clients
             Port = port;
 
             TcpClient = new TcpClient();
-            TcpClient.Connect(IPAddress.Parse(ip), port);
+            try
+            {
+                TcpClient.Connect(IPAddress.Parse(ip), port);
+            }
+            catch { }
         }
 
         ~AmeisenNavmeshClient()
