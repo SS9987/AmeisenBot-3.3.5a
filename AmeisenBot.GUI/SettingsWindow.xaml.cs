@@ -62,6 +62,13 @@ namespace AmeisenBotGUI
             checkboxAutoConnect.IsChecked = Settings.serverAutoConnect;
         }
 
+        private void LoadAmeisenNavServerSettings()
+        {
+            textboxIPNavServer.Text = Settings.navigationServerIp;
+            textboxPortNavServer.Text = Settings.navigationServerPort.ToString();
+            checkboxAutoConnectNavServer.IsChecked = Settings.navigationServerAutoConnect;
+        }
+
         private void LoadBotPicture(string fileName)
         {
             string configDir = AppDomain.CurrentDomain.BaseDirectory + "config/";
@@ -111,6 +118,7 @@ namespace AmeisenBotGUI
             labelSelectedPicture.Content = Path.GetFileName(Settings.picturePath);
 
             LoadAmeisenServerSettings();
+            LoadAmeisenNavServerSettings();
             LoadDatabaseSettings();
 
             checkboxSaveBotPosition.IsChecked = Settings.saveBotWindowPosition;
@@ -124,6 +132,13 @@ namespace AmeisenBotGUI
             Settings.ameisenServerIp = textboxIP.Text;
             Settings.ameisenServerPort = Convert.ToInt32(textboxPort.Text);
             Settings.serverAutoConnect = (bool)checkboxAutoConnect.IsChecked;
+        }
+               
+        private void SaveAmeisenNavServerSettings()
+        {
+            Settings.navigationServerIp = textboxIPNavServer.Text;
+            Settings.navigationServerPort = Convert.ToInt32(textboxPortNavServer.Text);
+            Settings.navigationServerAutoConnect = (bool)checkboxAutoConnectNavServer.IsChecked;
         }
 
         private void SaveDatabaseSettings()
@@ -165,6 +180,7 @@ namespace AmeisenBotGUI
         private void SaveSettings()
         {
             SaveAmeisenServerSettings();
+            SaveAmeisenNavServerSettings();
             SaveDatabaseSettings();
             SaveMapUISettings();
             SaveMainUISettings();

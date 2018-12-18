@@ -58,6 +58,11 @@ namespace AmeisenBot.Character.Objects
             Update();
         }
 
+        public override string ToString()
+        {
+            return $"{Name} [{Quality.ToString()}] ({Level}) ({Slot.ToString()})";
+        }
+
         private void Update()
         {
             // TODO: update item stuff here

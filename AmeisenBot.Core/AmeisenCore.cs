@@ -41,7 +41,7 @@ namespace AmeisenBotCore
 
             sb.Append("abAutoBoPFrame = CreateFrame(\"Frame\", \"ABot\");");
             sb.Append("abAutoBoPFrame:RegisterEvent(\"CONFIRM_LOOT_ROLL\");");
-            sb.Append("abAutoBoPFrame:SetScript(\"OnEvent\", function(self,event,...);");
+            sb.Append("abAutoBoPFrame:SetScript(\"OnEvent\", function(self,event,...) ");
             sb.Append("if event == \"CONFIRM_LOOT_ROLL\" then ");
             sb.Append("RollID = select(1, ...);");
             sb.Append("roll = select(2, ...);");
@@ -89,11 +89,11 @@ namespace AmeisenBotCore
         {
             if (new Random().Next(0, 2) == 1)
             {
-                SendKey(new IntPtr(0x51), 60, 380); // the "S" key to go a bit backwards TODO: find better method
+                SendKey(new IntPtr(0x51), 60, 380); // the "A" key to go a bit Left TODO: find better method
             }
             else
             {
-                SendKey(new IntPtr(0x45), 60, 380); // the "S" key to go a bit backwards TODO: find better method
+                SendKey(new IntPtr(0x45), 60, 380); // the "D" key to go a bit Right TODO: find better method
             }
         }
 
