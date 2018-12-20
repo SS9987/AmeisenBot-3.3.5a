@@ -1,19 +1,21 @@
-﻿using AmeisenBotCombat;
+﻿using AmeisenBot.Clients;
+using AmeisenBotCombat;
 using AmeisenBotCombat.Interfaces;
+using AmeisenBotCore;
 using AmeisenBotData;
+using AmeisenBotDB;
 using AmeisenBotFSM.Interfaces;
 using AmeisenBotUtilities;
 using AmeisenBotUtilities.Enums;
 using AmeisenCombatEngineCore;
 using AmeisenCombatEngineCore.Enums;
-using AmeisenCombatEngineCore.FSM.Enums;
 using AmeisenCombatEngineCore.Objects;
 using System;
 using static AmeisenBotFSM.Objects.Delegates;
 
 namespace AmeisenBotFSM.Actions
 {
-    internal class ActionCombat : IAction
+    internal class ActionCombat : ActionMoving
     {
         public Start StartAction { get { return Start; } }
         public DoThings StartDoThings { get { return DoThings; } }
@@ -71,7 +73,8 @@ namespace AmeisenBotFSM.Actions
                     new AmeisenCombatEngineCore.Structs.Vector3(
                         Me.pos.X,
                         Me.pos.Y,
-                        Me.pos.Z)
+                        Me.pos.Z),
+                    AmeisenCore.GetAuras(LuaUnit.player)
                     );
             }
         }
@@ -117,7 +120,8 @@ namespace AmeisenBotFSM.Actions
                         new AmeisenCombatEngineCore.Structs.Vector3(
                             Target.pos.X,
                             Target.pos.Y,
-                            Target.pos.Z)
+                            Target.pos.Z),
+                        AmeisenCore.GetAuras(LuaUnit.target)
                         );
                 }
                 return new AmeisenCombatEngineCore.Objects.Unit(
@@ -129,17 +133,38 @@ namespace AmeisenBotFSM.Actions
                         new AmeisenCombatEngineCore.Structs.Vector3(
                             0,
                             0,
-                            0)
+                            0),
+                        AmeisenCore.GetAuras(LuaUnit.target)
                         );
             }
         }
 
-        public ActionCombat(AmeisenDataHolder ameisenDataHolder, IAmeisenCombatPackage combatPackage)
+        public ActionCombat(
+            AmeisenDataHolder ameisenDataHolder, 
+            IAmeisenCombatPackage combatPackage, 
+            AmeisenDBManager ameisenDBManager, 
+            AmeisenNavmeshClient ameisenNavmeshClient) : base(ameisenDataHolder, ameisenDBManager, ameisenNavmeshClient)
         {
             AmeisenDataHolder = ameisenDataHolder;
             CombatPackage = combatPackage;
             CombatEngine = new CombatEngine(combatPackage.Spells, combatPackage.SpellStrategy, combatPackage.MovementStrategy);
             CombatEngine.OnCastSpell += HandleSpellCast;
+            CombatEngine.OnMoveCharacter += HandleMovement;
+        }
+
+        private void HandleMovement(object sender, EventArgs e)
+        {
+            Vector3 pos = new Vector3(
+                ((MoveCharacterEventArgs)e).PositionToGoTo.X, 
+                ((MoveCharacterEventArgs)e).PositionToGoTo.Y, 
+                ((MoveCharacterEventArgs)e).PositionToGoTo.Z);
+
+            Me.Update();
+
+            foreach (Vector3 vec3 in UsePathfinding(Me.pos, pos))
+            {
+                WaypointQueue.Enqueue(vec3);
+            }
         }
 
         private void HandleSpellCast(object sender, EventArgs e)
@@ -148,8 +173,13 @@ namespace AmeisenBotFSM.Actions
             ((CastSpellEventArgs)e).Spell.StartCooldown();
         }
 
-        public void DoThings()
+        public override void DoThings()
         {
+            if(WaypointQueue.Count > 0)
+            {
+                base.DoThings();
+            }
+
             if (Target == null || Target.Guid == 0)
             {
                 CombatUtils.AssistParty(Me, AmeisenDataHolder.ActiveWoWObjects);
@@ -174,9 +204,5 @@ namespace AmeisenBotFSM.Actions
 
             CombatEngine.DoIteration(MeUnit, TargetUnit);
         }
-
-        public void Start() { }
-
-        public void Stop() { }
     }
 }

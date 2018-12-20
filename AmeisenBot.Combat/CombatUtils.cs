@@ -32,7 +32,10 @@ namespace AmeisenBotCombat
 
             if (waitOnCastToFinish)
             {
-                Thread.Sleep(spellInfo.castTime + 50);
+                int sleeptime = spellInfo.castTime - 100;
+                Thread.Sleep(sleeptime > 0 ? sleeptime : 0);
+                FaceUnit(me, target);
+                Thread.Sleep(100);
 
                 while (AmeisenCore.GetUnitCastingInfo(LuaUnit.player).endTime >= 100)
                 {
@@ -49,7 +52,7 @@ namespace AmeisenBotCombat
         public static SpellInfo GetSpellInfo(string spellname)
             => AmeisenCore.GetSpellInfo(spellname);
 
-        public static void TargetNearestEnemy() 
+        public static void TargetNearestEnemy()
             => AmeisenCore.LuaDoString("TargetNearestEnemy();");
 
         public static bool IsSpellUseable(string spellname)
@@ -92,7 +95,7 @@ namespace AmeisenBotCombat
         /// <param name="me">you</param>
         /// <param name="unit">target</param>
         /// <returns>wether you're facing the unit or not</returns>
-        public static bool IsFacingRanged(Me me, Unit unit, double minRotation = 0.7, double maxRotation = 1.3)
+        public static bool IsFacingRanged(Me me, Unit unit, double minRotation = 0.9, double maxRotation = 1.1)
             => Utils.IsFacing(me.pos, me.Rotation, unit.pos, minRotation, maxRotation);
 
         /// <summary>
@@ -101,7 +104,7 @@ namespace AmeisenBotCombat
         /// <param name="me">you</param>
         /// <param name="unit">target</param>
         /// <returns>wether you're facing the unit or not</returns>
-        public static bool IsFacingMelee(Me me, Unit unit, double minRotation = 0.2, double maxRotation = 1.8)
+        public static bool IsFacingMelee(Me me, Unit unit, double minRotation = 0.8, double maxRotation = 1.2)
             => Utils.IsFacing(me.pos, me.Rotation, unit.pos, minRotation, maxRotation);
 
         /// <summary>
@@ -235,7 +238,7 @@ namespace AmeisenBotCombat
                        InteractionType.STOP);
         }
 
-        public static void AttackTarget() 
+        public static void AttackTarget()
             => AmeisenCore.RunSlashCommand("/startattack");
 
         /// <summary>

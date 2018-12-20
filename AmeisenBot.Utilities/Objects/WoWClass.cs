@@ -67,7 +67,26 @@ namespace AmeisenBotUtilities
 
             public static List<Spell> Spells = new List<Spell>()
             {
-                new Spell("Shadow Bolt", 385, 30, 1000, SpellType.Damage, SpellExecution.Cast, new Dictionary<SpellType, double>(){ { SpellType.Damage, 16 } })
+                // Damage Casts
+                new Spell("Shadow Bolt", 385, 30, 1000, SpellType.Damage, SpellExecution.Cast, new Dictionary<SpellType, double>(){ { SpellType.Damage, 900 } }),
+                // Dots
+                new Spell("Corruption", 506, 30, 1000, SpellType.Dot, SpellExecution.Instant, new Dictionary<SpellType, double>(){ { SpellType.Damage, 1450 } }),
+                new Spell("Haunt", 385, 30, 8000, SpellType.Dot, SpellExecution.Cast, new Dictionary<SpellType, double>(){ { SpellType.Damage, 500 } }),
+                new Spell("Unstable Affliction", 550, 30, 1500, SpellType.Dot, SpellExecution.Cast, new Dictionary<SpellType, double>(){ { SpellType.Damage, 900 } }),
+                // Debuffs
+                new Spell("Curse of the Elements", 361, 30, 1000, SpellType.Debuff, SpellExecution.Instant, new Dictionary<SpellType, double>(){ { SpellType.Damage, 0 } }),
+                //Buffs
+                new Spell("Fel Armor", 1079, int.MaxValue, 1000, SpellType.Buff, SpellExecution.Instant, new Dictionary<SpellType, double>(){ { SpellType.Damage, 0 } }),
+                // Manarestores
+                new Spell("Life Tap", 0, int.MaxValue, 1079, SpellType.Manarestore, SpellExecution.Instant, new Dictionary<SpellType, double>(){ { SpellType.Manarestore, 2200 } }),
+                new Spell("Dark Pact", 0, int.MaxValue, 1000, SpellType.Manarestore, SpellExecution.Instant, new Dictionary<SpellType, double>(){ { SpellType.Manarestore, 300 } }),
+                // Heals
+                new Spell("Death Coil", 840, 30, 120000, SpellType.Heal, SpellExecution.Instant, new Dictionary<SpellType, double>(){ { SpellType.Heal, 2500 } }),
+                new Spell("Drain Life", 0, 30, 5000, SpellType.Heal, SpellExecution.Channel, new Dictionary<SpellType, double>(){ { SpellType.Heal, 150 } }),
+                // Heals
+                new Spell("Fear", 434, 30, 1000, SpellType.Fear, SpellExecution.Cast, new Dictionary<SpellType, double>(){ { SpellType.Fear, 2000 } }),
+
+                //new Spell("Summon Imp", 2500, int.MaxValue, 10000, SpellType.Buff, SpellExecution.Cast, new Dictionary<SpellType, double>(){ { SpellType.Damage, 0 } }),
             };
         }
 

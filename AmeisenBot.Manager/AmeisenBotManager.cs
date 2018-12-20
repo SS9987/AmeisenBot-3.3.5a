@@ -209,7 +209,7 @@ namespace AmeisenBotManager
             AmeisenSettings.Settings.combatClassPath = fileName;
             AmeisenSettings.SaveToFile(AmeisenSettings.loadedconfName);
             IAmeisenCombatPackage combatClass = CompileAndLoadCombatClass(fileName);
-            AmeisenStateMachineManager.StateMachine.LoadNewCombatClass(AmeisenDataHolder, combatClass);
+            AmeisenStateMachineManager.StateMachine.LoadNewCombatClass(AmeisenDataHolder, combatClass, AmeisenDBManager, AmeisenNavmeshClient);
             CurrentCombatClass = combatClass.ToString();
         }
 
