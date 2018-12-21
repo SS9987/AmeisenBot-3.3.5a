@@ -343,11 +343,25 @@ namespace AmeisenBotManager
 
             switch (Me.Class)
             {
+                case WowClass.Paladin:
+                    return new CPDefault(
+                        WoWClass.Paladin.Spells,
+                        new SpellSimple(WoWClass.Paladin.Spells),
+                        new MovementCloseCombat()
+                    );
+
                 case WowClass.Warlock:
                     return new CPDefault(
                         WoWClass.Warlock.Spells,
                         new SpellSimple(WoWClass.Warlock.Spells),
-                        new MovementCloseCombat()
+                        new MovementCloseCombat(30.0)
+                    );
+
+                case WowClass.Mage:
+                    return new CPDefault(
+                        WoWClass.Mage.Spells,
+                        new SpellSimple(WoWClass.Mage.Spells),
+                        new MovementCloseCombat(30.0)
                     );
 
                 default:

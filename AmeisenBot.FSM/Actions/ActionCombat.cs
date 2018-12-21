@@ -148,16 +148,19 @@ namespace AmeisenBotFSM.Actions
 
         private void HandleMovement(object sender, EventArgs e)
         {
-            Vector3 pos = new Vector3(
+            if (WaypointQueue.Count == 0)
+            {
+                Vector3 pos = new Vector3(
                 ((MoveCharacterEventArgs)e).PositionToGoTo.X,
                 ((MoveCharacterEventArgs)e).PositionToGoTo.Y,
                 ((MoveCharacterEventArgs)e).PositionToGoTo.Z);
 
-            Me.Update();
+                Me.Update();
 
-            foreach (Vector3 vec3 in UsePathfinding(Me.pos, pos))
-            {
-                WaypointQueue.Enqueue(vec3);
+                if (!WaypointQueue.Contains(pos))
+                {
+                    WaypointQueue.Enqueue(pos);
+                }
             }
         }
 

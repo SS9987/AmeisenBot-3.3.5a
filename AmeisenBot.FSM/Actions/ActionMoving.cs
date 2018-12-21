@@ -129,6 +129,7 @@ namespace AmeisenBotFSM.Actions
                     if (distance > AmeisenDataHolder.Settings.pathfindingUsageThreshold)
                     {
                         navmeshPath = UsePathfinding(Me.pos, targetPosition);
+                        navmeshPath.Add(targetPosition); // original position
 
                         foreach (Vector3 pos in navmeshPath)
                         {
