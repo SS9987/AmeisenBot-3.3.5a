@@ -4,23 +4,17 @@ using AmeisenBotCombat.Interfaces;
 using AmeisenBotCore;
 using AmeisenBotData;
 using AmeisenBotDB;
-using AmeisenBotFSM.Interfaces;
 using AmeisenBotUtilities;
 using AmeisenBotUtilities.Enums;
 using AmeisenCombatEngineCore;
 using AmeisenCombatEngineCore.Enums;
 using AmeisenCombatEngineCore.Objects;
 using System;
-using static AmeisenBotFSM.Objects.Delegates;
 
 namespace AmeisenBotFSM.Actions
 {
     internal class ActionCombat : ActionMoving
     {
-        public Start StartAction { get { return Start; } }
-        public DoThings StartDoThings { get { return DoThings; } }
-        public Exit StartExit { get { return Stop; } }
-
         private AmeisenDataHolder AmeisenDataHolder { get; set; }
         private IAmeisenCombatPackage CombatPackage { get; set; }
         private CombatEngine CombatEngine { get; set; }
@@ -140,9 +134,9 @@ namespace AmeisenBotFSM.Actions
         }
 
         public ActionCombat(
-            AmeisenDataHolder ameisenDataHolder, 
-            IAmeisenCombatPackage combatPackage, 
-            AmeisenDBManager ameisenDBManager, 
+            AmeisenDataHolder ameisenDataHolder,
+            IAmeisenCombatPackage combatPackage,
+            AmeisenDBManager ameisenDBManager,
             AmeisenNavmeshClient ameisenNavmeshClient) : base(ameisenDataHolder, ameisenDBManager, ameisenNavmeshClient)
         {
             AmeisenDataHolder = ameisenDataHolder;
@@ -155,8 +149,8 @@ namespace AmeisenBotFSM.Actions
         private void HandleMovement(object sender, EventArgs e)
         {
             Vector3 pos = new Vector3(
-                ((MoveCharacterEventArgs)e).PositionToGoTo.X, 
-                ((MoveCharacterEventArgs)e).PositionToGoTo.Y, 
+                ((MoveCharacterEventArgs)e).PositionToGoTo.X,
+                ((MoveCharacterEventArgs)e).PositionToGoTo.Y,
                 ((MoveCharacterEventArgs)e).PositionToGoTo.Z);
 
             Me.Update();
@@ -175,7 +169,7 @@ namespace AmeisenBotFSM.Actions
 
         public override void DoThings()
         {
-            if(WaypointQueue.Count > 0)
+            if (WaypointQueue.Count > 0)
             {
                 base.DoThings();
             }

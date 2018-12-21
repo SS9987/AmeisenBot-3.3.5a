@@ -86,7 +86,7 @@ namespace AmeisenBotFSM.Actions
                                     GetMyPartyPosition());*/
 
 
-            Vector3 posToMoveTo = ActiveUnit.pos;// new Vector3(targetPos.X, targetPos.Y, targetPos.Z);
+            Vector3 posToMoveTo = ActiveUnit.pos; // new Vector3(targetPos.X, targetPos.Y, targetPos.Z);
 
             // When we are far enough away, follow
             if (Utils.GetDistance(Me.pos, ActiveUnit.pos) > AmeisenDataHolder.Settings.followDistance)
