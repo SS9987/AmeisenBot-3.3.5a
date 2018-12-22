@@ -105,6 +105,12 @@ namespace AmeisenBotFSM
             {
                 Thread.Sleep(AmeisenDataHolder.Settings.stateMachineStateUpdateMillis);
 
+                if (!AmeisenDataHolder.IsInWorld
+                    || AmeisenCore.CheckLoadingScreen())
+                {
+                    continue;
+                }
+
                 // Am I in combat
                 if (InCombatCheck())
                 {

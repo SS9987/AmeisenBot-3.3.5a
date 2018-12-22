@@ -115,7 +115,7 @@ namespace AmeisenBotManager
             // but will increse mapping details!
             nodeDBUpdateTimer = new System.Timers.Timer(AmeisenDataHolder.Settings.dataRefreshRate);
             nodeDBUpdateTimer.Elapsed += NodeDBUpdateTimer;
-            nodeDBUpdateTimer.Start();
+            //nodeDBUpdateTimer.Start();
         }
 
         private void NodeDBUpdateTimer(object sender, ElapsedEventArgs e)
@@ -157,6 +157,12 @@ namespace AmeisenBotManager
 
         private void RefreshObjects()
         {
+            if (!AmeisenDataHolder.IsInWorld
+                || AmeisenCore.CheckLoadingScreen())
+            {
+                return;
+            }
+
             ActiveWoWObjects = AmeisenCore.GetAllWoWObjects();
 
             foreach (WowObject t in ActiveWoWObjects)
@@ -215,6 +221,11 @@ namespace AmeisenBotManager
         /// </summary>
         private void RefreshObjectsAsync()
         {
+            if (AmeisenCore.CheckLoadingScreen())
+            {
+                return;
+            }
+
             AmeisenLogger.Instance.Log(LogLevel.DEBUG, "Refreshing Objects Async", this);
             timestampObjects = DateTime.Now;
 

@@ -3,6 +3,7 @@ using AmeisenBotData;
 using AmeisenBotDB;
 using AmeisenBotUtilities;
 using AmeisenMovement;
+using AmeisenMovement.Structs;
 using System;
 using System.Collections.Generic;
 using static AmeisenBotFSM.Objects.Delegates;
@@ -79,13 +80,13 @@ namespace AmeisenBotFSM.Actions
 
             //AmeisenMovementEngine.MemberCount = GetPartymemberCount();
 
-            /*Vector4 targetPos = AmeisenMovementEngine.GetPosition(
+            Vector4 targetPos = AmeisenMovementEngine.GetPosition(
                                     new Vector4(ActiveUnit.pos.X, ActiveUnit.pos.Y, ActiveUnit.pos.Z, ActiveUnit.Rotation),
-                                    AmeisenDataHolder.Settings.followDistance / 6,
-                                    GetMyPartyPosition());*/
+                                    AmeisenDataHolder.Settings.followDistance / 10,
+                                    GetMyPartyPosition());
 
 
-            Vector3 posToMoveTo = ActiveUnit.pos; // new Vector3(targetPos.X, targetPos.Y, targetPos.Z);
+            Vector3 posToMoveTo = new Vector3(targetPos.X, targetPos.Y, targetPos.Z);
 
             // When we are far enough away, follow
             if (WaypointQueue.Count == 0)

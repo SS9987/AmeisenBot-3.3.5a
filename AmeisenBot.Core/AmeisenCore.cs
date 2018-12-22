@@ -181,7 +181,7 @@ namespace AmeisenBotCore
         /// Check if the player's world is in a loadingscreen
         /// </summary>
         /// <returns>true if yes, false if no</returns>
-        public static bool CheckLoadingScreen() => false;
+        public static bool CheckLoadingScreen() => !CheckWorldLoaded();
 
         /// <summary>
         /// Check if the player's world is loaded

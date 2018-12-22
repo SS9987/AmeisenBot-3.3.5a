@@ -26,6 +26,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Text;
+using System.Threading;
 using System.Windows;
 using Unit = AmeisenBotUtilities.Unit;
 
@@ -335,11 +336,14 @@ namespace AmeisenBotManager
             {
                 ConnectToServer();
             }
+
+            AmeisenDataHolder.IsInWorld = true;
         }
 
         private IAmeisenCombatPackage LoadDefaultClassForSpec()
         {
             List<Spell> Spells = new List<Spell>();
+            AmeisenDataHolder.IsHealer = false;
 
             switch (Me.Class)
             {
@@ -348,6 +352,14 @@ namespace AmeisenBotManager
                         WoWClass.Paladin.Spells,
                         new SpellSimple(WoWClass.Paladin.Spells),
                         new MovementCloseCombat()
+                    );
+
+                case WowClass.Priest:
+                    AmeisenDataHolder.IsHealer = true;
+                    return new CPDefault(
+                        WoWClass.Priest.Spells,
+                        new SpellSimple(WoWClass.Priest.Spells, 80, 60, true),
+                        new MovementCloseCombat(30.0)
                     );
 
                 case WowClass.Warlock:
@@ -493,11 +505,24 @@ namespace AmeisenBotManager
 
         private void OnPlayerEnteringWorld(long timestamp, List<string> args)
         {
+            AmeisenDataHolder.IsInWorld = false;
             AmeisenLogger.Instance.Log(
                 LogLevel.DEBUG,
                 $"[{timestamp}] OnPlayerEnteringWorld args: {JsonConvert.SerializeObject(args)}",
                 this
             );
+
+            int tries = 0;
+            while (AmeisenCore.CheckWorldLoaded())
+            {
+                Thread.Sleep(500);
+                tries++;
+                if (tries == 10)
+                {
+                    break;
+                }
+            }
+            AmeisenDataHolder.IsInWorld = true;
         }
 
         private bool ConnectToServer() => AmeisenClient.Register(

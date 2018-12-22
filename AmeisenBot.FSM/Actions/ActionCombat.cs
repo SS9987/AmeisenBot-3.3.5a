@@ -164,6 +164,12 @@ namespace AmeisenBotFSM.Actions
             }
         }
 
+        public override void Start()
+        {
+            WaypointQueue.Clear();
+            base.Start();
+        }
+
         private void HandleSpellCast(object sender, EventArgs e)
         {
             CombatUtils.CastSpellByName(Me, Target, ((CastSpellEventArgs)e).Spell.SpellName, false, true);
@@ -172,14 +178,24 @@ namespace AmeisenBotFSM.Actions
 
         public override void DoThings()
         {
+            WaypointQueue.Clear();
             if (WaypointQueue.Count > 0)
             {
                 base.DoThings();
             }
 
-            if (Target == null || Target.Guid == 0)
+            if (AmeisenDataHolder.IsHealer)
             {
-                CombatUtils.AssistParty(Me, AmeisenDataHolder.ActiveWoWObjects);
+                CombatUtils.TargetTargetToHeal(Me, AmeisenDataHolder.ActiveWoWObjects);
+                Target?.Update();
+            }
+            else
+            {
+                if (Target == null || Target.Guid == 0 || Target.Health == 0)
+                {
+                    CombatUtils.AssistParty(Me, AmeisenDataHolder.ActiveWoWObjects);
+                }
+
                 Target?.Update();
 
                 if (Target == null || Target.Guid == 0)
@@ -194,7 +210,7 @@ namespace AmeisenBotFSM.Actions
                 }
             }
 
-            if (!Me.InCombat)
+            if (!Me.InCombat && !AmeisenDataHolder.IsHealer)
             {
                 CombatUtils.AttackTarget();
             }

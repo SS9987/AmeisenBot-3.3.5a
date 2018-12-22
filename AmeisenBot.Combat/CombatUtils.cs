@@ -253,15 +253,26 @@ namespace AmeisenBotCombat
             List<Unit> units = GetPartymembersInCombat(me, activeWowObjects);
             if (units.Count > 0)
             {
-                Unit u = units.OrderBy(o => o.HealthPercentage).ToList()[0];
-                u.Update();
+                foreach (Unit u in units.OrderBy(o => o.HealthPercentage).ToList())
+                {
+                    u.Update();
 
-                Unit targetToAttack = (Unit)GetWoWObjectFromGUID(u.TargetGuid, activeWowObjects);
-                targetToAttack.Update();
+                    Unit targetToAttack = (Unit)GetWoWObjectFromGUID(u.TargetGuid, activeWowObjects);
+                    if (targetToAttack == null)
+                    {
+                        continue;
+                    }
 
-                AmeisenCore.TargetGUID(targetToAttack.Guid);
-                me.Update();
-                return targetToAttack;
+                    targetToAttack.Update();
+
+                    AmeisenCore.TargetGUID(targetToAttack.Guid);
+                    me.Update();
+
+                    if (CanAttack(LuaUnit.target))
+                    {
+                        return targetToAttack;
+                    }
+                }
             }
             return null;
         }
