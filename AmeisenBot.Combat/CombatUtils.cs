@@ -37,7 +37,7 @@ namespace AmeisenBotCombat
                 FaceUnit(me, target);
                 Thread.Sleep(100);
 
-                while (AmeisenCore.GetUnitCastingInfo(LuaUnit.player).endTime >= 100)
+                while (AmeisenCore.GetUnitCastingInfo(LuaUnit.player).duration >= 100)
                 {
                     Thread.Sleep(100);
                 }

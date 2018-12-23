@@ -1,6 +1,7 @@
 ﻿using AmeisenBotLogger;
 using AmeisenBotUtilities;
 using AmeisenBotUtilities.Enums;
+using AmeisenBotUtilities.Structs;
 using Magic;
 using System;
 using System.Collections.Generic;
@@ -328,6 +329,20 @@ namespace AmeisenBotCore
         public static void SetWindowPosition(IntPtr mainWindowHandle, int x, int y, int width, int height)
             => SafeNativeMethods.MoveWindow(mainWindowHandle, x, y, height, width, true);
 
+        public static RollInfo ReadRollItemName(string id)
+        {
+            RollInfo info = new RollInfo();
+            string cmd = $"rollInfo = \"none|0|0\"; _, abItemName, abItemCount, abItemQuality = GetLootRollItemInfo({id}); rollInfo = abItemName..\"|\"..abItemCount..\"|\"..abItemQuality;";
+            string str = GetLocalizedText(cmd, "rollInfo");
+
+            info.name = str.Split('|')[0];
+            info.count = Utils.TryParseInt(str.Split('|')[1]);
+            info.quality = Utils.TryParseInt(str.Split('|')[2]);
+
+            AmeisenLogger.Instance.Log(LogLevel.DEBUG, $"[RollInfo] Name: {info.name}, Count: {info.count}, Quality: {info.quality}", "AmeisenCore");
+            return info;
+        }
+
         /// <summary>
         /// Returns WoW's window size as a native RECT struct by a given windowHandle
         /// </summary>
@@ -479,12 +494,14 @@ namespace AmeisenBotCore
         public static SpellInfo GetSpellInfo(string spell)
         {
             SpellInfo info = new SpellInfo();
-            string cmd = $"_, _, _, cost, _, _, castTime, _ = GetSpellInfo(\"{spell}\");";
+            string cmd = $"_, _, _, cost, _, _, castTime, _ = GetSpellInfo(\"{spell}\"); spellInfo = cost..\"|\"..castTime;";
+            string str = GetLocalizedText(cmd, "spellInfo");
 
             info.name = spell;
-            info.castTime = Utils.TryParseInt(GetLocalizedText(cmd, "castTime"));
-            //info.cost = Utils.TryParseInt(GetLocalizedText(cmd, "cost"));
+            info.castTime = Utils.TryParseInt(str.Split('|')[0]);
+            info.cost = Utils.TryParseInt(str.Split('|')[1]);
 
+            AmeisenLogger.Instance.Log(LogLevel.DEBUG, $"[SpellInfo] Name: {info.name}, Cost: {info.cost}, CastTime: {info.castTime} ms", "AmeisenCore");
             return info;
         }
 
@@ -496,12 +513,19 @@ namespace AmeisenBotCore
         public static CastingInfo GetUnitCastingInfo(LuaUnit luaunit)
         {
             CastingInfo info = new CastingInfo();
-            string cmd = $"name, _, _, _, _, endTime = UnitCastingInfo(\"{luaunit.ToString()}\"); remainingDuration = time() - endTime;";
+            string cmd = $"castingInfo = \"none|0\"; abSpellName, _, _, _, _, abSpellEndTime = UnitCastingInfo(\"{luaunit.ToString()}\"); abDuration = ((abSpellEndTime/1000) - GetTime()) * 1000; castingInfo = abSpellName..\"|\"..abDuration;";
+            string str = GetLocalizedText(cmd, "castingInfo");
 
-            info.duration = Utils.TryParseInt(GetLocalizedText(cmd, "remainingDuration"));
+            info.name = str.Split('|')[0];
+            info.duration = Utils.TryParseInt(str.Split('|')[1]);
 
-            AmeisenLogger.Instance.Log(LogLevel.DEBUG, $"CastingInfo: [{info.name}, {info.duration}]", "AmeisenCore");
+            AmeisenLogger.Instance.Log(LogLevel.DEBUG, $"[CastingInfo] Name: {info.name}, Duration: {info.duration} ms", "AmeisenCore");
             return info;
+        }
+
+        public static void RollOnLoot(int slot, LootRoll lootRoll)
+        {
+            //LuaDoString($"local b = _G[\"GroupLootFrame\"..{slot}].{lootRoll.ToString()} if b:IsVisible() then b:Click() StaticPopup1Button1:Click() end");
         }
 
         /// <summary>

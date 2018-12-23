@@ -1,6 +1,6 @@
-﻿using System;
+﻿using AmeisenBotUtilities;
+using System;
 using System.Collections.Concurrent;
-using System.Diagnostics;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -50,7 +50,8 @@ namespace AmeisenBotLogger
     {
         private static readonly object padlock = new object();
         private static AmeisenLogger instance;
-        private readonly string logName;
+        private string logName;
+        public string currentUsername;
         private readonly string logPath = AppDomain.CurrentDomain.BaseDirectory + "/logs/";
         private LogLevel activeLogLevel;
         private ConcurrentQueue<AmeisenLogEntry> entries;
@@ -85,7 +86,12 @@ namespace AmeisenBotLogger
             entries = new ConcurrentQueue<AmeisenLogEntry>();
             loggingThread = new Thread(new ThreadStart(WorkOnQueue));
             loggingThread.Start();
-            logName = $"{DateTime.Now.ToString("dd-MM-yyyy")}_{DateTime.Now.ToString("HH-mm")}-{Process.GetCurrentProcess().Id}.txt";
+            if (currentUsername == null || currentUsername == "")
+            {
+                currentUsername = Utils.GenerateRandonString(8, "ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+            }
+
+            logName = $"{DateTime.Now.ToString("dd-MM-yyyy")}_{DateTime.Now.ToString("HH-mm")}-{currentUsername}.txt";
         }
 
         /// <summary>
@@ -147,8 +153,20 @@ namespace AmeisenBotLogger
                 {
                     SaveLogToFile(currentEntry);
                 }
-                Thread.Sleep(1);
+                Thread.Sleep(10);
             }
+        }
+
+        public void RefreshLogName()
+        {
+            string newLogName = $"{DateTime.Now.ToString("dd-MM-yyyy")}_{DateTime.Now.ToString("HH-mm")}-{currentUsername}.txt";
+
+            if (File.Exists(logPath + logName))
+            {
+                File.Move(logPath + logName, logPath + newLogName);
+            }
+
+            logName = newLogName;
         }
     }
 }

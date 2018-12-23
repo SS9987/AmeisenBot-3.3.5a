@@ -232,6 +232,8 @@ namespace AmeisenBotManager
         /// <param name="wowExe">WowExe to start the bot on</param>
         public void StartBot(WowExe wowExe)
         {
+            AmeisenLogger.Instance.currentUsername = wowExe.characterName;
+            AmeisenLogger.Instance.RefreshLogName();
             WowExe = wowExe;
             LootableUnits = new Queue<Unit>();
 
@@ -295,6 +297,7 @@ namespace AmeisenBotManager
             AmeisenEventHook.Subscribe(WowEvents.ITEM_PUSH, OnNewItem);
             AmeisenEventHook.Subscribe(WowEvents.PLAYER_REGEN_DISABLED, OnRegenDisabled);
             AmeisenEventHook.Subscribe(WowEvents.PLAYER_REGEN_ENABLED, OnRegenEnabled);
+            AmeisenEventHook.Subscribe(WowEvents.START_LOOT_ROLL, OnStartLootRoll);
 
 
             // Start our object updates
@@ -338,6 +341,23 @@ namespace AmeisenBotManager
             }
 
             AmeisenDataHolder.IsInWorld = true;
+        }
+
+        private void OnStartLootRoll(long timestamp, List<string> args)
+        {
+            AmeisenLogger.Instance.Log(
+                LogLevel.DEBUG,
+                $"[{timestamp}] OnStartLootRoll args: {JsonConvert.SerializeObject(args)}",
+                this
+            );
+
+            string ItemName = AmeisenCore.ReadRollItemName(args[0]).name;
+
+            AmeisenLogger.Instance.Log(
+                LogLevel.DEBUG,
+                $"Item beeing rolled for: {ItemName}",
+                this
+            );
         }
 
         private IAmeisenCombatPackage LoadDefaultClassForSpec()

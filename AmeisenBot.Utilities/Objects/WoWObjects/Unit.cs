@@ -150,7 +150,9 @@ namespace AmeisenBotUtilities
 
             try { UFlags2 = (BitVector32)BlackMagicInstance.ReadObject(Descriptor + 0xF0, typeof(BitVector32)); } catch { }
 
-            try { IsDead = BlackMagicInstance.ReadByte(Descriptor + 0x12B) == 1; } catch { }
+            try { DynamicUFlags = (BitVector32)BlackMagicInstance.ReadObject(Descriptor + 0x240, typeof(BitVector32)); } catch { }
+
+            try { IsDead = BlackMagicInstance.ReadByte(Descriptor + 0x12B) == 1; } catch { }            
         }
     }
 }

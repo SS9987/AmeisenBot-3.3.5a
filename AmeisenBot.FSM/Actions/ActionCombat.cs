@@ -4,6 +4,7 @@ using AmeisenBotCombat.Interfaces;
 using AmeisenBotCore;
 using AmeisenBotData;
 using AmeisenBotDB;
+using AmeisenBotLogger;
 using AmeisenBotUtilities;
 using AmeisenBotUtilities.Enums;
 using AmeisenCombatEngineCore;
@@ -172,6 +173,7 @@ namespace AmeisenBotFSM.Actions
 
         private void HandleSpellCast(object sender, EventArgs e)
         {
+            AmeisenLogger.Instance.Log(LogLevel.DEBUG, $"Casting Spell: {((CastSpellEventArgs)e).Spell.SpellName}", this);
             CombatUtils.CastSpellByName(Me, Target, ((CastSpellEventArgs)e).Spell.SpellName, false, true);
             ((CastSpellEventArgs)e).Spell.StartCooldown();
         }

@@ -88,18 +88,18 @@ namespace AmeisenBotUtilities
             public static List<Spell> Spells = new List<Spell>()
             {
                 // Damage Casts
-                new Spell("Smite", 580, 28, 1000, SpellType.Damage, SpellExecution.Cast, new Dictionary<SpellType, double>(){ { SpellType.Damage, 800 } }),
-                new Spell("Holy Fire", 430, 28, 10000, SpellType.Damage, SpellExecution.Instant, new Dictionary<SpellType, double>(){ { SpellType.Damage, 1200 } }),
-                new Spell("Mind Blast", 660, 28, 8000, SpellType.Damage, SpellExecution.Cast, new Dictionary<SpellType, double>(){ { SpellType.Damage, 900 } }),
+                //new Spell("Smite", 580, 28, 1000, SpellType.Damage, SpellExecution.Cast, new Dictionary<SpellType, double>(){ { SpellType.Damage, 800 } }),
+                //new Spell("Holy Fire", 430, 28, 10000, SpellType.Damage, SpellExecution.Instant, new Dictionary<SpellType, double>(){ { SpellType.Damage, 1200 } }),
+                //new Spell("Mind Blast", 660, 28, 8000, SpellType.Damage, SpellExecution.Cast, new Dictionary<SpellType, double>(){ { SpellType.Damage, 900 } }),
                 // Dots
-                new Spell("Shadow Word: Pain", 770, 28, 1000, SpellType.Dot, SpellExecution.Instant, new Dictionary<SpellType, double>(){ { SpellType.Damage, 1450 } }),
-                new Spell("Devouring Plague", 870, 28, 1000, SpellType.Dot, SpellExecution.Cast, new Dictionary<SpellType, double>(){ { SpellType.Damage, 1400 } }),
+                //new Spell("Shadow Word: Pain", 770, 28, 1000, SpellType.Dot, SpellExecution.Instant, new Dictionary<SpellType, double>(){ { SpellType.Damage, 1450 } }),
+                //new Spell("Devouring Plague", 870, 28, 1000, SpellType.Dot, SpellExecution.Cast, new Dictionary<SpellType, double>(){ { SpellType.Damage, 1400 } }),
                 // Manarestore
-                new Spell("Shadowfiend", 550, 28, 1500, SpellType.Manarestore, SpellExecution.Cast, new Dictionary<SpellType, double>(){ { SpellType.Manarestore, 5000 } }),
-                // Buffs
-                new Spell("Divine Spirit", 905, int.MaxValue, 1000, SpellType.Buff, SpellExecution.Instant, new Dictionary<SpellType, double>(){ { SpellType.Damage, 0 } }),
-                new Spell("Power Word: Fortitude", 940, int.MaxValue, 1000, SpellType.Buff, SpellExecution.Instant, new Dictionary<SpellType, double>(){ { SpellType.Damage, 0 } }),
-                new Spell("Inner Fire", 490, int.MaxValue, 1000, SpellType.Buff, SpellExecution.Instant, new Dictionary<SpellType, double>(){ { SpellType.Damage, 0 } }),
+                //new Spell("Shadowfiend", 550, 28, 1500, SpellType.Manarestore, SpellExecution.Cast, new Dictionary<SpellType, double>(){ { SpellType.Manarestore, 5000 } }),
+                // Buffs buggy for heals atm
+                //new Spell("Divine Spirit", 905, int.MaxValue, 1000, SpellType.Buff, SpellExecution.Instant, new Dictionary<SpellType, double>(){ { SpellType.Damage, 0 } }),
+                //new Spell("Power Word: Fortitude", 940, int.MaxValue, 1000, SpellType.Buff, SpellExecution.Instant, new Dictionary<SpellType, double>(){ { SpellType.Damage, 0 } }),
+                //new Spell("Inner Fire", 490, int.MaxValue, 1000, SpellType.Buff, SpellExecution.Instant, new Dictionary<SpellType, double>(){ { SpellType.Damage, 0 } }),
                 // Hots
                 new Spell("Prayer of Mending", 490, int.MaxValue, 1000, SpellType.Hot, SpellExecution.Instant, new Dictionary<SpellType, double>(){ { SpellType.Heal, 1000 } }),
                 new Spell("Renew", 490, int.MaxValue, 1000, SpellType.Hot, SpellExecution.Instant, new Dictionary<SpellType, double>(){ { SpellType.Heal, 2000 } }),
