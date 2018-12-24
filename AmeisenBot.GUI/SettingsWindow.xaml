@@ -128,7 +128,7 @@
                 <SolidColorBrush Color="{DynamicResource BackgroundColor}" />
             </TextBox.Background>
         </TextBox>
-        <TextBox x:Name="textboxPort" HorizontalAlignment="Left" Height="23" Margin="275,110,0,0" TextWrapping="Wrap" Text="16200" VerticalAlignment="Top" Width="85" BorderThickness="2">
+        <TextBox x:Name="textboxPort" HorizontalAlignment="Left" Height="23" Margin="275,110,0,0" TextWrapping="Wrap" Text="5000" VerticalAlignment="Top" Width="85" BorderThickness="2">
             <TextBox.SelectionBrush>
                 <SolidColorBrush Color="{DynamicResource AccentColor}" />
             </TextBox.SelectionBrush>

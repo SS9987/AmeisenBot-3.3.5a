@@ -41,11 +41,11 @@ namespace AmeisenBotManager
             botListUpdateTimer.Elapsed += UpdateBotList;
         }
 
-        public bool Register(Me me, IPAddress ip, int port = 16200)
+        public bool Register(Me me, IPAddress ip, int port = 5000)
         {
             if (!AmeisenDataHolder.IsConnectedToServer)
             {
-                IRestResponse response = SendRequest(me, ip, port, HttpMethod.Post, true);
+                 IRestResponse response = SendRequest(me, ip, port, HttpMethod.Post, true);
 
                 if (response == null)
                 {
@@ -75,37 +75,33 @@ namespace AmeisenBotManager
 
         private IRestResponse SendRequest(Me me, IPAddress ip, int port, HttpMethod post, bool sendPicture = false)
         {
-            if (AmeisenDataHolder.IsConnectedToServer)
+            SendableMe meSendable = new SendableMe().ConvertFromMe(me);
+            string meSendableJSON = JsonConvert.SerializeObject(meSendable);
+
+            string base64Image = "";
+            if (sendPicture && AmeisenDataHolder.Settings.picturePath.Length > 0)
             {
-                SendableMe meSendable = new SendableMe().ConvertFromMe(me);
-                string meSendableJSON = JsonConvert.SerializeObject(meSendable);
-
-                string base64Image = "";
-                if (sendPicture && AmeisenDataHolder.Settings.picturePath.Length > 0)
-                {
-                    base64Image = Convert.ToBase64String(
-                            Utils.ImageToByte(
-                                new Bitmap(AmeisenDataHolder.Settings.picturePath)));
-                }
-
-                RestClient client = new RestClient($"http://{ip}:{port}");
-                // client.Authenticator = new HttpBasicAuthenticator(username, password);
-
-                RestRequest request = new RestRequest("bot/{name}", Method.PUT)
-                {
-                    RequestFormat = DataFormat.Json
-                };
-                request.AddUrlSegment("name", AmeisenDataHolder.Settings.ameisenServerName);
-                request.AddParameter("id", 0);
-                request.AddParameter("ip", "0.0.0.0");
-                request.AddParameter("lastActive", Environment.TickCount);
-                request.AddParameter("name", AmeisenDataHolder.Settings.ameisenServerName);
-                request.AddParameter("me", meSendableJSON);
-                request.AddParameter("picture", base64Image);
-
-                return client.Execute(request);
+                base64Image = Convert.ToBase64String(
+                        Utils.ImageToByte(
+                            new Bitmap(AmeisenDataHolder.Settings.picturePath)));
             }
-            return null;
+
+            RestClient client = new RestClient($"http://{ip}:{port}");
+            // client.Authenticator = new HttpBasicAuthenticator(username, password);
+
+            RestRequest request = new RestRequest("bot/{name}", Method.PUT)
+            {
+                RequestFormat = DataFormat.Json
+            };
+            request.AddUrlSegment("name", AmeisenDataHolder.Settings.ameisenServerName);
+            request.AddParameter("id", 0);
+            request.AddParameter("ip", "0.0.0.0");
+            request.AddParameter("lastActive", Environment.TickCount);
+            request.AddParameter("name", AmeisenDataHolder.Settings.ameisenServerName);
+            request.AddParameter("me", meSendableJSON);
+            request.AddParameter("picture", base64Image);
+
+            return client.Execute(request);
         }
 
         public void Unregister(Me me, IPAddress ip, int port = 5000)

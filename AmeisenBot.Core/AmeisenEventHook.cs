@@ -72,7 +72,11 @@ namespace AmeisenBotCore
                 {
                     rawEvents = JsonConvert.DeserializeObject<List<RawEvent>>(eventJson);
                 }
-                catch (Exception e){ AmeisenLogger.Instance.Log(LogLevel.ERROR, $"Failed to parse events Json: {e}", this); }
+                catch (Exception e)
+                {
+                    rawEvents = new List<RawEvent>();
+                    AmeisenLogger.Instance.Log(LogLevel.ERROR, $"Failed to parse events Json: {e}", this);
+                }
 
                 AmeisenLogger.Instance.Log(LogLevel.VERBOSE, $"Parsed {rawEvents.Count} events", this);
                 if (rawEvents.Count > 0)

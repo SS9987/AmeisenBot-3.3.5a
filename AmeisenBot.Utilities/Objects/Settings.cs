@@ -8,7 +8,7 @@
         public string accentColor = "#FFAAAAAA";
         public string ameisenServerIp = "127.0.0.1";
         public string ameisenServerName = Utils.GenerateRandonString(12, "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890");
-        public int ameisenServerPort = 16200;
+        public int ameisenServerPort = 5000;
         public bool assistParty = true;
         public string backgroundColor = "#FF323232";
         public bool behaviourAttack = false;

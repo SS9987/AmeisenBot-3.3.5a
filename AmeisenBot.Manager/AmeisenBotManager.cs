@@ -243,10 +243,10 @@ namespace AmeisenBotManager
             // Load old WoW Position
             if (AmeisenSettings.Settings.saveBotWindowPosition)
             {
-                if (AmeisenSettings.Settings.wowRectL >= 0
-                && AmeisenSettings.Settings.wowRectR >= 0
-                && AmeisenSettings.Settings.wowRectT >= 0
-                && AmeisenSettings.Settings.wowRectB >= 0)
+                if (AmeisenSettings.Settings.wowRectL > 0
+                && AmeisenSettings.Settings.wowRectR > 0
+                && AmeisenSettings.Settings.wowRectT > 0
+                && AmeisenSettings.Settings.wowRectB > 0)
                 {
                     AmeisenCore.SetWindowPosition(
                     wowExe.process.MainWindowHandle,
@@ -370,35 +370,35 @@ namespace AmeisenBotManager
                 case WowClass.Paladin:
                     return new CPDefault(
                         WoWClass.Paladin.Spells,
-                        new SpellSimple(WoWClass.Paladin.Spells),
-                        new MovementCloseCombat()
+                        new DamageSimple(WoWClass.Paladin.Spells),
+                        new MovementCloseCombat(3.0)
                     );
 
                 case WowClass.Priest:
                     AmeisenDataHolder.IsHealer = true;
                     return new CPDefault(
                         WoWClass.Priest.Spells,
-                        new SpellSimple(WoWClass.Priest.Spells, 80, 60, true),
+                        new HealSimple(WoWClass.Priest.Spells, 90),
                         new MovementCloseCombat(30.0)
                     );
 
                 case WowClass.Warlock:
                     return new CPDefault(
                         WoWClass.Warlock.Spells,
-                        new SpellSimple(WoWClass.Warlock.Spells),
+                        new DamageSimple(WoWClass.Warlock.Spells),
                         new MovementCloseCombat(30.0)
                     );
 
                 case WowClass.Mage:
                     return new CPDefault(
                         WoWClass.Mage.Spells,
-                        new SpellSimple(WoWClass.Mage.Spells),
+                        new DamageSimple(WoWClass.Mage.Spells),
                         new MovementCloseCombat(30.0)
                     );
 
                 default:
                     return new CPDefault(
-                        Spells, new SpellSimple(Spells), new MovementCloseCombat());
+                        Spells, new DamageSimple(Spells), new MovementCloseCombat());
             }
         }
 

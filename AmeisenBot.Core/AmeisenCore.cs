@@ -255,7 +255,7 @@ namespace AmeisenBotCore
         {
             BlackMagic.WriteFloat(me.BaseAddress + 0x7A8, Utils.GetFacingAngle(me.pos, me.Rotation, unit.pos));
             //LuaDoString("MoveBackwardStart();MoveBackwardStop();MoveBackwardStop();MoveBackwardStop();"); This is trash lel
-            SendKey(new IntPtr(0x41), 2, 8); // the "S" key to go a bit backwards TODO: find better method 0x53
+            SendKey(new IntPtr(0x41), 1, 2); // the "S" key to go a bit backwards TODO: find better method 0x53
         }
 
         /// <summary>
