@@ -149,19 +149,16 @@ namespace AmeisenBotFSM.Actions
 
         private void HandleMovement(object sender, EventArgs e)
         {
-            if (WaypointQueue.Count == 0)
+            Vector3 pos = new Vector3(
+            ((MoveCharacterEventArgs)e).PositionToGoTo.X,
+            ((MoveCharacterEventArgs)e).PositionToGoTo.Y,
+            ((MoveCharacterEventArgs)e).PositionToGoTo.Z);
+
+            Me.Update();
+
+            if (!WaypointQueue.Contains(pos))
             {
-                Vector3 pos = new Vector3(
-                ((MoveCharacterEventArgs)e).PositionToGoTo.X,
-                ((MoveCharacterEventArgs)e).PositionToGoTo.Y,
-                ((MoveCharacterEventArgs)e).PositionToGoTo.Z);
-
-                Me.Update();
-
-                if (!WaypointQueue.Contains(pos))
-                {
-                    WaypointQueue.Enqueue(pos);
-                }
+                WaypointQueue.Enqueue(pos);
             }
         }
 

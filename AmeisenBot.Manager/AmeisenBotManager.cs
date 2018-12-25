@@ -298,6 +298,7 @@ namespace AmeisenBotManager
             AmeisenEventHook.Subscribe(WowEvents.PLAYER_REGEN_DISABLED, OnRegenDisabled);
             AmeisenEventHook.Subscribe(WowEvents.PLAYER_REGEN_ENABLED, OnRegenEnabled);
             AmeisenEventHook.Subscribe(WowEvents.START_LOOT_ROLL, OnStartLootRoll);
+            AmeisenEventHook.Subscribe(WowEvents.COMBAT_LOG_EVENT_UNFILTERED, OnCombatLogEvent);
 
 
             // Start our object updates
@@ -343,21 +344,33 @@ namespace AmeisenBotManager
             AmeisenDataHolder.IsInWorld = true;
         }
 
+        private void OnCombatLogEvent(long timestamp, List<string> args)
+        {
+            AmeisenLogger.Instance.Log(
+                LogLevel.DEBUG,
+                $"OnCombatLogEvent args: {JsonConvert.SerializeObject(args)}",
+                this
+            );
+        }
+
         private void OnStartLootRoll(long timestamp, List<string> args)
         {
             AmeisenLogger.Instance.Log(
                 LogLevel.DEBUG,
-                $"[{timestamp}] OnStartLootRoll args: {JsonConvert.SerializeObject(args)}",
+                $"OnStartLootRoll args: {JsonConvert.SerializeObject(args)}",
                 this
             );
 
             string ItemName = AmeisenCore.ReadRollItemName(args[0]).name;
 
-            AmeisenLogger.Instance.Log(
-                LogLevel.DEBUG,
-                $"Item beeing rolled for: {ItemName}",
-                this
-            );
+            if (AmeisenCharacterManager.INeedThatItem(ItemName))
+            {
+                AmeisenLogger.Instance.Log(
+                    LogLevel.DEBUG,
+                    $"I could use that item: {ItemName}",
+                    this
+                );
+            }
         }
 
         private IAmeisenCombatPackage LoadDefaultClassForSpec()
@@ -438,7 +451,7 @@ namespace AmeisenBotManager
         {
             AmeisenLogger.Instance.Log(
                 LogLevel.DEBUG,
-                $"[{timestamp}] OnNewItem args: {JsonConvert.SerializeObject(args)}",
+                $"OnNewItem args: {JsonConvert.SerializeObject(args)}",
                 this
             );
 
@@ -460,7 +473,7 @@ namespace AmeisenBotManager
         {
             AmeisenLogger.Instance.Log(
                 LogLevel.DEBUG,
-                $"[{timestamp}] OnResurrectRequest args: {JsonConvert.SerializeObject(args)}",
+                $"OnResurrectRequest args: {JsonConvert.SerializeObject(args)}",
                 this
             );
 
@@ -472,7 +485,7 @@ namespace AmeisenBotManager
         {
             AmeisenLogger.Instance.Log(
                 LogLevel.DEBUG,
-                $"[{timestamp}] OnSummonRequest args: {JsonConvert.SerializeObject(args)}",
+                $"OnSummonRequest args: {JsonConvert.SerializeObject(args)}",
                 this
             );
 
@@ -484,7 +497,7 @@ namespace AmeisenBotManager
         {
             AmeisenLogger.Instance.Log(
                 LogLevel.DEBUG,
-                $"[{timestamp}] OnPartyInvitation args: {JsonConvert.SerializeObject(args)}",
+                $"OnPartyInvitation args: {JsonConvert.SerializeObject(args)}",
                 this
             );
 
@@ -496,7 +509,7 @@ namespace AmeisenBotManager
         {
             AmeisenLogger.Instance.Log(
                 LogLevel.DEBUG,
-                $"[{timestamp}] OnReadyCheck args: {JsonConvert.SerializeObject(args)}",
+                $"OnReadyCheck args: {JsonConvert.SerializeObject(args)}",
                 this
             );
 
@@ -507,7 +520,7 @@ namespace AmeisenBotManager
         {
             AmeisenLogger.Instance.Log(
                 LogLevel.DEBUG,
-                $"[{timestamp}] OnLootBindOnPickup args: {JsonConvert.SerializeObject(args)}",
+                $"OnLootBindOnPickup args: {JsonConvert.SerializeObject(args)}",
                 this
             );
         }
@@ -516,7 +529,7 @@ namespace AmeisenBotManager
         {
             AmeisenLogger.Instance.Log(
                 LogLevel.DEBUG,
-                $"[{timestamp}] OnLootWindowOpened args: {JsonConvert.SerializeObject(args)}",
+                $"OnLootWindowOpened args: {JsonConvert.SerializeObject(args)}",
                 this
             );
 
@@ -528,7 +541,7 @@ namespace AmeisenBotManager
             AmeisenDataHolder.IsInWorld = false;
             AmeisenLogger.Instance.Log(
                 LogLevel.DEBUG,
-                $"[{timestamp}] OnPlayerEnteringWorld args: {JsonConvert.SerializeObject(args)}",
+                $"OnPlayerEnteringWorld args: {JsonConvert.SerializeObject(args)}",
                 this
             );
 

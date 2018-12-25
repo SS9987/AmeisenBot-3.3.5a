@@ -3,6 +3,7 @@ using AmeisenBot.Character.Interfaces;
 using AmeisenBot.Character.Objects;
 using AmeisenBotCore;
 using AmeisenBotLogger;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -54,7 +55,7 @@ namespace AmeisenBot.Character
                     }
                     else
                     {
-                        // we hae no item equipped
+                        // we have no item equipped
                         List<InventoryItem> bestForSlotItem = GetAllItemsForSlot(item);
                         if (bestForSlotItem.Count > 0)
                         {
@@ -136,6 +137,24 @@ namespace AmeisenBot.Character
             AmeisenCore.LuaDoString("ConfirmBindOnUse();");
             AmeisenCore.RunSlashCommand("/click StaticPopup1Button1");
             AmeisenLogger.Instance.Log(LogLevel.DEBUG, $"Equipped new Item...", this);
+        }
+
+        public bool INeedThatItem(string itemName)
+        {
+            Item itemToRollFor = new Item(itemName);
+            AmeisenLogger.Instance.Log(LogLevel.DEBUG, $"Item to roll for: {itemToRollFor.ToString()}", this);
+
+            List<InventoryItem> itemsLikeItem = GetAllItemsLike(itemToRollFor);
+
+            if (itemsLikeItem.Count > 0)
+            {
+                Item possibleNewItem = itemsLikeItem.First();
+                if (CompareItems(itemToRollFor, possibleNewItem))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }

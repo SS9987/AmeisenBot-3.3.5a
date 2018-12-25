@@ -156,5 +156,10 @@
         /// Gets fired when world events trigger (BG when somebody takes the flag)
         /// </summary>
         public const string UPDATE_WORLD_STATES = "UPDATE_WORLD_STATES";
+
+        /// <summary>
+        /// CombatLog events
+        /// </summary>
+        public const string COMBAT_LOG_EVENT_UNFILTERED = "COMBAT_LOG_EVENT_UNFILTERED";
     }
 }

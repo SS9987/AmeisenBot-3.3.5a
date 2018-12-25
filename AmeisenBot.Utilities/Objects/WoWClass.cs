@@ -51,7 +51,7 @@ namespace AmeisenBotUtilities
                 new Spell("Ice Barrier", 600, int.MaxValue, 24000, SpellType.Heal, SpellExecution.Instant, new Dictionary<SpellType, double>(){ { SpellType.Heal, 500 } }),
                 new Spell("Mana Shield", 200, 30, 1000, SpellType.Heal, SpellExecution.Cast, new Dictionary<SpellType, double>(){ { SpellType.Heal, 1300 } }),
                 // Stuns
-                new Spell("Polymorph", 140, 30, 1000, SpellType.Stun, SpellExecution.Instant, new Dictionary<SpellType, double>(){ { SpellType.Stun, 1500 } }),
+                //new Spell("Polymorph", 140, 30, 1000, SpellType.Stun, SpellExecution.Instant, new Dictionary<SpellType, double>(){ { SpellType.Stun, 1500 } }),
                 // Gapbuilder
                 new Spell("Frost Nova", 200, 10, 20000, SpellType.Root, SpellExecution.Instant, new Dictionary<SpellType, double>(){ { SpellType.Damage, 420 }, { SpellType.Root, 3000 } }),
             };
@@ -67,7 +67,7 @@ namespace AmeisenBotUtilities
                 new Spell("Exorcism", 360, 30, 15000, SpellType.Damage, SpellExecution.Cast, new Dictionary<SpellType, double>(){ { SpellType.Damage, 1200 } }),
                 new Spell("Judgement of Light", 220, 10, 10000, SpellType.Damage, SpellExecution.Instant, new Dictionary<SpellType, double>(){ { SpellType.Damage, 150 } }),
                 new Spell("Divine Storm", 480, 8, 10000, SpellType.Damage, SpellExecution.Instant, new Dictionary<SpellType, double>(){ { SpellType.Damage, 600 } }),
-                new Spell("Crusader Strike", 200, 3, 4000, SpellType.Damage, SpellExecution.Melee, new Dictionary<SpellType, double>(){ { SpellType.Damage, 500 } }),
+                new Spell("Crusader Strike", 200, 3, 4000, SpellType.Damage, SpellExecution.Melee, new Dictionary<SpellType, double>(){ { SpellType.Damage, 800 } }),
                 // Buffs
                 new Spell("Retribution Aura", 0, int.MaxValue, 1000, SpellType.Buff, SpellExecution.Instant, new Dictionary<SpellType, double>(){ { SpellType.Damage, 0 } }),
                 new Spell("Seal of Justice", 620, int.MaxValue, 1000, SpellType.Buff, SpellExecution.Instant, new Dictionary<SpellType, double>(){ { SpellType.Damage, 0 } }),

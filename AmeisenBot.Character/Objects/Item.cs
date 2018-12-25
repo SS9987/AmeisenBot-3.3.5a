@@ -52,6 +52,11 @@ namespace AmeisenBot.Character.Objects
 
         public Item() { }
 
+        public Item(string itemName)
+        {
+            Name = itemName;
+        }
+
         public Item(int slot)
         {
             Slot = slot;
