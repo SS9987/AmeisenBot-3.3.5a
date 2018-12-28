@@ -117,7 +117,7 @@ namespace AmeisenBotFSM.Actions
 
                 if (distance > AmeisenDataHolder.Settings.followDistance)
                 {
-                    //CheckIfWeAreStuckIfYesJump(Me.pos, LastPosition);
+                    CheckIfWeAreStuckIfYesJump(Me.pos, LastPosition);
 
                     if (targetPosition.Z == 0)
                     {
@@ -137,7 +137,7 @@ namespace AmeisenBotFSM.Actions
                             double posDistance = Utils.GetDistance(Me.pos, pos);
                             int tries = 0;
 
-                            while (tries < 40 && posDistance > 3)
+                            while (tries < 20 && posDistance > 3)
                             {
                                 AmeisenCore.MovePlayerToXYZ(pos, InteractionType.MOVE);
                                 posDistance = Utils.GetDistance(Me.pos, pos);
@@ -145,8 +145,9 @@ namespace AmeisenBotFSM.Actions
                                 tries++;
                             }
 
-                            if (tries == 39)
+                            if (tries == 19)
                             {
+                                WaypointQueue.Clear();
                                 break;
                             }
                         }

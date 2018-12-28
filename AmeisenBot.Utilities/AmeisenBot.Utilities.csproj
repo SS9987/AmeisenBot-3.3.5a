@@ -60,6 +60,7 @@
     <Compile Include="Enums\WowEvents.cs" />
     <Compile Include="Enums\WowRace.cs" />
     <Compile Include="Objects\RememberedUnit.cs" />
+    <Compile Include="Objects\WowColor.cs" />
     <Compile Include="Structs\CastingInfo.cs" />
     <Compile Include="Structs\NetworkBot.cs" />
     <Compile Include="Objects\NetworkRegData.cs" />

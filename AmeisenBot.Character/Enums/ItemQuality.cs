@@ -2,6 +2,7 @@
 {
     public enum ItemQuality
     {
+        UNIQUE = -1,
         POOR,
         COMMON,
         UNCOMMON,

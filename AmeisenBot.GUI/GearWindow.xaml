@@ -4,8 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="AmeisenBot - Gear" Height="362" Width="500
-        " WindowStyle="None" ResizeMode="NoResize" Icon="Icon.ico" BorderThickness="2" MouseLeftButtonDown="Mainscreen_MouseLeftButtonDown" Loaded="Mainscreen_Loaded">
+        Title="AmeisenBot - Gear" Height="600" Width="800" WindowStyle="None" ResizeMode="NoResize" Icon="Icon.ico" BorderThickness="2" MouseLeftButtonDown="Mainscreen_MouseLeftButtonDown" Loaded="Mainscreen_Loaded">
     <Window.BorderBrush>
         <SolidColorBrush Color="{DynamicResource AccentColor}" />
     </Window.BorderBrush>
@@ -13,27 +12,46 @@
         <SolidColorBrush Color="{DynamicResource BackgroundColor}" />
     </Window.Background>
     <Grid>
-        <Label Content="..." HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="20" Margin="6,0,0,0">
+        <Label Content="🛡️ Equipment" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="20" Margin="6,0,0,0">
             <Label.Foreground>
                 <SolidColorBrush Color="{DynamicResource TextColor}"/>
             </Label.Foreground>
         </Label>
-        <ListBox x:Name="listboxEquipped" HorizontalAlignment="Left" Height="306" Margin="10,42,0,0" VerticalAlignment="Top" Width="236
-                 " Background="{x:Null}">
+        <ListBox x:Name="listboxEquipped" HorizontalAlignment="Left" Height="320" Margin="10,42,0,0" VerticalAlignment="Top" Width="380" Background="{x:Null}">
             <ListBox.Foreground>
                 <SolidColorBrush Color="{DynamicResource TextColor}"/>
             </ListBox.Foreground>
             <ListBox.BorderBrush>
                 <SolidColorBrush Color="{DynamicResource AccentColor}"/>
             </ListBox.BorderBrush>
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="Foreground" Value="{Binding Background}" />
+                </Style>
+            </ListBox.ItemContainerStyle>
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Text}" />
+                </DataTemplate>
+            </ListBox.ItemTemplate>
         </ListBox>
-        <ListBox x:Name="listboxInventory" HorizontalAlignment="Left" Height="306" Margin="250,42,0,0" VerticalAlignment="Top" Width="236" Background="{x:Null}">
+        <ListBox x:Name="listboxInventory" HorizontalAlignment="Left" Height="320" Margin="406,42,0,0" VerticalAlignment="Top" Width="380" Background="{x:Null}">
             <ListBox.Foreground>
                 <SolidColorBrush Color="{DynamicResource TextColor}"/>
             </ListBox.Foreground>
             <ListBox.BorderBrush>
                 <SolidColorBrush Color="{DynamicResource AccentColor}"/>
             </ListBox.BorderBrush>
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="Foreground" Value="{Binding Background}" />
+                </Style>
+            </ListBox.ItemContainerStyle>
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Text}" />
+                </DataTemplate>
+            </ListBox.ItemTemplate>
         </ListBox>
         <Button x:Name="buttonExit" Content="X" VerticalAlignment="Top" FontFamily="Consolas" Click="ButtonExit_Click" FontWeight="Bold" Background="{x:Null}" BorderThickness="2" HorizontalAlignment="Right" Width="20" Margin="0,-2,-2,0">
             <Button.Foreground>
@@ -51,6 +69,34 @@
                 <SolidColorBrush Color="{DynamicResource AccentColor}" />
             </Button.BorderBrush>
         </Button>
+        <ListBox x:Name="listboxSpells" HorizontalAlignment="Left" Height="177" Margin="10,409,0,0" VerticalAlignment="Top" Width="776" Background="{x:Null}">
+            <ListBox.Foreground>
+                <SolidColorBrush Color="{DynamicResource TextColor}"/>
+            </ListBox.Foreground>
+            <ListBox.BorderBrush>
+                <SolidColorBrush Color="{DynamicResource AccentColor}"/>
+            </ListBox.BorderBrush>
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="Foreground" Value="{Binding Background}" />
+                </Style>
+            </ListBox.ItemContainerStyle>
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Text}" />
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <Label Content="🎒 Inventory" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="20" Margin="406,0,0,0">
+            <Label.Foreground>
+                <SolidColorBrush Color="{DynamicResource TextColor}"/>
+            </Label.Foreground>
+        </Label>
+        <Label Content="⚔ Spells" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="20" Margin="10,367,0,0">
+            <Label.Foreground>
+                <SolidColorBrush Color="{DynamicResource TextColor}"/>
+            </Label.Foreground>
+        </Label>
 
     </Grid>
 </Window>

@@ -81,6 +81,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="CombatEditor.xaml.cs">
+      <DependentUpon>CombatEditor.xaml</DependentUpon>
+    </Compile>
     <Compile Include="GearWindow.xaml.cs">
       <DependentUpon>GearWindow.xaml</DependentUpon>
     </Compile>
@@ -105,6 +108,10 @@
     <Compile Include="SettingsWindow.xaml.cs">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
     </Compile>
+    <Page Include="CombatEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="GearWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

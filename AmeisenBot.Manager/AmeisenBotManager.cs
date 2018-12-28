@@ -375,7 +375,7 @@ namespace AmeisenBotManager
 
         private IAmeisenCombatPackage LoadDefaultClassForSpec()
         {
-            List<Spell> Spells = new List<Spell>();
+            List<AmeisenCombatEngineCore.Objects.Spell> Spells = new List<AmeisenCombatEngineCore.Objects.Spell>();
             AmeisenDataHolder.IsHealer = false;
 
             switch (Me.Class)

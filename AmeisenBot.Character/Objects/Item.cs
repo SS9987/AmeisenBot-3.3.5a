@@ -55,6 +55,7 @@ namespace AmeisenBot.Character.Objects
         public Item(string itemName)
         {
             Name = itemName;
+            Update(true);
         }
 
         public Item(int slot)
@@ -65,10 +66,10 @@ namespace AmeisenBot.Character.Objects
 
         public override string ToString()
         {
-            return $"{Name} [{Quality.ToString()}] ({Level}) ({Slot.ToString()})";
+            return $"{(Slot != -1 ? $"[{((InventorySlot)Slot).ToString()}] " : "")}[{Quality.ToString()}] [{Name}] {Level}";
         }
 
-        private void Update()
+        private void Update(bool fromItemName = false)
         {
             // TODO: update item stuff here
             /*Id = ReadItemIntAttribute("GetInventoryItemID");
@@ -84,7 +85,8 @@ namespace AmeisenBot.Character.Objects
             EquipLocation = ReadItemDetail("itemEquipLoc");*/
 
             // Experimental! but should be 100x faster
-            string itemInfoJson = AmeisenCore.GetLocalizedText(GetItemInfo.Lua(Slot), GetItemInfo.OutVar());
+            string luaToExecute = fromItemName ? GetItemInfo.Lua(Name) : GetItemInfo.Lua(Slot);
+            string itemInfoJson = AmeisenCore.GetLocalizedText(luaToExecute, GetItemInfo.OutVar());
             AmeisenLogger.Instance.Log(LogLevel.DEBUG, $"GetItemInfoLuaJSON: {itemInfoJson}", this);
             // parse this JSON
             try

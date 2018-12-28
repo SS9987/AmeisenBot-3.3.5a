@@ -177,10 +177,10 @@ namespace AmeisenBotFSM.Actions
 
         public override void DoThings()
         {
-            WaypointQueue.Clear();
             if (WaypointQueue.Count > 0)
             {
                 base.DoThings();
+                WaypointQueue.Clear();
             }
 
             if (AmeisenDataHolder.IsHealer)
@@ -197,7 +197,7 @@ namespace AmeisenBotFSM.Actions
 
                 Target?.Update();
 
-                if (Target == null || Target.Guid == 0)
+                if (Target == null || Target.Guid == 0 || CombatUtils.IsFriendly(LuaUnit.target))
                 {
                     CombatUtils.TargetNearestEnemy();
                     Target?.Update();

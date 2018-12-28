@@ -444,5 +444,10 @@ namespace AmeisenBotGUI
         {
             AmeisenBotCore.AmeisenCore.LuaDoString("TurnRightStop();");
         }
+
+        private void ButtonCombatEditor_Click(object sender, RoutedEventArgs e)
+        {
+            new CombatEditor(BotManager).ShowDialog();
+        }
     }
 }

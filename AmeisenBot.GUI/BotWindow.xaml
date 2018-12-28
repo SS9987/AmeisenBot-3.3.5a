@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="AmeisenBot - " Height="362" Width="546" Loaded="Mainscreen_Loaded" WindowStyle="None" ResizeMode="NoResize" MouseDown="Mainscreen_MouseDown" Icon="Icon.ico" BorderThickness="2" Closing="Mainscreen_Closing">
+        Title="AmeisenBot - " Height="380" Width="550" Loaded="Mainscreen_Loaded" WindowStyle="None" ResizeMode="NoResize" MouseDown="Mainscreen_MouseDown" Icon="Icon.ico" BorderThickness="2" Closing="Mainscreen_Closing">
     <Window.BorderBrush>
         <SolidColorBrush Color="{DynamicResource AccentColor}" />
     </Window.BorderBrush>
@@ -23,7 +23,7 @@
                 <SolidColorBrush Color="{DynamicResource AccentColor}" />
             </Rectangle.Stroke>
         </Rectangle>
-        <CheckBox x:Name="checkBoxTopMost" Content="" HorizontalAlignment="Left" Margin="491,-1,0,0" VerticalAlignment="Top" Height="19" FontSize="14" Width="23" Click="CheckBoxTopMost_Click" />
+        <CheckBox x:Name="checkBoxTopMost" Content="" HorizontalAlignment="Left" Margin="494,-1,0,0" VerticalAlignment="Top" Height="19" FontSize="14" Width="23" Click="CheckBoxTopMost_Click" />
         <Rectangle HorizontalAlignment="Left" Margin="-2,252,0,-2" StrokeThickness="2" Width="170">
             <Rectangle.Fill>
                 <SolidColorBrush Color="{DynamicResource BackgroundColor}" />
@@ -32,7 +32,7 @@
                 <SolidColorBrush Color="{DynamicResource AccentColor}" />
             </Rectangle.Stroke>
         </Rectangle>
-        <Rectangle HorizontalAlignment="Left" Height="80" Margin="166,174,0,0" StrokeThickness="2" VerticalAlignment="Top" Width="312">
+        <Rectangle HorizontalAlignment="Left" Height="80" Margin="166,174,0,0" StrokeThickness="2" VerticalAlignment="Top" Width="316">
             <Rectangle.Fill>
                 <SolidColorBrush Color="{DynamicResource BackgroundColor}" />
             </Rectangle.Fill>
@@ -48,7 +48,7 @@
                 <SolidColorBrush Color="{DynamicResource AccentColor}" />
             </Rectangle.Stroke>
         </Rectangle>
-        <Rectangle HorizontalAlignment="Left" Height="178" Margin="-2,-2,0,0" VerticalAlignment="Top" Width="480" StrokeThickness="2">
+        <Rectangle HorizontalAlignment="Left" Height="178" Margin="-2,-2,0,0" VerticalAlignment="Top" Width="484" StrokeThickness="2">
             <Rectangle.Stroke>
                 <SolidColorBrush Color="{DynamicResource AccentColor}" />
             </Rectangle.Stroke>
@@ -113,7 +113,7 @@
                 <SolidColorBrush Color="{DynamicResource AccentColor}" />
             </Button.BorderBrush>
         </Button>
-        <CheckBox x:Name="checkBoxFollowParty" Content="🚀 Follow Group" Margin="346,255,0,0" Background="White" HorizontalAlignment="Left" Width="120" BorderThickness="2" Height="20" VerticalAlignment="Top" Click="CheckBoxFollowMaster_Click">
+        <CheckBox x:Name="checkBoxFollowParty" Content="🚀 Follow Group" Margin="346,256,0,0" Background="White" HorizontalAlignment="Left" Width="120" BorderThickness="2" Height="20" VerticalAlignment="Top" Click="CheckBoxFollowMaster_Click">
             <CheckBox.Foreground>
                 <SolidColorBrush Color="{DynamicResource TextColor}" />
             </CheckBox.Foreground>
@@ -121,7 +121,7 @@
                 <SolidColorBrush Color="{DynamicResource AccentColor}" />
             </CheckBox.BorderBrush>
         </CheckBox>
-        <Button x:Name="buttonSettings" Content="🛠" HorizontalAlignment="Right" Margin="0,23,-2,0" VerticalAlignment="Top" Width="60" Height="60" Click="ButtonSettings_Click" Background="{x:Null}" FontSize="32" BorderThickness="2">
+        <Button x:Name="buttonSettings" Content="🛠" HorizontalAlignment="Right" Margin="0,22,-2,0" VerticalAlignment="Top" Width="60" Height="60" Click="ButtonSettings_Click" Background="{x:Null}" FontSize="32" BorderThickness="2">
             <Button.BorderBrush>
                 <SolidColorBrush Color="{DynamicResource AccentColor}" />
             </Button.BorderBrush>
@@ -137,7 +137,7 @@
                 <SolidColorBrush Color="{DynamicResource AccentColor}" />
             </Button.BorderBrush>
         </Button>
-        <Button x:Name="buttonExtendedDebugUI" Content="💻" Margin="0,153,-2,0" Click="ButtonExtendedDebugUI_Click" HorizontalAlignment="Right" Width="60" BorderThickness="2" Background="{x:Null}" FontSize="32" Height="60" VerticalAlignment="Top">
+        <Button x:Name="buttonExtendedDebugUI" Content="💻" Margin="0,196,-2,0" Click="ButtonExtendedDebugUI_Click" HorizontalAlignment="Right" Width="60" BorderThickness="2" Background="{x:Null}" FontSize="32" Height="60" VerticalAlignment="Top">
             <Button.BorderBrush>
                 <SolidColorBrush Color="{DynamicResource AccentColor}" />
             </Button.BorderBrush>
@@ -145,7 +145,7 @@
                 <SolidColorBrush Color="{DynamicResource TextColor}" />
             </Button.Foreground>
         </Button>
-        <Button x:Name="buttonGear" Content="🎒" Margin="0,88,-2,0" VerticalAlignment="Top" Height="60" Click="ButtonCobatClassEditor_Click" Background="{x:Null}" FontSize="32" BorderThickness="2" HorizontalAlignment="Right" Width="60">
+        <Button x:Name="buttonGear" Content="🎒" Margin="0,138,-2,0" VerticalAlignment="Top" Height="60" Click="ButtonCobatClassEditor_Click" Background="{x:Null}" FontSize="32" BorderThickness="2" HorizontalAlignment="Right" Width="60">
             <Button.BorderBrush>
                 <SolidColorBrush Color="{DynamicResource AccentColor}" />
             </Button.BorderBrush>
@@ -153,7 +153,7 @@
                 <SolidColorBrush Color="{DynamicResource TextColor}" />
             </Button.Foreground>
         </Button>
-        <CheckBox x:Name="checkBoxAssistPartyAttack" Content="⚔ Attack" Margin="172,338,0,0" Background="White" HorizontalAlignment="Left" Width="80" BorderThickness="2" Height="20" VerticalAlignment="Top" Click="CheckBoxAssistPartyAttack_Click">
+        <CheckBox x:Name="checkBoxAssistPartyAttack" Content="⚔ Attack" Margin="172,344,0,0" Background="White" HorizontalAlignment="Left" Width="80" BorderThickness="2" Height="20" VerticalAlignment="Top" Click="CheckBoxAssistPartyAttack_Click">
             <CheckBox.Foreground>
                 <SolidColorBrush Color="{DynamicResource TextColor}" />
             </CheckBox.Foreground>
@@ -161,7 +161,7 @@
                 <SolidColorBrush Color="{DynamicResource AccentColor}" />
             </CheckBox.BorderBrush>
         </CheckBox>
-        <CheckBox x:Name="checkBoxAssistPartyHeal" Content="⛨ Heal" Margin="172,321,0,0" Background="White" HorizontalAlignment="Left" Width="70" BorderThickness="2" Height="20" VerticalAlignment="Top" Click="CheckBoxAssistPartyHeal_Click">
+        <CheckBox x:Name="checkBoxAssistPartyHeal" Content="⛨ Heal" Margin="172,324,0,0" Background="White" HorizontalAlignment="Left" Width="70" BorderThickness="2" Height="20" VerticalAlignment="Top" Click="CheckBoxAssistPartyHeal_Click">
             <CheckBox.Foreground>
                 <SolidColorBrush Color="{DynamicResource TextColor}" />
             </CheckBox.Foreground>
@@ -177,7 +177,7 @@
                 <SolidColorBrush Color="{DynamicResource AccentColor}" />
             </CheckBox.BorderBrush>
         </CheckBox>
-        <Label Content="🎯" HorizontalAlignment="Left" Margin="426,202,0,0" VerticalAlignment="Top" FontSize="30" RenderTransformOrigin="4.267,0.515" Height="50" Width="50">
+        <Label Content="🎯" HorizontalAlignment="Left" Margin="430,202,0,0" VerticalAlignment="Top" FontSize="30" RenderTransformOrigin="4.267,0.515" Height="50" Width="50">
             <Label.Foreground>
                 <SolidColorBrush Color="#19FFFFFF" />
             </Label.Foreground>
@@ -192,7 +192,7 @@
                 <SolidColorBrush Color="{DynamicResource TextColor}" />
             </Label.Foreground>
         </Label>
-        <Button x:Name="buttonOpenFile" Content="📂 Open CombatClass" HorizontalAlignment="Left" Margin="-2,341,0,-2" VerticalAlignment="Top" Width="120" BorderThickness="2" Click="ButtonOpenFile_Click" FontSize="10">
+        <Button x:Name="buttonOpenFile" Content="📂 Open CombatClass" HorizontalAlignment="Left" Margin="-2,359,0,-2" VerticalAlignment="Top" Width="120" BorderThickness="2" Click="ButtonOpenFile_Click" FontSize="10">
             <Button.Foreground>
                 <SolidColorBrush Color="{DynamicResource TextColor}" />
             </Button.Foreground>
@@ -203,7 +203,7 @@
                 <SolidColorBrush Color="{DynamicResource BackgroundColor}" />
             </Button.Background>
         </Button>
-        <Button x:Name="buttonMap" Content="🏝️" Margin="0,218,-2,0" BorderThickness="2" Background="{x:Null}" FontSize="32" Click="ButtonMap_Click" Height="60" VerticalAlignment="Top" HorizontalAlignment="Right" Width="60">
+        <Button x:Name="buttonMap" Content="🏝️" Margin="0,254,-2,0" BorderThickness="2" Background="{x:Null}" FontSize="32" Click="ButtonMap_Click" Height="60" VerticalAlignment="Top" HorizontalAlignment="Right" Width="60">
             <Button.BorderBrush>
                 <SolidColorBrush Color="{DynamicResource AccentColor}" />
             </Button.BorderBrush>
@@ -211,7 +211,7 @@
                 <SolidColorBrush Color="{DynamicResource TextColor}" />
             </Button.Foreground>
         </Button>
-        <Button x:Name="buttonGroup" Content="🐉" Margin="0,283,-2,0" BorderThickness="2" Background="{x:Null}" FontSize="36" Click="ButtonGroup_Click" Height="60" VerticalAlignment="Top" HorizontalAlignment="Right" Width="60">
+        <Button x:Name="buttonGroup" Content="🐉" Margin="0,312,-2,0" BorderThickness="2" Background="{x:Null}" FontSize="36" Click="ButtonGroup_Click" Height="60" VerticalAlignment="Top" HorizontalAlignment="Right" Width="60">
             <Button.BorderBrush>
                 <SolidColorBrush Color="{DynamicResource AccentColor}" />
             </Button.BorderBrush>
@@ -268,7 +268,7 @@
                 <SolidColorBrush Color="{DynamicResource AccentColor}" />
             </CheckBox.BorderBrush>
         </CheckBox>
-        <CheckBox x:Name="checkBoxAssistGroup" Content="🤝 Assist Group" Margin="346,272,0,0" Background="White" HorizontalAlignment="Left" Width="120" BorderThickness="2" Height="20" VerticalAlignment="Top" Click="CheckBoxAssistGroup_Click">
+        <CheckBox x:Name="checkBoxAssistGroup" Content="🤝 Assist Group" Margin="346,276,0,0" Background="White" HorizontalAlignment="Left" Width="120" BorderThickness="2" Height="20" VerticalAlignment="Top" Click="CheckBoxAssistGroup_Click">
             <CheckBox.Foreground>
                 <SolidColorBrush Color="{DynamicResource TextColor}" />
             </CheckBox.Foreground>
@@ -276,7 +276,7 @@
                 <SolidColorBrush Color="{DynamicResource AccentColor}" />
             </CheckBox.BorderBrush>
         </CheckBox>
-        <CheckBox x:Name="checkBoxReleaseSpirit" Content="👻 Release Spirit" Margin="346,289,0,0" Background="White" HorizontalAlignment="Left" Width="129" BorderThickness="2" Height="20" VerticalAlignment="Top" Click="CheckBoxReleaseSpirit_Click">
+        <CheckBox x:Name="checkBoxReleaseSpirit" Content="👻 Release Spirit" Margin="346,296,0,0" Background="White" HorizontalAlignment="Left" Width="129" BorderThickness="2" Height="20" VerticalAlignment="Top" Click="CheckBoxReleaseSpirit_Click">
             <CheckBox.Foreground>
                 <SolidColorBrush Color="{DynamicResource TextColor}" />
             </CheckBox.Foreground>
@@ -284,7 +284,7 @@
                 <SolidColorBrush Color="{DynamicResource AccentColor}" />
             </CheckBox.BorderBrush>
         </CheckBox>
-        <CheckBox x:Name="checkBoxRevive" Content="💀 Revive" Margin="346,306,0,0" Background="White" HorizontalAlignment="Left" Width="129" BorderThickness="2" Height="20" VerticalAlignment="Top" Click="CheckBoxReleaseSpirit_Copy_Click">
+        <CheckBox x:Name="checkBoxRevive" Content="💀 Revive" Margin="346,316,0,0" Background="White" HorizontalAlignment="Left" Width="129" BorderThickness="2" Height="20" VerticalAlignment="Top" Click="CheckBoxReleaseSpirit_Copy_Click">
             <CheckBox.Foreground>
                 <SolidColorBrush Color="{DynamicResource TextColor}" />
             </CheckBox.Foreground>
@@ -303,7 +303,7 @@
                 <SolidColorBrush Color="{DynamicResource AccentColor}" />
             </Rectangle.Stroke>
         </Rectangle>
-        <CheckBox x:Name="checkBoxRandomEmotes" Content="🤷 Emotes" Margin="346,323,0,0" Background="White" HorizontalAlignment="Left" Width="129" BorderThickness="2" Height="20" VerticalAlignment="Top" Click="CheckBoxAssistPartyBuff_Click">
+        <CheckBox x:Name="checkBoxRandomEmotes" Content="🤷 Emotes" Margin="346,336,0,0" Background="White" HorizontalAlignment="Left" Width="129" BorderThickness="2" Height="20" VerticalAlignment="Top" Click="CheckBoxAssistPartyBuff_Click">
             <CheckBox.Foreground>
                 <SolidColorBrush Color="{DynamicResource TextColor}" />
             </CheckBox.Foreground>
@@ -311,7 +311,7 @@
                 <SolidColorBrush Color="{DynamicResource AccentColor}" />
             </CheckBox.BorderBrush>
         </CheckBox>
-        <CheckBox x:Name="checkBoxDoBotStuff" Content="👾 Do own stuff" Margin="346,340,0,-8" Background="White" HorizontalAlignment="Left" Width="129" BorderThickness="2" Height="20" VerticalAlignment="Top" Click="CheckBoxDoBotStuff_Click">
+        <CheckBox x:Name="checkBoxDoBotStuff" Content="👾 Do own stuff" Margin="346,356,0,0" Background="White" HorizontalAlignment="Left" Width="129" BorderThickness="2" Height="20" VerticalAlignment="Top" Click="CheckBoxDoBotStuff_Click">
             <CheckBox.Foreground>
                 <SolidColorBrush Color="{DynamicResource TextColor}" />
             </CheckBox.Foreground>
@@ -319,9 +319,9 @@
                 <SolidColorBrush Color="{DynamicResource AccentColor}" />
             </CheckBox.BorderBrush>
         </CheckBox>
-        <Label Content="⚔" HorizontalAlignment="Left" Margin="116,308,0,0" VerticalAlignment="Top" FontSize="30" RenderTransformOrigin="4.267,0.515" Height="50" Width="50" Foreground="#19FFFFFF" />
+        <Label Content="⚔" HorizontalAlignment="Left" Margin="116,328,0,-2" VerticalAlignment="Top" FontSize="30" RenderTransformOrigin="4.267,0.515" Height="50" Width="50" Foreground="#19FFFFFF" />
         <Image x:Name="botPicture" HorizontalAlignment="Left" Height="80" VerticalAlignment="Top" Width="80" Margin="12,12,0,0" />
-        <Button x:Name="buttonRememberUnit" Content="💡 Add Unit to DB" HorizontalAlignment="Left" Margin="346,174,0,0" VerticalAlignment="Top" Width="132" BorderThickness="2" Click="ButtonRememberUnit_Click" FontSize="11" Height="23">
+        <Button x:Name="buttonRememberUnit" Content="💡 Add Unit to DB" HorizontalAlignment="Left" Margin="350,174,0,0" VerticalAlignment="Top" Width="132" BorderThickness="2" Click="ButtonRememberUnit_Click" FontSize="11" Height="23">
             <Button.Background>
                 <SolidColorBrush Color="{DynamicResource BackgroundColor}" />
             </Button.Background>
@@ -332,12 +332,12 @@
                 <SolidColorBrush Color="{DynamicResource TextColor}" />
             </Button.Foreground>
         </Button>
-        <Label x:Name="labelRemember" Content="I don't know this Unit" HorizontalAlignment="Left" Margin="346,200,0,0" VerticalAlignment="Top" Width="120" FontSize="11">
+        <Label x:Name="labelRemember" Content="I don't know this Unit" HorizontalAlignment="Left" Margin="350,200,0,0" VerticalAlignment="Top" Width="120" FontSize="11">
             <Label.Foreground>
                 <SolidColorBrush Color="{DynamicResource TextColor}" />
             </Label.Foreground>
         </Label>
-        <Label x:Name="labelUnitTraits" Content="💰 🔧 🍖 🍹" HorizontalAlignment="Left" Margin="346,223,0,0" VerticalAlignment="Top" Width="120" FontSize="14">
+        <Label x:Name="labelUnitTraits" Content="💰 🔧 🍖 🍹" HorizontalAlignment="Left" Margin="348,223,0,0" VerticalAlignment="Top" Width="120" FontSize="14">
             <Label.Foreground>
                 <SolidColorBrush Color="{DynamicResource TextColor}" />
             </Label.Foreground>
@@ -352,8 +352,8 @@
                 <SolidColorBrush Color="{DynamicResource TextColor}" />
             </Label.Foreground>
         </Label>
-        <Label Content="💭" HorizontalAlignment="Left" Margin="426,308,0,0" VerticalAlignment="Top" FontSize="30" RenderTransformOrigin="4.267,0.515" Height="50" Width="50" Foreground="#19FFFFFF" />
-        <Label x:Name="labelMoney" Content="0 g 0 s 0 c" HorizontalAlignment="Left" Margin="0,223,0,0" VerticalAlignment="Top" FontSize="11">
+        <Label Content="💭" HorizontalAlignment="Left" Margin="426,328,0,-2" VerticalAlignment="Top" FontSize="30" RenderTransformOrigin="4.267,0.515" Height="50" Width="50" Foreground="#19FFFFFF" />
+        <Label x:Name="labelMoney" Content="0 g 0 s 0 c" HorizontalAlignment="Left" Margin="0,227,0,0" VerticalAlignment="Top" FontSize="11">
             <Label.Foreground>
                 <SolidColorBrush Color="{DynamicResource TextColor}" />
             </Label.Foreground>
@@ -363,7 +363,7 @@
                 <SolidColorBrush Color="{DynamicResource TextColor}" />
             </Label.Foreground>
         </Label>
-        <Button x:Name="buttonEquiptAllBetter" Content="💡 Equip all better Items" HorizontalAlignment="Left" Margin="166,147,0,0" VerticalAlignment="Top" Width="128" BorderThickness="2" FontSize="11" Height="23" Click="ButtonEquiptAllBetter_Click">
+        <Button x:Name="buttonEquiptAllBetter" Content="Equip all better Items" HorizontalAlignment="Left" Margin="166,147,0,0" VerticalAlignment="Top" Width="128" BorderThickness="2" FontSize="11" Height="23" Click="ButtonEquiptAllBetter_Click">
             <Button.Background>
                 <SolidColorBrush Color="{DynamicResource BackgroundColor}" />
             </Button.Background>
@@ -385,18 +385,7 @@
                 <SolidColorBrush Color="{DynamicResource TextColor}" />
             </Button.Foreground>
         </Button>
-        <Button x:Name="buttonDebugTest" Content="FaceUnit" HorizontalAlignment="Left" Margin="299,118,0,0" VerticalAlignment="Top" Width="79" BorderThickness="2" FontSize="11" Height="23" Click="ButtonDebugTest_Click">
-            <Button.Background>
-                <SolidColorBrush Color="{DynamicResource BackgroundColor}" />
-            </Button.Background>
-            <Button.BorderBrush>
-                <SolidColorBrush Color="{DynamicResource AccentColor}" />
-            </Button.BorderBrush>
-            <Button.Foreground>
-                <SolidColorBrush Color="{DynamicResource TextColor}" />
-            </Button.Foreground>
-        </Button>
-        <Button x:Name="buttonDebugTest2" Content="Stop Turning" HorizontalAlignment="Left" Margin="299,147,0,0" VerticalAlignment="Top" Width="79" BorderThickness="2" FontSize="11" Height="23" Click="ButtonDebugTest2_Click">
+        <Button x:Name="buttonDebugTest" Content="FaceUnit" HorizontalAlignment="Left" Margin="299,147,0,0" VerticalAlignment="Top" Width="79" BorderThickness="2" FontSize="11" Height="23" Click="ButtonDebugTest_Click">
             <Button.Background>
                 <SolidColorBrush Color="{DynamicResource BackgroundColor}" />
             </Button.Background>
@@ -408,10 +397,18 @@
             </Button.Foreground>
         </Button>
         <ProgressBar x:Name="progressbarHookQueue" HorizontalAlignment="Left" Height="76" Margin="160,176,0,0" VerticalAlignment="Top" Width="6" Foreground="Yellow" Background="{x:Null}" BorderBrush="{x:Null}" Orientation="Vertical" Maximum="30"/>
-        <Label x:Name="labelHookQueue" Content="HookJobs: 0/30" HorizontalAlignment="Left" Margin="83,232,0,0" VerticalAlignment="Top" FontSize="10">
+        <Label x:Name="labelHookQueue" Content="HookJobs: 0/30" HorizontalAlignment="Left" Margin="80,174,0,0" VerticalAlignment="Top" FontSize="10">
             <Label.Foreground>
                 <SolidColorBrush Color="{DynamicResource TextColor}" />
             </Label.Foreground>
         </Label>
+        <Button x:Name="buttonCombatEditor" Content="⚔" HorizontalAlignment="Right" Margin="0,80,-2,0" VerticalAlignment="Top" Width="60" Height="60" Click="ButtonCombatEditor_Click" Background="{x:Null}" FontSize="32" BorderThickness="2">
+            <Button.BorderBrush>
+                <SolidColorBrush Color="{DynamicResource AccentColor}" />
+            </Button.BorderBrush>
+            <Button.Foreground>
+                <SolidColorBrush Color="{DynamicResource TextColor}" />
+            </Button.Foreground>
+        </Button>
     </Grid>
 </Window>
