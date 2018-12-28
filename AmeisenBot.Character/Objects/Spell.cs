@@ -11,9 +11,9 @@ namespace AmeisenBot.Character.Objects
         public int CastTime { get; private set; }
         public int MinRange { get; private set; }
         public int MaxRange { get; private set; }
-        public string Costs { get; private set; }
+        public int Costs { get; private set; }
 
-        public Spell(string spellBookName, int spellbookId, string name, string rank, int castTime, int minRange, int maxRange, string costs)
+        public Spell(string spellBookName, int spellbookId, string name, string rank, int castTime, int minRange, int maxRange, int costs)
         {
             SpellbookName = spellBookName;
             SpellbookId = spellbookId;

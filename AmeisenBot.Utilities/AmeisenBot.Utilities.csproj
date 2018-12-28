@@ -91,12 +91,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\AmeisenCombatEngine\AmeisenCombatEngine\AmeisenCombatEngine.Core.csproj">
-      <Project>{AC364F4C-36E2-42BD-BADD-56D5E69966F6}</Project>
-      <Name>AmeisenCombatEngine.Core</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

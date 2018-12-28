@@ -3,6 +3,8 @@ using AmeisenBot.Character.Objects;
 using AmeisenBot.Clients;
 using AmeisenBotCombat.CombatPackages;
 using AmeisenBotCombat.Interfaces;
+using AmeisenBotCombat.MovementStrategies;
+using AmeisenBotCombat.SpellStrategies;
 using AmeisenBotCore;
 using AmeisenBotData;
 using AmeisenBotDB;
@@ -12,8 +14,6 @@ using AmeisenBotLogger;
 using AmeisenBotUtilities;
 using AmeisenBotUtilities.Enums;
 using AmeisenBotUtilities.Objects;
-using AmeisenCombatEngineCore.Objects;
-using AmeisenCombatEngineCore.Strategies;
 using AmeisenMovement;
 using AmeisenMovement.Formations;
 using Magic;
@@ -284,6 +284,10 @@ namespace AmeisenBotManager
             // TODO: make this non static
             AmeisenCore.AmeisenHook = AmeisenHook;
 
+            // Init our CharacterMangager to keep track of our stats/items/money
+            AmeisenCharacterManager = new AmeisenCharacterManager();
+            AmeisenCharacterManager.UpdateCharacterAsync();
+
             // Hook Events
             AmeisenEventHook = new AmeisenEventHook();
             AmeisenEventHook.Init();
@@ -331,10 +335,6 @@ namespace AmeisenBotManager
             AmeisenStateMachineManager.StateMachine.PushAction(BotState.Idle);
             AmeisenStateMachineManager.Start();
 
-            // Init our CharacterMangager to keep track of our stats/items/money
-            AmeisenCharacterManager = new AmeisenCharacterManager();
-            AmeisenCharacterManager.UpdateCharacterAsync();
-
             // Connect to Server
             if (Settings.serverAutoConnect)
             {
@@ -375,43 +375,24 @@ namespace AmeisenBotManager
 
         private IAmeisenCombatPackage LoadDefaultClassForSpec()
         {
-            List<AmeisenCombatEngineCore.Objects.Spell> Spells = new List<AmeisenCombatEngineCore.Objects.Spell>();
             AmeisenDataHolder.IsHealer = false;
+
+            while (!Character.FullyLoaded)
+            {
+                Thread.Sleep(250);
+            }
 
             switch (Me.Class)
             {
-                case WowClass.Paladin:
+                case WowClass.Warrior:
                     return new CPDefault(
-                        WoWClass.Paladin.Spells,
-                        new DamageSimple(WoWClass.Paladin.Spells),
-                        new MovementCloseCombat(3.0)
-                    );
-
-                case WowClass.Priest:
-                    AmeisenDataHolder.IsHealer = true;
-                    return new CPDefault(
-                        WoWClass.Priest.Spells,
-                        new HealSimple(WoWClass.Priest.Spells, 90),
-                        new MovementCloseCombat(30.0)
-                    );
-
-                case WowClass.Warlock:
-                    return new CPDefault(
-                        WoWClass.Warlock.Spells,
-                        new DamageSimple(WoWClass.Warlock.Spells),
-                        new MovementCloseCombat(30.0)
-                    );
-
-                case WowClass.Mage:
-                    return new CPDefault(
-                        WoWClass.Mage.Spells,
-                        new DamageSimple(WoWClass.Mage.Spells),
-                        new MovementCloseCombat(30.0)
+                        Character.Spells,
+                        new WarriorFury(Character.Spells),
+                        new MovementClose(2.7)
                     );
 
                 default:
-                    return new CPDefault(
-                        Spells, new DamageSimple(Spells), new MovementCloseCombat());
+                    return new CPDefault(Character.Spells, null, new MovementClose());
             }
         }
 

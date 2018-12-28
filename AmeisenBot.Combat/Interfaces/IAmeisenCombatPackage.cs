@@ -1,5 +1,4 @@
-﻿using AmeisenCombatEngineCore.Interfaces;
-using AmeisenCombatEngineCore.Objects;
+﻿using AmeisenBot.Character.Objects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +10,7 @@ namespace AmeisenBotCombat.Interfaces
     public interface IAmeisenCombatPackage
     {
         List<Spell> Spells { get; }
-        ISpellStrategy SpellStrategy { get; }
+        ICombatClass SpellStrategy { get; }
         IMovementStrategy MovementStrategy { get; }
     }
 }

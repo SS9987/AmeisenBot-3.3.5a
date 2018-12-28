@@ -9,6 +9,6 @@
         public int castTime;
         public int minRange;
         public int maxRange;
-        public string costs;
+        public int costs;
     }
 }

@@ -104,7 +104,7 @@ namespace AmeisenBotCombat
         /// <param name="me">you</param>
         /// <param name="unit">target</param>
         /// <returns>wether you're facing the unit or not</returns>
-        public static bool IsFacingMelee(Me me, Unit unit, double minRotation = 0.8, double maxRotation = 1.2)
+        public static bool IsFacingMelee(Me me, Unit unit, double minRotation = 0.6, double maxRotation = 1.4)
             => Utils.IsFacing(me.pos, me.Rotation, unit.pos, minRotation, maxRotation);
 
         /// <summary>

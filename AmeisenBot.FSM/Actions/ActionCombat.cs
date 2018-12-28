@@ -1,16 +1,10 @@
-﻿using AmeisenBot.Clients;
+﻿using AmeisenBot.Character.Objects;
+using AmeisenBot.Clients;
 using AmeisenBotCombat;
 using AmeisenBotCombat.Interfaces;
-using AmeisenBotCore;
 using AmeisenBotData;
 using AmeisenBotDB;
-using AmeisenBotLogger;
 using AmeisenBotUtilities;
-using AmeisenBotUtilities.Enums;
-using AmeisenCombatEngineCore;
-using AmeisenCombatEngineCore.Enums;
-using AmeisenCombatEngineCore.Objects;
-using System;
 
 namespace AmeisenBotFSM.Actions
 {
@@ -18,7 +12,6 @@ namespace AmeisenBotFSM.Actions
     {
         private AmeisenDataHolder AmeisenDataHolder { get; set; }
         private IAmeisenCombatPackage CombatPackage { get; set; }
-        private CombatEngine CombatEngine { get; set; }
 
         private Me Me
         {
@@ -26,112 +19,10 @@ namespace AmeisenBotFSM.Actions
             set { AmeisenDataHolder.Me = value; }
         }
 
-        private AmeisenBotUtilities.Unit Target
+        private Unit Target
         {
             get { return AmeisenDataHolder.Target; }
             set { AmeisenDataHolder.Target = value; }
-        }
-
-        private AmeisenCombatEngineCore.Objects.Unit MeUnit
-        {
-            get
-            {
-                Me.Update();
-
-                double energy = Me.Mana;
-                double maxEnergy = Me.MaxMana;
-
-                if (Me.Class == WowClass.Warrior)
-                {
-                    energy = Me.Rage;
-                    maxEnergy = Me.MaxRage;
-                }
-
-                if (Me.Class == WowClass.Rogue)
-                {
-                    energy = Me.Energy;
-                    maxEnergy = Me.MaxEnergy;
-                }
-
-                if (Me.Class == WowClass.DeathKnight)
-                {
-                    energy = Me.RuneEnergy;
-                    maxEnergy = Me.MaxRuneEnergy;
-                }
-
-                return new AmeisenCombatEngineCore.Objects.Unit(
-                    Me.Health,
-                    Me.MaxHealth,
-                    energy,
-                    maxEnergy,
-                    CombatState.Standing,
-                    new AmeisenCombatEngineCore.Structs.Vector3(
-                        Me.pos.X,
-                        Me.pos.Y,
-                        Me.pos.Z),
-                    AmeisenCore.GetAuras(LuaUnit.player)
-                    );
-            }
-        }
-
-
-        private AmeisenCombatEngineCore.Objects.Unit TargetUnit
-        {
-            get
-            {
-                if (Target != null)
-                {
-                    Target.Update();
-
-                    double energy = Target.Energy;
-                    double maxEnergy = Target.MaxEnergy;
-
-                    /*
-                    if (Target.Class == WowClass.Warrior)
-                    {
-                        energy = Target.Rage;
-                        maxEnergy = Target.MaxRage;
-                    }
-
-                    if (Target.Class == WowClass.Rogue)
-                    {
-                        energy = Target.Energy;
-                        maxEnergy = Target.MaxEnergy;
-                    }
-
-                    if (Target.Class == WowClass.DeathKnight)
-                    {
-                        energy = Target.RuneEnergy;
-                        maxEnergy = Target.MaxRuneEnergy;
-                    }
-                    */
-
-                    return new AmeisenCombatEngineCore.Objects.Unit(
-                        Target.Health,
-                        Target.MaxHealth,
-                        energy,
-                        maxEnergy,
-                        CombatState.Standing,
-                        new AmeisenCombatEngineCore.Structs.Vector3(
-                            Target.pos.X,
-                            Target.pos.Y,
-                            Target.pos.Z),
-                        AmeisenCore.GetAuras(LuaUnit.target)
-                        );
-                }
-                return new AmeisenCombatEngineCore.Objects.Unit(
-                        0,
-                        0,
-                        0,
-                        0,
-                        CombatState.Standing,
-                        new AmeisenCombatEngineCore.Structs.Vector3(
-                            0,
-                            0,
-                            0),
-                        AmeisenCore.GetAuras(LuaUnit.target)
-                        );
-            }
         }
 
         public ActionCombat(
@@ -142,18 +33,10 @@ namespace AmeisenBotFSM.Actions
         {
             AmeisenDataHolder = ameisenDataHolder;
             CombatPackage = combatPackage;
-            CombatEngine = new CombatEngine(combatPackage.Spells, combatPackage.SpellStrategy, combatPackage.MovementStrategy);
-            CombatEngine.OnCastSpell += HandleSpellCast;
-            CombatEngine.OnMoveCharacter += HandleMovement;
         }
 
-        private void HandleMovement(object sender, EventArgs e)
+        private void HandleMovement(Vector3 pos)
         {
-            Vector3 pos = new Vector3(
-            ((MoveCharacterEventArgs)e).PositionToGoTo.X,
-            ((MoveCharacterEventArgs)e).PositionToGoTo.Y,
-            ((MoveCharacterEventArgs)e).PositionToGoTo.Z);
-
             Me.Update();
 
             if (!WaypointQueue.Contains(pos))
@@ -166,13 +49,6 @@ namespace AmeisenBotFSM.Actions
         {
             WaypointQueue.Clear();
             base.Start();
-        }
-
-        private void HandleSpellCast(object sender, EventArgs e)
-        {
-            AmeisenLogger.Instance.Log(LogLevel.DEBUG, $"Casting Spell: {((CastSpellEventArgs)e).Spell.SpellName}", this);
-            CombatUtils.CastSpellByName(Me, Target, ((CastSpellEventArgs)e).Spell.SpellName, false, true);
-            ((CastSpellEventArgs)e).Spell.StartCooldown();
         }
 
         public override void DoThings()
@@ -190,6 +66,8 @@ namespace AmeisenBotFSM.Actions
             }
             else
             {
+                CombatUtils.AttackTarget();
+
                 if (Target == null || Target.Guid == 0 || Target.Health == 0)
                 {
                     CombatUtils.AssistParty(Me, AmeisenDataHolder.ActiveWoWObjects);
@@ -214,7 +92,19 @@ namespace AmeisenBotFSM.Actions
                 CombatUtils.AttackTarget();
             }
 
-            CombatEngine.DoIteration(MeUnit, TargetUnit);
+            Spell spellToUse = CombatPackage.SpellStrategy.DoRoutine(Me, Target);
+            if (spellToUse != null)
+            {
+                CombatUtils.CastSpellByName(Me, Target, spellToUse.Name, false, true);
+            }
+
+            Vector3 posToGoTo = CombatPackage.MovementStrategy.CalculatePosition(Me, Target);
+            if (posToGoTo.X != Me.pos.X
+                && posToGoTo.Y != Me.pos.Y
+                && posToGoTo.Z != Me.pos.Z)
+            {
+                HandleMovement(posToGoTo);
+            }
         }
     }
 }
