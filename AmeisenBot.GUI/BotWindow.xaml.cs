@@ -267,8 +267,8 @@ namespace AmeisenBotGUI
             catch { AmeisenLogger.Instance.Log(LogLevel.ERROR, "Failed to load picture...", this); }
 
             labelName.Content = BotManager.Me.Name + " lvl." + BotManager.Me.Level;
+            labelHP.Content = $"Health {ProcessKMValue(BotManager.Me.Health)} / {ProcessKMValue(BotManager.Me.MaxHealth)}";
 
-            labelHP.Content = $"Health {BotManager.Me.Health} / {BotManager.Me.MaxHealth}";
             progressBarHP.Maximum = BotManager.Me.MaxHealth;
             progressBarHP.Value = BotManager.Me.Health;
             
@@ -280,52 +280,52 @@ namespace AmeisenBotGUI
             switch (BotManager.Me.Class)
             {
                 case WowClass.Warrior:
-                    labelEnergy.Content = $"Energy {BotManager.Me.Rage} / {BotManager.Me.MaxRage}";
+                    labelEnergy.Content = $"Energy {ProcessKMValue(BotManager.Me.Rage)} / {ProcessKMValue(BotManager.Me.MaxRage)}";
                     progressBarEnergy.Maximum = BotManager.Me.MaxRage;
                     progressBarEnergy.Value = BotManager.Me.Rage;
                     break;
 
                 case WowClass.Rogue:
-                    labelEnergy.Content = $"Energy {BotManager.Me.Energy} / {BotManager.Me.MaxEnergy}";
+                    labelEnergy.Content = $"Energy {ProcessKMValue(BotManager.Me.Energy)} / {ProcessKMValue(BotManager.Me.MaxEnergy)}";
                     progressBarEnergy.Maximum = BotManager.Me.MaxEnergy;
                     progressBarEnergy.Value = BotManager.Me.Energy;
                     break;
 
                 case WowClass.DeathKnight:
-                    labelEnergy.Content = $"Energy {BotManager.Me.RuneEnergy} / {BotManager.Me.MaxRuneEnergy}";
+                    labelEnergy.Content = $"Energy {ProcessKMValue(BotManager.Me.RuneEnergy)} / {ProcessKMValue(BotManager.Me.MaxRuneEnergy)}";
                     progressBarEnergy.Maximum = BotManager.Me.MaxRuneEnergy;
                     progressBarEnergy.Value = BotManager.Me.RuneEnergy;
                     break;
 
                 default:
-                    labelEnergy.Content = $"Energy {BotManager.Me.Mana} / {BotManager.Me.MaxMana}";
+                    labelEnergy.Content = $"Energy {ProcessKMValue(BotManager.Me.Mana)} / {ProcessKMValue(BotManager.Me.MaxMana)}";
                     progressBarEnergy.Maximum = BotManager.Me.MaxMana;
                     progressBarEnergy.Value = BotManager.Me.Mana;
                     break;
             }
 
-            if (BotManager.Me.MaxExp > 100000)
-            {
-                labelExp.Content = $"Exp {BotManager.Me.Exp / 1000}k / {BotManager.Me.MaxExp / 1000}k";
-            }
-            else
-            {
-                labelExp.Content = $"Exp {BotManager.Me.Exp} / {BotManager.Me.MaxExp}";
-            }
+            labelExp.Content = $"Exp {ProcessKMValue(BotManager.Me.Exp)} / {ProcessKMValue(BotManager.Me.MaxExp)}";
 
             progressBarXP.Maximum = BotManager.Me.MaxExp;
             progressBarXP.Value = BotManager.Me.Exp;
+        }
+
+        private string ProcessKMValue(double value)
+        {
+            if (value > 1000000) return $"{(int)value / 1000000}M";
+            if (value > 1000) return $"{(int)value / 1000}K";
+            return $"{value}";
         }
 
         private void UpdateTargetViews()
         {
             labelNameTarget.Content = $"{BotManager.Target.Name} lvl.{BotManager.Target.Level}";
 
-            labelTargetHP.Content = $"Health {BotManager.Target.Health} / {BotManager.Target.MaxHealth}";
+            labelTargetHP.Content = $"Health {ProcessKMValue(BotManager.Target.Health)} / {ProcessKMValue(BotManager.Target.MaxHealth)}";
             progressBarHPTarget.Maximum = BotManager.Target.MaxHealth;
             progressBarHPTarget.Value = BotManager.Target.Health;
 
-            labelTargetEnergy.Content = $"Energy {BotManager.Target.Mana} / {BotManager.Target.MaxMana}";
+            labelTargetEnergy.Content = $"Energy {ProcessKMValue(BotManager.Target.Mana)} / {ProcessKMValue(BotManager.Target.MaxMana)}";
             progressBarEnergyTarget.Maximum = BotManager.Target.MaxMana;
             progressBarEnergyTarget.Value = BotManager.Target.Mana;
 

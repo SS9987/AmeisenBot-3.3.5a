@@ -501,7 +501,7 @@ namespace AmeisenBotCore
             info.castTime = Utils.TryParseInt(str.Split('|')[0]);
             info.cost = Utils.TryParseInt(str.Split('|')[1]);
 
-            AmeisenLogger.Instance.Log(LogLevel.DEBUG, $"[SpellInfo] Name: {info.name}, Cost: {info.cost}, CastTime: {info.castTime} ms", "AmeisenCore");
+            AmeisenLogger.Instance.Log(LogLevel.DEBUG, $"[SpellInfo] Name: {info.name}, Cost: {info.cost}, CastTime: {info.castTime}s", "AmeisenCore");
             return info;
         }
 
