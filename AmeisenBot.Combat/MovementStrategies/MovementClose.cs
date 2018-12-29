@@ -14,7 +14,7 @@ namespace AmeisenBotCombat.MovementStrategies
 
         public Vector3 CalculatePosition(Me me, Unit target)
         {
-            if (Utils.GetDistance(me.pos, target.pos) > Distance)
+            if (target != null && Utils.GetDistance(me.pos, target.pos) > Distance)
             {
                 return target.pos;
             }

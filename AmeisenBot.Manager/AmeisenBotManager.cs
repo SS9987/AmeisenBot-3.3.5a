@@ -302,7 +302,7 @@ namespace AmeisenBotManager
             AmeisenEventHook.Subscribe(WowEvents.PLAYER_REGEN_DISABLED, OnRegenDisabled);
             AmeisenEventHook.Subscribe(WowEvents.PLAYER_REGEN_ENABLED, OnRegenEnabled);
             AmeisenEventHook.Subscribe(WowEvents.START_LOOT_ROLL, OnStartLootRoll);
-            AmeisenEventHook.Subscribe(WowEvents.COMBAT_LOG_EVENT_UNFILTERED, OnCombatLogEvent);
+            //AmeisenEventHook.Subscribe(WowEvents.COMBAT_LOG_EVENT_UNFILTERED, OnCombatLogEvent);
 
 
             // Start our object updates

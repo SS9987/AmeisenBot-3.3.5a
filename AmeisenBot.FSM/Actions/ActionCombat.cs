@@ -47,7 +47,6 @@ namespace AmeisenBotFSM.Actions
 
         public override void Start()
         {
-            WaypointQueue.Clear();
             base.Start();
         }
 
@@ -56,8 +55,10 @@ namespace AmeisenBotFSM.Actions
             if (WaypointQueue.Count > 0)
             {
                 base.DoThings();
-                WaypointQueue.Clear();
             }
+
+            Vector3 posToGoTo = CombatPackage.MovementStrategy.CalculatePosition(Me, Target);
+            HandleMovement(posToGoTo);
 
             if (AmeisenDataHolder.IsHealer)
             {
@@ -96,14 +97,6 @@ namespace AmeisenBotFSM.Actions
             if (spellToUse != null)
             {
                 CombatUtils.CastSpellByName(Me, Target, spellToUse.Name, false, true);
-            }
-
-            Vector3 posToGoTo = CombatPackage.MovementStrategy.CalculatePosition(Me, Target);
-            if (posToGoTo.X != Me.pos.X
-                && posToGoTo.Y != Me.pos.Y
-                && posToGoTo.Z != Me.pos.Z)
-            {
-                HandleMovement(posToGoTo);
             }
         }
     }

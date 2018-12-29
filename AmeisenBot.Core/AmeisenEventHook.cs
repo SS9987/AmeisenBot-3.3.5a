@@ -64,7 +64,7 @@ namespace AmeisenBotCore
             while (IsActive)
             {
                 // Unminified lua code is attached down below
-                string eventJson = AmeisenCore.GetLocalizedText("abEventJson='['for a,b in pairs(abEventTable)do abEventJson=abEventJson..'{'for c,d in pairs(b)do if type(d)==\"table\"then abEventJson=abEventJson..'\"args\": ['for e,f in pairs(d)do abEventJson=abEventJson..'\"'..f..'\"'if e<table.getn(d)then abEventJson=abEventJson..','end end;abEventJson=abEventJson..']}'if a<table.getn(abEventTable)then abEventJson=abEventJson..','end else if type(d)==\"string\"then abEventJson=abEventJson..'\"event\": \"'..d..'\",'else abEventJson=abEventJson..'\"time\": \"'..d..'\",'end end end end;abEventJson=abEventJson..']';abEventTable={};", "abEventJson");
+                string eventJson = AmeisenCore.GetLocalizedText("abEventJson='['for a,b in pairs(abEventTable)do abEventJson=abEventJson..'{'for c,d in pairs(b)do if type(d)==\"table\"then abEventJson=abEventJson..'\"args\": ['for e,f in pairs(d)do abEventJson=abEventJson..'\"'..f..'\"'if e<=table.getn(d)then abEventJson=abEventJson..','end end;abEventJson=abEventJson..']}'if a<table.getn(abEventTable)then abEventJson=abEventJson..','end else if type(d)==\"string\"then abEventJson=abEventJson..'\"event\": \"'..d..'\",'else abEventJson=abEventJson..'\"time\": \"'..d..'\",'end end end end;abEventJson=abEventJson..']'abEventTable={}", "abEventJson");
                 AmeisenLogger.Instance.Log(LogLevel.VERBOSE, $"LUA Events Json: {eventJson}", this);
 
                 List<RawEvent> rawEvents = new List<RawEvent>();
@@ -96,52 +96,3 @@ namespace AmeisenBotCore
         }
     }
 }
-
-/// Unminified Lua code
-
-// Lua code to catch events
-/*
-abFrame = CreateFrame("FRAME", "AbotEventFrame");
-abEventTable = {};
-
-function abEventHandler(self, event, ...)
-  table.insert(abEventTable, {time(), event, {...} })
-end
-abFrame:SetScript("OnEvent", abEventHandler);
-*/
-
-// Lua code to subscribe to events
-/*
-
-*/
-
-// Lua to convert my eventTable to a Json, Yeet this was fun
-/*
-abEventJson = '[';
-for a,b in pairs(abEventTable) do
-  abEventJson = abEventJson..'{'
-  for c,d in pairs(b) do
-    if type(d) == "table" then
-      abEventJson = abEventJson..'"args": ['
-      for e,f in pairs(d) do
-        abEventJson = abEventJson..'"'..f..'"'
-        if e<(table.getn(d)) then
-        abEventJson = abEventJson..','
-        end
-      end
-      abEventJson = abEventJson..']}'
-      if a<(table.getn(abEventTable)) then
-      abEventJson = abEventJson..','
-      end
-    else
-      if type(d) == "string" then
-        abEventJson = abEventJson..'"event": "'..d..'",'
-      else
-        abEventJson = abEventJson..'"time": "'..d..'",'
-      end
-    end
-  end
-end
-abEventJson = abEventJson..']';
-abEventTable={};
-*/

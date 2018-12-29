@@ -111,6 +111,7 @@ namespace AmeisenBotFSM.Actions
             {
                 Me.Update();
                 Vector3 initialPosition = Me.pos;
+                if (WaypointQueue.Count == 0) return;
                 Vector3 targetPosition = WaypointQueue.Dequeue();
 
                 double distance = Utils.GetDistance(initialPosition, targetPosition);
