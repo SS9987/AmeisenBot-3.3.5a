@@ -391,6 +391,35 @@ namespace AmeisenBotManager
                         new MovementClose(2.7)
                     );
 
+                case WowClass.Warlock:
+                    return new CPDefault(
+                        Character.Spells,
+                        new WarlockAffliction(Character.Spells),
+                        new MovementClose(28)
+                    );
+
+                case WowClass.Paladin:
+                    return new CPDefault(
+                        Character.Spells,
+                        new PaladinRetribution(Character.Spells),
+                        new MovementClose(2.8)
+                    );
+
+                case WowClass.Druid:
+                    AmeisenDataHolder.IsHealer = true;
+                    return new CPDefault(
+                        Character.Spells,
+                        new DruidRestoration(Character.Spells),
+                        new MovementClose(38)
+                    );
+
+                case WowClass.Hunter:
+                    return new CPDefault(
+                        Character.Spells,
+                        new HunterMarksman(Character.Spells),
+                        new MovementClose(33)
+                    );
+
                 default:
                     return new CPDefault(Character.Spells, null, new MovementClose());
             }
@@ -527,16 +556,18 @@ namespace AmeisenBotManager
             );
 
             int tries = 0;
-            while (AmeisenCore.CheckWorldLoaded())
+            while (!AmeisenCore.CheckWorldLoaded())
             {
-                Thread.Sleep(500);
+                Thread.Sleep(200);
                 tries++;
                 if (tries == 10)
                 {
                     break;
                 }
             }
+
             AmeisenDataHolder.IsInWorld = true;
+            AmeisenHook.IsNotInWorld = false;
         }
 
         private bool ConnectToServer() => AmeisenClient.Register(

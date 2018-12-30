@@ -26,6 +26,7 @@ namespace AmeisenBotCore
         private byte[] originalEndscene = new byte[] { 0xB8, 0x51, 0xD7, 0xCA, 0x64 };
         private uint returnAdress;
         private BlackMagic BlackMagic { get; set; }
+        public bool IsNotInWorld { get; set; }
 
         public AmeisenHook(BlackMagic blackmagic)
         {
@@ -33,6 +34,13 @@ namespace AmeisenBotCore
             Hook();
             hookJobs = new ConcurrentQueue<HookJob>();
             hookWorker = new Thread(new ThreadStart(DoWork));
+
+            while (!AmeisenCore.CheckWorldLoaded())
+            {
+                Thread.Sleep(200);
+            }
+
+            IsNotInWorld = false;
 
             if (isHooked)
             {
@@ -68,6 +76,12 @@ namespace AmeisenBotCore
         {
             while (isHooked)
             {
+                if (IsNotInWorld)
+                {
+                    Thread.Sleep(200);
+                    continue;
+                }
+
                 if (!hookJobs.IsEmpty)
                 {
                     if (hookJobs.TryDequeue(out HookJob currentJob))

@@ -85,18 +85,22 @@ namespace AmeisenBotUtilities
                 try { Name = GetMobNameFromBase(BaseAddress); } catch { }
             }
 
-            pos.X = BlackMagicInstance.ReadFloat(BaseAddress + 0x798);
-            pos.Y = BlackMagicInstance.ReadFloat(BaseAddress + 0x79C);
-            pos.Z = BlackMagicInstance.ReadFloat(BaseAddress + 0x7A0);
-            Rotation = BlackMagicInstance.ReadFloat(BaseAddress + 0x7A8);
+            try
+            {
+                pos.X = BlackMagicInstance.ReadFloat(BaseAddress + 0x798);
+                pos.Y = BlackMagicInstance.ReadFloat(BaseAddress + 0x79C);
+                pos.Z = BlackMagicInstance.ReadFloat(BaseAddress + 0x7A0);
+                Rotation = BlackMagicInstance.ReadFloat(BaseAddress + 0x7A8);
 
-            TargetGuid = BlackMagicInstance.ReadUInt64(Descriptor + 0x48);
+                TargetGuid = BlackMagicInstance.ReadUInt64(Descriptor + 0x48);
 
-            int currentlyCastingID = BlackMagicInstance.ReadInt(BaseAddress + 0xA6C);
-            int currentlyChannelingID = BlackMagicInstance.ReadInt(BaseAddress + 0xA80);
-            int combined = currentlyCastingID + currentlyChannelingID;
-            
-            IsCasting = combined > 0;
+                int currentlyCastingID = BlackMagicInstance.ReadInt(BaseAddress + 0xA6C);
+                int currentlyChannelingID = BlackMagicInstance.ReadInt(BaseAddress + 0xA80);
+                int combined = currentlyCastingID + currentlyChannelingID;
+
+                IsCasting = combined > 0;
+            }
+            catch { }
 
             // too cpu heavy
             /*try
@@ -152,7 +156,7 @@ namespace AmeisenBotUtilities
 
             try { DynamicUFlags = (BitVector32)BlackMagicInstance.ReadObject(Descriptor + 0x240, typeof(BitVector32)); } catch { }
 
-            try { IsDead = BlackMagicInstance.ReadByte(Descriptor + 0x12B) == 1; } catch { }            
+            try { IsDead = BlackMagicInstance.ReadByte(Descriptor + 0x12B) == 1; } catch { }
         }
     }
 }

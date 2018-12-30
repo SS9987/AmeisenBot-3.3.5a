@@ -182,6 +182,9 @@ namespace AmeisenBotCombat
             }
         }
 
+        public static double GetSpellCooldown(string spellName)
+            => double.Parse(AmeisenCore.GetLocalizedText($"start,duration,enabled = GetSpellCooldown(\"{spellName}\");cdLeft = (start + duration - GetTime()) * 1000;", "cdLeft"));
+
         /// <summary>
         /// Turn into a specified Units direction
         /// </summary>

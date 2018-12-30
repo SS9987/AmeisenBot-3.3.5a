@@ -15,15 +15,15 @@ namespace AmeisenBotCombat.SpellStrategies
         private bool IsBloodthirstKnown { get; set; }
         private bool IsWhirlwindKnown { get; set; }
         private bool IsBerserkerRageKnown { get; set; }
-        public bool IsHeroicStrikeKnown { get; private set; }
-        public bool IsHeroicThrowKnown { get; private set; }
-        public bool IsExecuteKnown { get; private set; }
-        public bool IsRecklessnessKnown { get; private set; }
-        public bool IsDeathWishKnown { get; private set; }
-        public bool IsEnragedRegenerationKnown { get; private set; }
-        public bool IsInterceptKnown { get; private set; }
-        public bool IsHamstringKnown { get; private set; }
-        public bool IsBattleShoutKnown { get; private set; }
+        private bool IsHeroicStrikeKnown { get; set; }
+        private bool IsHeroicThrowKnown { get; set; }
+        private bool IsExecuteKnown { get; set; }
+        private bool IsRecklessnessKnown { get; set; }
+        private bool IsDeathWishKnown { get; set; }
+        private bool IsEnragedRegenerationKnown { get; set; }
+        private bool IsInterceptKnown { get; set; }
+        private bool IsHamstringKnown { get; set; }
+        private bool IsBattleShoutKnown { get; set; }
 
         private bool IsInMainCombo { get; set; }
 
@@ -51,7 +51,7 @@ namespace AmeisenBotCombat.SpellStrategies
         public Spell DoRoutine(Me me, Unit target)
         {
             List<string> myAuras = AmeisenCore.GetAuras(LuaUnit.player);
-            List<string> targetAuras = AmeisenCore.GetAuras(LuaUnit.player);
+            List<string> targetAuras = AmeisenCore.GetAuras(LuaUnit.target);
 
             Spell spellToUse = null;
             double targetDistance = Utils.GetDistance(me.pos, target.pos);
@@ -82,7 +82,7 @@ namespace AmeisenBotCombat.SpellStrategies
                     // Heroic Strike wont't interrupt main-combo
                     if (IsHeroicStrikeKnown)
                     {
-                        CombatUtils.CastSpellByName(me,target,"Heroic Strike", false, false); // don't wait on cooldown
+                        CombatUtils.CastSpellByName(me, target, "Heroic Strike", false, false); // don't wait on cooldown
                     }
                 }
 
@@ -99,7 +99,7 @@ namespace AmeisenBotCombat.SpellStrategies
                 }
 
                 // use hamstring so our enemy can't escape
-                if (IsHamstringKnown && targetAuras.Contains("hamstring"))
+                if (IsHamstringKnown && !targetAuras.Contains("hamstring"))
                 {
                     spellToUse = TryUseSpell("Hamstring", me);
                     if (spellToUse != null) { return spellToUse; }
@@ -182,18 +182,12 @@ namespace AmeisenBotCombat.SpellStrategies
             if (spellToUse == null) { return null; }
             if (me.Rage < spellToUse.Costs) { return null; }
 
-            if (GetSpellCooldown(spellToUse.Name) < 0)
+            if (CombatUtils.GetSpellCooldown(spellToUse.Name) < 0)
             {
                 IsInMainCombo = false;
                 return spellToUse;
             }
             return null;
-        }
-
-        private double GetSpellCooldown(string spellName)
-        {
-            double cooldown = double.Parse(AmeisenCore.GetLocalizedText($"start,duration,enabled = GetSpellCooldown(\"{spellName}\");cdLeft = (start + duration - GetTime()) * 1000;", "cdLeft"));
-            return cooldown;
         }
     }
 }

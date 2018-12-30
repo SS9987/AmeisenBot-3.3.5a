@@ -93,10 +93,13 @@ namespace AmeisenBotFSM.Actions
                 CombatUtils.AttackTarget();
             }
 
-            Spell spellToUse = CombatPackage.SpellStrategy.DoRoutine(Me, Target);
-            if (spellToUse != null)
+            if (CombatPackage.SpellStrategy != null)
             {
-                CombatUtils.CastSpellByName(Me, Target, spellToUse.Name, false, true);
+                Spell spellToUse = CombatPackage.SpellStrategy.DoRoutine(Me, Target);
+                if (spellToUse != null)
+                {
+                    CombatUtils.CastSpellByName(Me, Target, spellToUse.Name, false, true);
+                }
             }
         }
     }
