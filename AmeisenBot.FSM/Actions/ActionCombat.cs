@@ -77,6 +77,8 @@ namespace AmeisenBotFSM.Actions
             if (WaypointQueue.Count > 0)
             {
                 base.DoThings();
+                // Clear to process combat stuff
+                WaypointQueue.Clear();
             }
 
             // Try to get a target
@@ -115,14 +117,6 @@ namespace AmeisenBotFSM.Actions
                 }
             }
 
-            // Handle Movement stuff
-            if (CombatPackage.MovementStrategy != null)
-            {
-                Me?.Update();
-                Target?.Update();
-                HandleMovement(CombatPackage.MovementStrategy.CalculatePosition(Me, Target));
-            }
-
             // Attack target if we are no healer
             if (!Me.InCombat && !AmeisenDataHolder.IsHealer) { CombatUtils.AttackTarget(); }
 
@@ -133,6 +127,14 @@ namespace AmeisenBotFSM.Actions
                 Target?.Update();
                 Spell spellToUse = CombatPackage.SpellStrategy.DoRoutine(Me, Target, Pet);
                 if (spellToUse != null) { CombatUtils.CastSpellByName(Me, Target, spellToUse.Name, false, true); }
+            }
+
+            // Handle Movement stuff
+            if (CombatPackage.MovementStrategy != null)
+            {
+                Me?.Update();
+                Target?.Update();
+                HandleMovement(CombatPackage.MovementStrategy.CalculatePosition(Me, Target));
             }
         }
 

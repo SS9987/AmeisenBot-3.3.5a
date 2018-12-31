@@ -111,7 +111,11 @@ namespace AmeisenBotFSM.Actions
             {
                 Me.Update();
                 Vector3 initialPosition = Me.pos;
-                if (WaypointQueue.Count == 0) return;
+                if (WaypointQueue.Count == 0)
+                {
+                    return;
+                }
+
                 Vector3 targetPosition = WaypointQueue.Dequeue();
 
                 double distance = Utils.GetDistance(initialPosition, targetPosition);
@@ -138,7 +142,7 @@ namespace AmeisenBotFSM.Actions
                             double posDistance = Utils.GetDistance(Me.pos, pos);
                             int tries = 0;
 
-                            while (tries < 20 && posDistance > 3)
+                            while (tries < (int)posDistance * 2 && posDistance > 3)
                             {
                                 AmeisenCore.MovePlayerToXYZ(pos, InteractionType.MOVE);
                                 posDistance = Utils.GetDistance(Me.pos, pos);
@@ -146,7 +150,7 @@ namespace AmeisenBotFSM.Actions
                                 tries++;
                             }
 
-                            if (tries == 19)
+                            if (tries == (int)posDistance * 2 - 1)
                             {
                                 WaypointQueue.Clear();
                                 break;
