@@ -48,7 +48,9 @@ namespace AmeisenBotCombat.SpellStrategies
             IsInMainCombo = false;
         }
 
-        public Spell DoRoutine(Me me, Unit target)
+        public void Startup(Me me, Unit target, Unit pet) { }
+
+        public Spell DoRoutine(Me me, Unit target, Unit pet)
         {
             List<string> myAuras = AmeisenCore.GetAuras(LuaUnit.player);
             List<string> targetAuras = AmeisenCore.GetAuras(LuaUnit.target);

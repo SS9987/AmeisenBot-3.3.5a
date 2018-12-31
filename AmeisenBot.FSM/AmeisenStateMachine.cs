@@ -63,7 +63,7 @@ namespace AmeisenBotFSM
         }
 
         public void LoadNewCombatClass(
-            AmeisenDataHolder ameisenDataHolder, 
+            AmeisenDataHolder ameisenDataHolder,
             IAmeisenCombatPackage combatPackage,
             AmeisenDBManager ameisenDBManager,
             AmeisenNavmeshClient ameisenNavmeshClient)
@@ -79,13 +79,17 @@ namespace AmeisenBotFSM
         /// Pop the state Stack of the bot, calls the Start() of new State and the Stop() of current State.
         /// </summary>
         /// <param name="botState">the state you want to change to</param>
-        public BotState PopAction([CallerMemberName]string functionName = "")
+        public BotState PopAction(BotState botState, [CallerMemberName]string functionName = "")
         {
-            AmeisenLogger.Instance.Log(LogLevel.VERBOSE, $"FSM Pop called by: {functionName}", this);
-            GetCurrentStateAction(GetCurrentState())?.StartExit.Invoke();
-            BotState tmpState = StateStack.Pop();
-            GetCurrentStateAction(GetCurrentState())?.StartAction.Invoke();
-            return tmpState;
+            if (GetCurrentState() == botState)
+            {
+                AmeisenLogger.Instance.Log(LogLevel.VERBOSE, $"FSM Pop called by: {functionName}", this);
+                GetCurrentStateAction(GetCurrentState())?.StartExit.Invoke();
+                BotState tmpState = StateStack.Pop();
+                GetCurrentStateAction(GetCurrentState())?.StartAction.Invoke();
+                return tmpState;
+            }
+            return GetCurrentState();
         }
 
         /// <summary>

@@ -48,7 +48,9 @@ namespace AmeisenBotCombat.SpellStrategies
             IsDivinePleaKnown = Spells.Where(spell => spell.Name == "Divine Plea").ToList().Count > 0;
         }
 
-        public Spell DoRoutine(Me me, Unit target)
+        public void Startup(Me me, Unit target, Unit pet) { }
+
+        public Spell DoRoutine(Me me, Unit target, Unit pet)
         {
             List<string> myAuras = AmeisenCore.GetAuras(LuaUnit.player);
             List<string> targetAuras = AmeisenCore.GetAuras(LuaUnit.target);

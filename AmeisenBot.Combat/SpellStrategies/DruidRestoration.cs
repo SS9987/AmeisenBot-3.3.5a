@@ -38,8 +38,12 @@ namespace AmeisenBotCombat.SpellStrategies
             IsInnervateKnown = Spells.Where(spell => spell.Name == "Innervate").ToList().Count > 0;
         }
 
-        public Spell DoRoutine(Me me, Unit target)
+        public void Startup(Me me, Unit target, Unit pet) { }
+
+        public Spell DoRoutine(Me me, Unit target, Unit pet)
         {
+            if (me == null || target == null) return null;
+
             List<string> myAuras = AmeisenCore.GetAuras(LuaUnit.player);
             List<string> targetAuras = AmeisenCore.GetAuras(LuaUnit.target);
 
@@ -54,10 +58,10 @@ namespace AmeisenBotCombat.SpellStrategies
             }
 
             // our Barkskin
-            if (IsMarkOfTheWildKnown && !targetAuras.Contains("barkskin"))
+            if (IsMarkOfTheWildKnown && !myAuras.Contains("barkskin"))
             {
                 spellToUse = TryUseSpell("Barkskin", me);
-                if (spellToUse != null) { return spellToUse; }
+                if (spellToUse != null) { CombatUtils.CastSpellByName(me, target, "Barkskin", true); } // only cast on me
             }
 
             // Innervate mana regen
@@ -71,35 +75,35 @@ namespace AmeisenBotCombat.SpellStrategies
             if (targetDistance < 38)
             {
                 // Swiftmend burst heal
-                if (IsSwiftmendKnown && me.HealthPercentage < 40 && targetAuras.Contains("rejuvenation"))
+                if (IsSwiftmendKnown && target.HealthPercentage < 40 && targetAuras.Contains("rejuvenation"))
                 {
                     spellToUse = TryUseSpell("Swiftmend", me);
                     if (spellToUse != null) { return spellToUse; }
                 }
 
                 // Regrowth HOT
-                if (IsRegrowthKnown && me.HealthPercentage < 80 && !targetAuras.Contains("regrowth"))
+                if (IsRegrowthKnown && target.HealthPercentage < 80 && !targetAuras.Contains("regrowth"))
                 {
                     spellToUse = TryUseSpell("Regrowth", me);
                     if (spellToUse != null) { return spellToUse; }
                 }
 
                 // Lifebloom HOT
-                if (IsLifebloomKnown && me.HealthPercentage < 90 && !targetAuras.Contains("lifebloom"))
+                if (IsLifebloomKnown && target.HealthPercentage < 90 && !targetAuras.Contains("lifebloom"))
                 {
                     spellToUse = TryUseSpell("Lifebloom", me);
                     if (spellToUse != null) { return spellToUse; }
                 }
 
                 // Wild Growth HOT
-                if (IsWildGrowthKnown && me.HealthPercentage < 70 && !targetAuras.Contains("wild growth"))
+                if (IsWildGrowthKnown && target.HealthPercentage < 70 && !targetAuras.Contains("wild growth"))
                 {
                     spellToUse = TryUseSpell("Wild Growth", me);
                     if (spellToUse != null) { return spellToUse; }
                 }
 
                 // Rejuvenation HOT
-                if (IsRejuvenationKnown && me.HealthPercentage < 70 && !targetAuras.Contains("rejuvenation"))
+                if (IsRejuvenationKnown && target.HealthPercentage < 70 && !targetAuras.Contains("rejuvenation"))
                 {
                     spellToUse = TryUseSpell("Rejuvenation", me);
                     if (spellToUse != null) { return spellToUse; }

@@ -1,14 +1,11 @@
 ﻿using AmeisenBotUtilities;
 using AmeisenBotUtilities.Structs;
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace AmeisenBot.Clients
 {
@@ -16,7 +13,7 @@ namespace AmeisenBot.Clients
     {
         private string Ip { get; set; }
         private int Port { get; set; }
-        TcpClient TcpClient { get; set; }
+        private TcpClient TcpClient { get; set; }
 
         public AmeisenNavmeshClient(string ip, int port)
         {
@@ -43,7 +40,7 @@ namespace AmeisenBot.Clients
 
             if (!TcpClient.Connected)
             {
-                TcpClient.Connect(Ip, Port);
+                try { TcpClient.Connect(Ip, Port); } catch { return path; }
                 if (!TcpClient.Connected)
                 {
                     return path;
@@ -60,7 +57,7 @@ namespace AmeisenBot.Clients
             {
                 sWriter.WriteLine(JsonConvert.SerializeObject(pathRequest) + " &gt;");
                 sWriter.Flush();
-                
+
                 pathJson = sReader.ReadLine().Replace("&gt;", "");
                 path = JsonConvert.DeserializeObject<List<Vector3>>(pathJson);
                 return path;

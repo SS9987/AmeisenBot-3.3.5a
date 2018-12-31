@@ -192,15 +192,15 @@ namespace AmeisenBotCombat
         /// <param name="unit">unit to turn to</param>
         public static void FaceUnit(Me me, Unit unit)
         {
-            /*if (unit != null)
+            if (unit != null)
             {
-                unit.Update();
+                /*unit.Update();
                 AmeisenCore.MovePlayerToXYZ(
                     unit.pos,
                     InteractionType.FACETARGET,
-                    0);
-            }*/
-            AmeisenCore.FaceUnit(me, unit);
+                    0);*/
+                AmeisenCore.FaceUnit(me, unit);
+            }
         }
 
         /// <summary>

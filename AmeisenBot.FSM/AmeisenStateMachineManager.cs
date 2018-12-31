@@ -155,34 +155,28 @@ namespace AmeisenBotFSM
         {
             if (AmeisenDataHolder.LootableUnits.Count > 0)
             {
-                if (StateMachine.GetCurrentState() == BotState.Idle)
-                {
-                    StateMachine.PushAction(BotState.Loot);
-                }
+                StateMachine.PushAction(BotState.Loot);
                 return true;
             }
-            else if (StateMachine.GetCurrentState() == BotState.Loot)
+            else
             {
-                StateMachine.PopAction();
+                StateMachine.PopAction(BotState.Loot);
+                return false;
             }
-            return false;
         }
 
         private bool BotStuffCheck()
         {
             if (AmeisenDataHolder.IsAllowedToDoOwnStuff)
             {
-                if (StateMachine.GetCurrentState() == BotState.Idle)
-                {
-                    StateMachine.PushAction(BotState.BotStuff);
-                }
+                StateMachine.PushAction(BotState.BotStuff);
                 return true;
             }
-            else if (StateMachine.GetCurrentState() == BotState.BotStuff)
+            else
             {
-                StateMachine.PopAction();
+                StateMachine.PopAction(BotState.BotStuff);
+                return false;
             }
-            return false;
         }
 
         private bool FollowCheck()
@@ -200,21 +194,21 @@ namespace AmeisenBotFSM
 
                 Me.Update();
                 activeUnit?.Update();
+
                 if (activeUnit != null)
                 {
                     double distance = Utils.GetDistance(Me.pos, activeUnit.pos);
 
-                    if (AmeisenDataHolder.IsAllowedToFollowParty && distance > AmeisenDataHolder.Settings.followDistance)
+                    if (AmeisenDataHolder.IsAllowedToFollowParty
+                        && distance > AmeisenDataHolder.Settings.followDistance)
                     {
-                        if (StateMachine.GetCurrentState() == BotState.Idle)
-                        {
-                            StateMachine.PushAction(BotState.Follow);
-                        }
+                        StateMachine.PushAction(BotState.Follow);
                         return true;
                     }
                     else if (StateMachine.GetCurrentState() == BotState.Follow)
                     {
-                        StateMachine.PopAction();
+                        StateMachine.PopAction(BotState.Follow);
+                        return false;
                     }
                 }
             }
@@ -229,20 +223,13 @@ namespace AmeisenBotFSM
                     || (AmeisenDataHolder.IsAllowedToAssistParty
                     && CombatUtils.GetPartymembersInCombat(Me, AmeisenDataHolder.ActiveWoWObjects).Count > 0))
                 {
-                    if (StateMachine.GetCurrentState() != BotState.Idle)
-                    {
-                        StateMachine.PopAction();
-                    }
-
-                    if (StateMachine.GetCurrentState() != BotState.Combat)
-                    {
-                        StateMachine.PushAction(BotState.Combat);
-                    }
+                    StateMachine.PushAction(BotState.Combat);
                     return true;
                 }
-                else if (StateMachine.GetCurrentState() == BotState.Combat)
+                else
                 {
-                    StateMachine.PopAction();
+                    StateMachine.PopAction(BotState.Combat);
+                    return false;
                 }
             }
             return false;
@@ -268,17 +255,13 @@ namespace AmeisenBotFSM
             {
                 if (Me.IsDead)
                 {
-                    if (StateMachine.GetCurrentState() != BotState.Idle)
-                    {
-                        StateMachine.PopAction();
-                    }
-
                     StateMachine.PushAction(BotState.Dead);
                     return true;
                 }
-                else if (StateMachine.GetCurrentState() == BotState.Dead)
+                else
                 {
-                    StateMachine.PopAction();
+                    StateMachine.PopAction(BotState.Dead);
+                    return false;
                 }
             }
             return false;

@@ -22,7 +22,7 @@ namespace AmeisenBotCombat.SpellStrategies
         private bool IsLifeTapKnown { get; set; }
         private bool IsFearKnown { get; set; }
         private bool IsCurseOfAgonyKnown { get; set; }
-        
+
         public WarlockAffliction(List<Spell> spells)
         {
             Spells = spells;
@@ -40,7 +40,9 @@ namespace AmeisenBotCombat.SpellStrategies
             IsCurseOfAgonyKnown = Spells.Where(spell => spell.Name == "Curse of Agony").ToList().Count > 0;
         }
 
-        public Spell DoRoutine(Me me, Unit target)
+        public void Startup(Me me, Unit target, Unit pet) { }
+
+        public Spell DoRoutine(Me me, Unit target, Unit pet)
         {
             List<string> myAuras = AmeisenCore.GetAuras(LuaUnit.player);
             List<string> targetAuras = AmeisenCore.GetAuras(LuaUnit.target);

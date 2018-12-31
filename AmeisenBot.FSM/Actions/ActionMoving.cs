@@ -142,7 +142,7 @@ namespace AmeisenBotFSM.Actions
                             {
                                 AmeisenCore.MovePlayerToXYZ(pos, InteractionType.MOVE);
                                 posDistance = Utils.GetDistance(Me.pos, pos);
-                                Thread.Sleep(50);
+                                Thread.Sleep(100);
                                 tries++;
                             }
 
