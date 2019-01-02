@@ -1,4 +1,5 @@
-﻿using AmeisenBotCore;
+﻿using AmeisenBotCombat;
+using AmeisenBotCore;
 using AmeisenBotData;
 using AmeisenBotDB;
 using AmeisenBotLogger;
@@ -49,6 +50,9 @@ namespace AmeisenBotManager
             AmeisenDataHolder = ameisenDataHolder;
             AmeisenDBManager = ameisenDBManager;
             RefreshObjects();
+
+            // Get Partymembers
+            ameisenDataHolder.Partymembers = CombatUtils.GetPartymembers(Me, ActiveWoWObjects);
         }
 
         /// <summary>
@@ -157,11 +161,7 @@ namespace AmeisenBotManager
 
         private void RefreshObjects()
         {
-            if (!AmeisenDataHolder.IsInWorld
-                || AmeisenCore.CheckLoadingScreen())
-            {
-                return;
-            }
+            if (!AmeisenDataHolder.IsInWorld) { return; }
 
             ActiveWoWObjects = AmeisenCore.GetAllWoWObjects();
 
@@ -221,7 +221,7 @@ namespace AmeisenBotManager
         /// </summary>
         private void RefreshObjectsAsync()
         {
-            if (AmeisenCore.CheckLoadingScreen())
+            if (AmeisenCore.IsInLoadingScreen())
             {
                 return;
             }

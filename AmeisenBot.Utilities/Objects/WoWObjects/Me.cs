@@ -12,10 +12,11 @@ namespace AmeisenBotUtilities
         public int MaxExp { get; set; }
         public WowRace Race { get; set; }
         public WowClass Class { get; set; }
-        public ulong PartyleaderGUID { get; set; }
+        public ulong PartyleaderGuid { get; set; }
         public List<ulong> PartymemberGuids { get; set; }
         public uint PlayerBase { get; set; }
         public ulong PetGuid { get; set; }
+        public int AreaId { get; set; }
 
         public Me(uint baseAddress, BlackMagic blackMagic) : base(baseAddress, blackMagic)
         {
@@ -58,7 +59,7 @@ namespace AmeisenBotUtilities
             sb.Append($" >> exp: {Exp}");
             sb.Append($" >> maxExp: {MaxExp}");
 
-            sb.Append($" >> partyLeader: {PartyleaderGUID}");
+            sb.Append($" >> partyLeader: {PartyleaderGuid}");
 
             int count = 1;
             foreach (ulong guid in PartymemberGuids)
@@ -99,12 +100,27 @@ namespace AmeisenBotUtilities
                 PetGuid = BlackMagicInstance.ReadUInt64(Offsets.petGuid);
 
                 PartymemberGuids = new List<ulong>();
-                PartyleaderGUID = BlackMagicInstance.ReadUInt64(Offsets.partyLeader);
+                //PartyleaderGuid = BlackMagicInstance.ReadUInt64(Offsets.partyLeader);
+                PartyleaderGuid = BlackMagicInstance.ReadUInt64(Offsets.raidLeader);
 
                 PartymemberGuids.Add(BlackMagicInstance.ReadUInt64(Offsets.partyPlayer1));
                 PartymemberGuids.Add(BlackMagicInstance.ReadUInt64(Offsets.partyPlayer2));
                 PartymemberGuids.Add(BlackMagicInstance.ReadUInt64(Offsets.partyPlayer3));
                 PartymemberGuids.Add(BlackMagicInstance.ReadUInt64(Offsets.partyPlayer4));
+
+                // try to add raidmembers
+                for (uint g = 0; g < 8; g++)
+                {
+                    for (uint p = 0; p < 5; p++)
+                    {
+                        uint address = Offsets.raidGroup1 + (g * Offsets.raidGroupOffset) + (p * Offsets.raidPlayerOffset);
+                        ulong guid = BlackMagicInstance.ReadUInt64(address);
+                        if (!PartymemberGuids.Contains(guid))
+                        {
+                            PartymemberGuids.Add(guid);
+                        }
+                    }
+                }
             }
             catch { }
         }

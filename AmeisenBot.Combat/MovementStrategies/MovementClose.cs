@@ -7,7 +7,7 @@ namespace AmeisenBotCombat.MovementStrategies
     {
         private double Distance { get; set; }
 
-        public MovementClose(double distance = 2.0)
+        public MovementClose(double distance = 3.0)
         {
             Distance = distance;
         }

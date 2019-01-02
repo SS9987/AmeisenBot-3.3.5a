@@ -250,10 +250,10 @@ namespace AmeisenBotCombat
         /// <param name="me">me object</param>
         /// <param name="activeWowObjects">all active wow objects</param>
         /// <returns>a possible target unit</returns>
-        public static Unit AssistParty(Me me, List<WowObject> activeWowObjects)
+        public static Unit AssistParty(Me me, List<WowObject> activeWowObjects, List<Unit> partymembers)
         {
             // Get the one with the lowest hp and assist him/her
-            List<Unit> units = GetPartymembersInCombat(me, activeWowObjects);
+            List<Unit> units = GetPartymembersInCombat(me, partymembers);
             if (units.Count > 0)
             {
                 foreach (Unit u in units.OrderBy(o => o.HealthPercentage).ToList())
@@ -316,6 +316,7 @@ namespace AmeisenBotCombat
         {
             // Get the one with the lowest hp and target him/her
             List<Unit> units = GetPartymembers(me, activeWowObjects);
+            units.Add(me);
             if (units.Count > 0)
             {
                 List<Unit> unitsSorted = units.OrderBy(o => o.HealthPercentage).ToList();
@@ -330,25 +331,23 @@ namespace AmeisenBotCombat
         /// Check if any of our partymembers are in combat
         /// </summary>
         /// <returns>returns all partymembers in combat</returns>
-        public static List<Unit> GetPartymembersInCombat(Me me, List<WowObject> activeWowObjects)
+        public static List<Unit> GetPartymembersInCombat(Me me, List<Unit> partymembers)
         {
             List<Unit> inCombatUnits = new List<Unit>();
+
+            if (partymembers == null || partymembers.Count == 0)
+            {
+                return inCombatUnits;
+            }
+
             try
             {
-                foreach (ulong guid in me.PartymemberGuids)
+                foreach (Unit obj in partymembers)
                 {
-                    foreach (WowObject obj in activeWowObjects)
+                    obj.Update();
+                    if (obj.InCombat)
                     {
-                        if (obj.GetType() == typeof(Unit)
-                            || obj.GetType() == typeof(Player)
-                            || obj.GetType() == typeof(Me))
-                        {
-                            ((Unit)obj).Update();
-                            if (guid == obj.Guid && ((Unit)obj).InCombat)
-                            {
-                                inCombatUnits.Add(((Unit)obj));
-                            }
-                        }
+                        inCombatUnits.Add(obj);
                     }
                 }
             }
@@ -365,19 +364,16 @@ namespace AmeisenBotCombat
             List<Unit> inCombatUnits = new List<Unit>();
             try
             {
-                foreach (ulong guid in me.PartymemberGuids)
+                foreach (WowObject obj in activeWowObjects)
                 {
-                    foreach (WowObject obj in activeWowObjects)
+                    if (obj.GetType() == typeof(Unit)
+                        || obj.GetType() == typeof(Player)
+                        || obj.GetType() == typeof(Me))
                     {
-                        if (obj.GetType() == typeof(Unit)
-                            || obj.GetType() == typeof(Player)
-                            || obj.GetType() == typeof(Me))
+                        if (me.PartymemberGuids.Contains(obj.Guid))
                         {
-                            if (guid == obj.Guid)
-                            {
-                                inCombatUnits.Add(((Unit)obj));
-                                ((Unit)obj).Update();
-                            }
+                            inCombatUnits.Add(((Unit)obj));
+                            ((Unit)obj).Update();
                         }
                     }
                 }

@@ -6,6 +6,8 @@ using AmeisenMovement;
 using AmeisenMovement.Structs;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 using static AmeisenBotFSM.Objects.Delegates;
 
 namespace AmeisenBotFSM.Actions
@@ -16,7 +18,6 @@ namespace AmeisenBotFSM.Actions
         public override DoThings StartDoThings { get { return DoThings; } }
         public override Exit StartExit { get { return Stop; } }
         private Unit ActiveUnit { get; set; }
-        private List<Unit> ActiveUnits { get; set; }
         private AmeisenDataHolder AmeisenDataHolder { get; set; }
         private AmeisenDBManager AmeisenDBManager { get; set; }
         private AmeisenMovementEngine AmeisenMovementEngine { get; set; }
@@ -50,16 +51,21 @@ namespace AmeisenBotFSM.Actions
             {
                 // Do the movement stuff
                 base.DoThings();
+                Thread.Sleep(100);
                 return;
-            }
-
-            ActiveUnits = GetUnitsToFollow();
+            }          
+            
             RefreshActiveUnit();
-
             Me?.Update();
             ActiveUnit?.Update();
 
             if (Me == null || ActiveUnit == null)
+            {
+                return;
+            }
+
+            // When we are on different maps, stop following
+            if (Me.MapID != ActiveUnit.MapID)
             {
                 return;
             }
@@ -122,7 +128,6 @@ namespace AmeisenBotFSM.Actions
         public override void Start()
         {
             base.Start();
-            ActiveUnits = GetUnitsToFollow();
 
             Random rnd = new Random();
             XOffset = rnd.NextDouble() * AmeisenDataHolder.Settings.followDistance;
@@ -190,49 +195,26 @@ namespace AmeisenBotFSM.Actions
                 posToMoveTo.Z);
         }
 
-        /// <summary>
-        /// Returns a list with Units that we are allowed to follow: Party Units if:
-        /// AmeisenDataHolder.Instance.IsAllowedToFollowParty is true. ...
-        /// </summary>
-        /// <returns>List containing all Units we are able to follow</returns>
-        private List<Unit> GetUnitsToFollow()
-        {
-            List<Unit> tempList = new List<Unit>();
 
-            try
-            {
-                if (AmeisenDataHolder.IsAllowedToFollowParty)
-                {
-                    List<ulong> partymembers = Me.PartymemberGuids;
-                    foreach (ulong guid in partymembers)
-                    {
-                        if (guid != 0)
-                        {
-                            tempList.Add((Unit)GetWoWObjectFromGUID(guid));
-                        }
-                    }
-                }
-            }
-            catch { }
-
-            return tempList;
-        }
-
-        // Get the first Unit from our active Unit list and refresh it.
         private void RefreshActiveUnit()
         {
-            foreach (Unit u in ActiveUnits)
+            foreach (Unit u in AmeisenDataHolder.Partymembers)
             {
-                if (u == null)
+                if (u != null)
                 {
-                    continue;
-                }
+                    if (u.Guid != Me.PartyleaderGuid)
+                    {
+                        continue;
+                    }
 
-                u.Update();
-                ActiveUnit = u;
-                return;
+                    u.Update();
+                    ActiveUnit = u;
+                    return;
+                }
             }
-            ActiveUnit = null;
+
+            ActiveUnit = (Unit)GetWoWObjectFromGUID(Me.PartyleaderGuid);
+            AmeisenDataHolder.Partymembers.Add(ActiveUnit);
         }
     }
 }

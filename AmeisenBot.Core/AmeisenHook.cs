@@ -35,7 +35,7 @@ namespace AmeisenBotCore
             hookJobs = new ConcurrentQueue<HookJob>();
             hookWorker = new Thread(new ThreadStart(DoWork));
 
-            while (!AmeisenCore.CheckWorldLoaded())
+            while (!AmeisenCore.IsWorldLoaded())
             {
                 Thread.Sleep(200);
             }
@@ -76,9 +76,9 @@ namespace AmeisenBotCore
         {
             while (isHooked)
             {
-                if (IsNotInWorld)
+                if (AmeisenCore.IsInLoadingScreen())
                 {
-                    Thread.Sleep(200);
+                    Thread.Sleep(50);
                     continue;
                 }
 
@@ -100,7 +100,7 @@ namespace AmeisenBotCore
                         currentJob.IsFinished = true;
                     }
                 }
-                Thread.Sleep(5);
+                Thread.Sleep(1);
             }
         }
 
@@ -208,9 +208,10 @@ namespace AmeisenBotCore
 
             try
             {
-                while (isInjectionUsed)
+                if (AmeisenCore.IsInLoadingScreen())
                 {
                     Thread.Sleep(5);
+                    return returnBytes.ToArray();
                 }
 
                 isInjectionUsed = true;
@@ -221,10 +222,10 @@ namespace AmeisenBotCore
                 {
                     BlackMagic.Asm.AddLine(s);
                 }
-                BlackMagic.Asm.Inject(codeCaveForInjection);
 
                 // there is code to be executed
                 BlackMagic.WriteInt(codeToExecute, 1);
+                BlackMagic.Asm.Inject(codeCaveForInjection);
 
                 // we don't need this atm
                 //AmeisenManager.Instance().GetBlackMagic().Asm.AddLine("JMP " + (endsceneReturnAddress));
@@ -233,7 +234,7 @@ namespace AmeisenBotCore
                 // wait for the code ti be executed
                 while (BlackMagic.ReadInt(codeToExecute) > 0)
                 {
-                    Thread.Sleep(5);
+                    Thread.Sleep(1);
                 }
 
                 // if we want to read the return value, do it

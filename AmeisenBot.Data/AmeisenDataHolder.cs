@@ -27,6 +27,7 @@ namespace AmeisenBotData
         public Queue<Unit> LootableUnits { get; set; }
         public bool IsInWorld { get; set; }
         public bool IsHealer { get; set; }
+        public List<Unit> Partymembers { get; set; }
 
         public AmeisenDataHolder()
         {

@@ -163,6 +163,11 @@ namespace AmeisenBotLogger
 
             if (File.Exists(logPath + logName))
             {
+                if(File.Exists(logPath + newLogName))
+                {
+                    File.Delete(logPath + newLogName);
+                }
+
                 File.Move(logPath + logName, logPath + newLogName);
             }
 

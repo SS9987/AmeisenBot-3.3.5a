@@ -9,6 +9,7 @@ using AmeisenBotFSM.Enums;
 using AmeisenBotLogger;
 using AmeisenBotUtilities;
 using AmeisenMovement;
+using System;
 using System.Threading;
 
 namespace AmeisenBotFSM
@@ -21,7 +22,9 @@ namespace AmeisenBotFSM
         private AmeisenDataHolder AmeisenDataHolder { get; set; }
         private AmeisenDBManager AmeisenDBManager { get; set; }
         private AmeisenNavmeshClient AmeisenNavmeshClient { get; set; }
+        private AmeisenCharacterManager AmeisenCharacterManager { get; set; }
         private IAmeisenCombatPackage CombatPackage { get; set; }
+        private AmeisenMovementEngine AmeisenMovementEngine { get; set; }
         private Thread MainWorker { get; set; }
         private Thread StateWatcherWorker { get; set; }
 
@@ -51,6 +54,8 @@ namespace AmeisenBotFSM
             AmeisenDBManager = ameisenDBManager;
             CombatPackage = combatPackage;
             AmeisenNavmeshClient = ameisenNavmeshClient;
+            AmeisenCharacterManager = characterManager;
+            AmeisenMovementEngine = ameisenMovementEngine;
 
             MainWorker = new Thread(new ThreadStart(DoWork));
             StateWatcherWorker = new Thread(new ThreadStart(WatchForStateChanges));
@@ -105,8 +110,7 @@ namespace AmeisenBotFSM
             {
                 Thread.Sleep(AmeisenDataHolder.Settings.stateMachineStateUpdateMillis);
 
-                if (!AmeisenDataHolder.IsInWorld
-                    || AmeisenCore.CheckLoadingScreen())
+                if (!AmeisenDataHolder.IsInWorld)
                 {
                     continue;
                 }
@@ -123,6 +127,12 @@ namespace AmeisenBotFSM
                     continue;
                 }
 
+                // Is me supposed to follow
+                if (FollowCheck())
+                {
+                    continue;
+                }
+
                 // Am I dead?
                 if (DeadCheck())
                 {
@@ -131,12 +141,6 @@ namespace AmeisenBotFSM
 
                 // Bot stuff check
                 if (BotStuffCheck())
-                {
-                    continue;
-                }
-
-                // Is me supposed to follow
-                if (FollowCheck())
                 {
                     continue;
                 }
@@ -181,12 +185,12 @@ namespace AmeisenBotFSM
 
         private bool FollowCheck()
         {
-            if (Me.PartyleaderGUID != 0)
+            if (Me.PartyleaderGuid != 0)
             {
                 Unit activeUnit = null;
                 foreach (WowObject p in AmeisenDataHolder.ActiveWoWObjects)
                 {
-                    if (p.Guid == Me.PartyleaderGUID)
+                    if (p.Guid == Me.PartyleaderGuid)
                     {
                         activeUnit = (Unit)p;
                     }
@@ -221,7 +225,7 @@ namespace AmeisenBotFSM
             {
                 if (Me.InCombat
                     || (AmeisenDataHolder.IsAllowedToAssistParty
-                    && CombatUtils.GetPartymembersInCombat(Me, AmeisenDataHolder.ActiveWoWObjects).Count > 0))
+                    && CombatUtils.GetPartymembersInCombat(Me, AmeisenDataHolder.Partymembers).Count > 0))
                 {
                     StateMachine.PushAction(BotState.Combat);
                     return true;
@@ -253,7 +257,7 @@ namespace AmeisenBotFSM
         {
             if (AmeisenDataHolder.IsAllowedToRevive)
             {
-                if (Me.IsDead)
+                if (Me.IsDead) // || AmeisenCore.IsGhost(LuaUnit.player)
                 {
                     StateMachine.PushAction(BotState.Dead);
                     return true;
@@ -265,6 +269,12 @@ namespace AmeisenBotFSM
                 }
             }
             return false;
+        }
+
+        public void UpdateCombatPackage(IAmeisenCombatPackage combatPackage)
+        {
+            CombatPackage = combatPackage;
+            StateMachine = new AmeisenStateMachine(AmeisenDataHolder, AmeisenDBManager, AmeisenMovementEngine, combatPackage, AmeisenCharacterManager, AmeisenNavmeshClient);
         }
     }
 }

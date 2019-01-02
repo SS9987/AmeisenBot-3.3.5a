@@ -1,6 +1,7 @@
 ﻿using AmeisenBot.Character;
 using AmeisenBot.Character.Objects;
 using AmeisenBot.Clients;
+using AmeisenBotCombat;
 using AmeisenBotCombat.CombatPackages;
 using AmeisenBotCombat.Interfaces;
 using AmeisenBotCombat.MovementStrategies;
@@ -24,6 +25,7 @@ using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading;
@@ -55,7 +57,7 @@ namespace AmeisenBotManager
             set { AmeisenDataHolder.IsAllowedToDoRandomEmotes = value; }
         }
 
-        public bool IsAllowedToAttack
+        public bool IsSpecA
         {
             get { return AmeisenDataHolder.IsAllowedToAttack; }
             set { AmeisenDataHolder.IsAllowedToAttack = value; }
@@ -79,13 +81,13 @@ namespace AmeisenBotManager
             set { AmeisenDataHolder.IsAllowedToFollowParty = value; }
         }
 
-        public bool IsAllowedToHeal
+        public bool IsSpecB
         {
             get { return AmeisenDataHolder.IsAllowedToHeal; }
             set { AmeisenDataHolder.IsAllowedToHeal = value; }
         }
 
-        public bool IsAllowedToTank
+        public bool IsSpecC
         {
             get { return AmeisenDataHolder.IsAllowedToTank; }
             set { AmeisenDataHolder.IsAllowedToTank = value; }
@@ -162,8 +164,8 @@ namespace AmeisenBotManager
         {
             get
             {
-                return AmeisenCore.CheckWorldLoaded()
-                   && !AmeisenCore.CheckLoadingScreen(); // TODO: implement this
+                return AmeisenCore.IsWorldLoaded()
+                   && !AmeisenCore.IsInLoadingScreen(); // TODO: implement this
             }
         }
 
@@ -180,12 +182,15 @@ namespace AmeisenBotManager
         private BlackMagic Blackmagic { get; set; }
         private AmeisenEventHook AmeisenEventHook { get; set; }
         private AmeisenCharacterManager AmeisenCharacterManager { get; set; }
-        public string CurrentCombatClass { get; set; }
+        public string CurrentCombatClassName => CombatPackage.SpellStrategy == null ? "n/a" : CombatPackage.SpellStrategy.ToString().Split('.').Last(); // only get the classname
         private Queue<Unit> LootableUnits
         {
             get => AmeisenDataHolder.LootableUnits;
             set => AmeisenDataHolder.LootableUnits = value;
         }
+        public bool IsLoadingScreenCheckerActive { get; private set; }
+        public Thread LoadingScreenCheckerThread { get; private set; }
+        public IAmeisenCombatPackage CombatPackage { get; private set; }
 
         /// <summary>
         /// Create a new AmeisenBotManager to manage the bot's functionality
@@ -211,7 +216,6 @@ namespace AmeisenBotManager
             AmeisenSettings.SaveToFile(AmeisenSettings.loadedconfName);
             IAmeisenCombatPackage combatClass = CompileAndLoadCombatClass(fileName);
             AmeisenStateMachineManager.StateMachine.LoadNewCombatClass(AmeisenDataHolder, combatClass, AmeisenDBManager, AmeisenNavmeshClient);
-            CurrentCombatClass = combatClass.ToString();
         }
 
         /// <summary>
@@ -302,18 +306,23 @@ namespace AmeisenBotManager
             AmeisenEventHook.Subscribe(WowEvents.PLAYER_REGEN_DISABLED, OnRegenDisabled);
             AmeisenEventHook.Subscribe(WowEvents.PLAYER_REGEN_ENABLED, OnRegenEnabled);
             AmeisenEventHook.Subscribe(WowEvents.START_LOOT_ROLL, OnStartLootRoll);
+            AmeisenEventHook.Subscribe(WowEvents.PARTY_MEMBERS_CHANGED, OnGroupChanged);
             //AmeisenEventHook.Subscribe(WowEvents.COMBAT_LOG_EVENT_UNFILTERED, OnCombatLogEvent);
 
+            // LoadingscreenChecker, stops our hook if we are in loadingscreens
+            IsLoadingScreenCheckerActive = true;
+            LoadingScreenCheckerThread = new Thread(new ThreadStart(LoadingScreenChecker));
+            LoadingScreenCheckerThread.Start();
 
             // Start our object updates
             AmeisenObjectManager = new AmeisenObjectManager(AmeisenDataHolder, AmeisenDBManager);
             AmeisenObjectManager.Start();
 
             // Load the combatclass
-            IAmeisenCombatPackage combatClass = CompileAndLoadCombatClass(AmeisenSettings.Settings.combatClassPath);
-            if (combatClass == null)
+            // CombatClass = CompileAndLoadCombatClass(AmeisenSettings.Settings.combatClassPath);
+            if (CombatPackage == null)
             {
-                combatClass = LoadDefaultClassForSpec();
+                CombatPackage = LoadDefaultClassForSpec();
             }
 
             // Init our MovementEngine to position ourself according to our formation
@@ -327,7 +336,7 @@ namespace AmeisenBotManager
                 AmeisenDataHolder,
                 AmeisenDBManager,
                 AmeisenMovementEngine,
-                combatClass,
+                CombatPackage,
                 AmeisenCharacterManager,
                 AmeisenNavmeshClient);
 
@@ -341,7 +350,17 @@ namespace AmeisenBotManager
                 ConnectToServer();
             }
 
+            // Limit fps
+            AmeisenCore.RunSlashCommand("/console maxfps 30");
+            AmeisenCore.RunSlashCommand("/console maxfpsbk 30");
+
             AmeisenDataHolder.IsInWorld = true;
+        }
+
+        private void OnGroupChanged(long timestamp, List<string> args)
+        {
+            // Refresh Partymembers
+            AmeisenDataHolder.Partymembers = CombatUtils.GetPartymembers(Me, ActiveWoWObjects);
         }
 
         private void OnCombatLogEvent(long timestamp, List<string> args)
@@ -373,6 +392,15 @@ namespace AmeisenBotManager
             }
         }
 
+        /// <summary>
+        /// Reload the CombatClass if you changed the role or something alike
+        /// </summary>
+        public void RefreshCombatClass()
+        {
+            CombatPackage = LoadDefaultClassForSpec();
+            AmeisenStateMachineManager.UpdateCombatPackage(CombatPackage);
+        }
+
         private IAmeisenCombatPackage LoadDefaultClassForSpec()
         {
             AmeisenDataHolder.IsHealer = false;
@@ -384,6 +412,13 @@ namespace AmeisenBotManager
 
             switch (Me.Class)
             {
+                case WowClass.Rogue:
+                    return new CPDefault(
+                        Character.Spells,
+                        new RogueCombat(Character.Spells),
+                        new MovementClose(2.7)
+                    );
+
                 case WowClass.Warrior:
                     return new CPDefault(
                         Character.Spells,
@@ -411,6 +446,38 @@ namespace AmeisenBotManager
                         Character.Spells,
                         new DruidRestoration(Character.Spells),
                         new MovementClose(38)
+                    );
+
+                case WowClass.Priest:
+                    if (IsSpecA)
+                    {
+                        AmeisenDataHolder.IsHealer = true;
+                        return new CPDefault(
+                            Character.Spells,
+                            new PriestHoly(Character.Spells),
+                            new MovementClose(38)
+                        );
+                    }
+                    else if (IsSpecB)
+                    {
+                        AmeisenDataHolder.IsHealer = false;
+                        return new CPDefault(
+                            Character.Spells,
+                            new PriestShadow(Character.Spells),
+                            new MovementClose(28)
+                        );
+                    }
+                    else
+                    {
+                        CombatPackage = null;
+                        return new CPDefault(Character.Spells, null, new MovementClose());
+                    }
+
+                case WowClass.Mage:
+                    return new CPDefault(
+                        Character.Spells,
+                        new MageFire(Character.Spells),
+                        new MovementClose(28)
                     );
 
                 case WowClass.Hunter:
@@ -549,6 +616,9 @@ namespace AmeisenBotManager
         private void OnPlayerEnteringWorld(long timestamp, List<string> args)
         {
             AmeisenDataHolder.IsInWorld = false;
+            AmeisenEventHook.IsNotInWorld = true;
+            AmeisenHook.IsNotInWorld = true;
+
             AmeisenLogger.Instance.Log(
                 LogLevel.DEBUG,
                 $"OnPlayerEnteringWorld args: {JsonConvert.SerializeObject(args)}",
@@ -556,7 +626,7 @@ namespace AmeisenBotManager
             );
 
             int tries = 0;
-            while (!AmeisenCore.CheckWorldLoaded())
+            while (!AmeisenCore.IsWorldLoaded())
             {
                 Thread.Sleep(200);
                 tries++;
@@ -568,6 +638,29 @@ namespace AmeisenBotManager
 
             AmeisenDataHolder.IsInWorld = true;
             AmeisenHook.IsNotInWorld = false;
+            AmeisenEventHook.IsNotInWorld = false;
+        }
+
+        private void LoadingScreenChecker()
+        {
+            while (IsLoadingScreenCheckerActive)
+            {
+                if (AmeisenCore.IsInLoadingScreen())
+                {
+                    AmeisenDataHolder.IsInWorld = false;
+                    AmeisenEventHook.IsNotInWorld = true;
+                    AmeisenHook.IsNotInWorld = true;
+                }
+                else
+                {
+
+                    AmeisenDataHolder.IsInWorld = true;
+                    AmeisenHook.IsNotInWorld = false;
+                    AmeisenEventHook.IsNotInWorld = false;
+                }
+
+                Thread.Sleep(250);
+            }
         }
 
         private bool ConnectToServer() => AmeisenClient.Register(
@@ -590,6 +683,9 @@ namespace AmeisenBotManager
         /// </summary>
         public void StopBot()
         {
+            IsLoadingScreenCheckerActive = false;
+            LoadingScreenCheckerThread.Join();
+
             // Disconnect from Server
             AmeisenClient.Unregister(
                 Me,

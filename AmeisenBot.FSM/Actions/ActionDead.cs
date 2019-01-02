@@ -46,7 +46,7 @@ namespace AmeisenBotFSM.Actions
         {
             Vector3 corpsePosition = AmeisenCore.GetCorpsePosition();
 
-            if (corpsePosition.X != 0 && corpsePosition.Y != 0 && corpsePosition.Z != 0)
+            if (corpsePosition.X != 0 && corpsePosition.Y != 0 && corpsePosition.Z != 0 && corpsePosition.Z != -20000)
             {
                 if (!WaypointQueue.Contains(corpsePosition))
                 {

@@ -97,7 +97,7 @@ namespace AmeisenBotFSM.Actions
                 if (MovedSinceLastTick < AmeisenDataHolder.Settings.movementJumpThreshold)
                 {
                     AmeisenCore.CharacterJumpAsync();
-                    AmeisenCore.MoveLeftRight();
+                    //AmeisenCore.MoveLeftRight();
                     AmeisenLogger.Instance.Log(LogLevel.DEBUG, $"Jumping: {MovedSinceLastTick}", this);
                     return true;
                 }
@@ -117,7 +117,6 @@ namespace AmeisenBotFSM.Actions
                 }
 
                 Vector3 targetPosition = WaypointQueue.Dequeue();
-
                 double distance = Utils.GetDistance(initialPosition, targetPosition);
 
                 if (distance > AmeisenDataHolder.Settings.followDistance)
@@ -134,6 +133,13 @@ namespace AmeisenBotFSM.Actions
                     if (distance > AmeisenDataHolder.Settings.pathfindingUsageThreshold)
                     {
                         navmeshPath = UsePathfinding(Me.pos, targetPosition);
+
+                        if (navmeshPath.Count == 0)
+                        {
+                            Thread.Sleep(500);
+                            return;
+                        }
+
                         navmeshPath.Add(targetPosition); // original position
 
                         foreach (Vector3 pos in navmeshPath)
@@ -142,15 +148,20 @@ namespace AmeisenBotFSM.Actions
                             double posDistance = Utils.GetDistance(Me.pos, pos);
                             int tries = 0;
 
-                            while (tries < (int)posDistance * 2 && posDistance > 3)
+                            if (posDistance < 3)
+                            {
+                                continue;
+                            }
+
+                            while (tries < 5 && posDistance > 3)
                             {
                                 AmeisenCore.MovePlayerToXYZ(pos, InteractionType.MOVE);
                                 posDistance = Utils.GetDistance(Me.pos, pos);
-                                Thread.Sleep(100);
                                 tries++;
+                                Thread.Sleep(100);
                             }
 
-                            if (tries == (int)posDistance * 2 - 1)
+                            if (tries == 5)
                             {
                                 WaypointQueue.Clear();
                                 break;
@@ -162,8 +173,6 @@ namespace AmeisenBotFSM.Actions
                         AmeisenCore.MovePlayerToXYZ(navmeshPath.First(), InteractionType.MOVE);
                     }
 
-                    Thread.Sleep(50);
-
                     Me.Update();
                     LastPosition = Me.pos;
                 }
@@ -173,6 +182,7 @@ namespace AmeisenBotFSM.Actions
 
         internal List<Vector3> UsePathfinding(Vector3 initialPosition, Vector3 targetPosition)
         {
+            Me.Update();
             List<Vector3> navmeshPath = AmeisenNavmeshClient.RequestPath(new PathRequest(initialPosition, targetPosition, Me.MapID));
 
             if (navmeshPath != null)

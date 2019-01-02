@@ -161,5 +161,10 @@
         /// CombatLog events
         /// </summary>
         public const string COMBAT_LOG_EVENT_UNFILTERED = "COMBAT_LOG_EVENT_UNFILTERED";
+
+        /// <summary>
+        /// new, removed, moved player from group/raid
+        /// </summary>
+        public const string PARTY_MEMBERS_CHANGED = "PARTY_MEMBERS_CHANGED";
     }
 }

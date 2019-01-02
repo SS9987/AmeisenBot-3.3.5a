@@ -124,17 +124,32 @@ namespace AmeisenBotGUI
         private void CheckBoxAssistGroup_Click(object sender, RoutedEventArgs e)
             => BotManager.IsAllowedToAssistParty = (bool)checkBoxAssistGroup.IsChecked;
 
-        private void CheckBoxAssistPartyAttack_Click(object sender, RoutedEventArgs e)
-            => BotManager.IsAllowedToAttack = (bool)checkBoxAssistPartyAttack.IsChecked;
-
         private void CheckBoxAssistPartyBuff_Click(object sender, RoutedEventArgs e)
             => BotManager.IsAllowedToBuff = (bool)checkBoxAssistPartyBuff.IsChecked;
 
-        private void CheckBoxAssistPartyHeal_Click(object sender, RoutedEventArgs e)
-            => BotManager.IsAllowedToHeal = (bool)checkBoxAssistPartyAttack.IsChecked;
+        private void RadioButtonSpecA_Click(object sender, RoutedEventArgs e)
+        {
+            BotManager.IsSpecA = true;
+            BotManager.IsSpecB = false;
+            BotManager.IsSpecC = false;
+            BotManager.RefreshCombatClass();
+        }
 
-        private void CheckBoxAssistPartyTank_Click(object sender, RoutedEventArgs e)
-            => BotManager.IsAllowedToTank = (bool)checkBoxAssistPartyTank.IsChecked;
+        private void RadioButtonSpecB_Click(object sender, RoutedEventArgs e)
+        {
+            BotManager.IsSpecA = false;
+            BotManager.IsSpecB = true;
+            BotManager.IsSpecC = false;
+            BotManager.RefreshCombatClass();
+        }
+
+        private void RadioButtonSpecC_Click(object sender, RoutedEventArgs e)
+        {
+            BotManager.IsSpecA = false;
+            BotManager.IsSpecB = false;
+            BotManager.IsSpecC = true;
+            BotManager.RefreshCombatClass();
+        }
 
         private void CheckBoxFollowMaster_Click(object sender, RoutedEventArgs e)
             => BotManager.IsAllowedToFollowParty = (bool)checkBoxFollowParty.IsChecked;
@@ -144,14 +159,15 @@ namespace AmeisenBotGUI
 
         private void LoadViewSettings()
         {
-            checkBoxAssistPartyAttack.IsChecked = Settings.behaviourAttack;
-            BotManager.IsAllowedToAttack = Settings.behaviourAttack;
+            radiobuttonSpecA.IsChecked = Settings.behaviourAttack;
+            BotManager.IsSpecA = Settings.behaviourAttack;
 
-            checkBoxAssistPartyTank.IsChecked = Settings.behaviourTank;
-            BotManager.IsAllowedToTank = Settings.behaviourTank;
+            radiobuttonSpecC.IsChecked = Settings.behaviourTank;
+            BotManager.IsSpecC = Settings.behaviourTank;
 
-            checkBoxAssistPartyHeal.IsChecked = Settings.behaviourHeal;
-            BotManager.IsAllowedToHeal = Settings.behaviourHeal;
+            radiobuttonSpecB.IsChecked = Settings.behaviourHeal;
+            BotManager.IsSpecB = Settings.behaviourHeal;
+            BotManager.RefreshCombatClass();
 
             checkBoxAssistPartyBuff.IsChecked = Settings.behaviourBuff;
             BotManager.IsAllowedToBuff = Settings.behaviourBuff;
@@ -208,9 +224,9 @@ namespace AmeisenBotGUI
 
         private void SaveViewSettings()
         {
-            Settings.behaviourAttack = (bool)checkBoxAssistPartyAttack.IsChecked;
-            Settings.behaviourTank = (bool)checkBoxAssistPartyTank.IsChecked;
-            Settings.behaviourHeal = (bool)checkBoxAssistPartyHeal.IsChecked;
+            Settings.behaviourAttack = (bool)radiobuttonSpecA.IsChecked;
+            Settings.behaviourTank = (bool)radiobuttonSpecC.IsChecked;
+            Settings.behaviourHeal = (bool)radiobuttonSpecB.IsChecked;
             Settings.behaviourBuff = (bool)checkBoxAssistPartyBuff.IsChecked;
             Settings.followMaster = (bool)checkBoxFollowParty.IsChecked;
             Settings.releaseSpirit = (bool)checkBoxReleaseSpirit.IsChecked;
@@ -269,9 +285,14 @@ namespace AmeisenBotGUI
             labelName.Content = BotManager.Me.Name + " lvl." + BotManager.Me.Level;
             labelHP.Content = $"Health {ProcessKMValue(BotManager.Me.Health)} / {ProcessKMValue(BotManager.Me.MaxHealth)}";
 
+            labelMapID.Content = $"MapId: {BotManager.Me.MapID}";
+            labelZoneID.Content = $"ZoneId: {BotManager.Me.ZoneID}";
+
+            labelLeaderGuid.Content = $"LeaderGuid: {BotManager.Me.PartyleaderGuid}";
+
             progressBarHP.Maximum = BotManager.Me.MaxHealth;
             progressBarHP.Value = BotManager.Me.Health;
-            
+
             labelMoney.Content = $"{BotManager.Money[2]}g {BotManager.Money[1]}s {BotManager.Money[1]}c";
 
             labelHookQueue.Content = $"HookJobs {BotManager.HookJobsInQueue}/{30}";
@@ -312,8 +333,16 @@ namespace AmeisenBotGUI
 
         private string ProcessKMValue(double value)
         {
-            if (value > 1000000) return $"{(int)value / 1000000}M";
-            if (value > 1000) return $"{(int)value / 1000}K";
+            if (value > 1000000)
+            {
+                return $"{(int)value / 1000000}M";
+            }
+
+            if (value > 1000)
+            {
+                return $"{(int)value / 1000}K";
+            }
+
             return $"{value}";
         }
 
@@ -376,7 +405,7 @@ namespace AmeisenBotGUI
             long memoryUsageMB = currentProcess.WorkingSet64 / 1000000;
 
             labelLoadedCombatClass.Content = $"{Path.GetFileName(Settings.combatClassPath)}.cs";
-            labelLoadedCombatClassC.Content = $"{BotManager.CurrentCombatClass}";
+            labelLoadedCombatClassC.Content = $"{BotManager.CurrentCombatClassName}";
             labelClass.Content = $"{BotManager.Me.Class.ToString()}";
             labelRace.Content = $"{BotManager.Me.Race.ToString()}";
 

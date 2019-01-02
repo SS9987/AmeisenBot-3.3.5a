@@ -6,6 +6,7 @@ using AmeisenBotCore;
 using AmeisenBotData;
 using AmeisenBotDB;
 using AmeisenBotUtilities;
+using System.Threading;
 
 namespace AmeisenBotFSM.Actions
 {
@@ -77,8 +78,6 @@ namespace AmeisenBotFSM.Actions
             if (WaypointQueue.Count > 0)
             {
                 base.DoThings();
-                // Clear to process combat stuff
-                WaypointQueue.Clear();
             }
 
             // Try to get a target
@@ -95,7 +94,7 @@ namespace AmeisenBotFSM.Actions
 
                 if (Me.TargetGuid == 0 || Target == null || Target.Guid == 0)
                 {
-                    CombatUtils.AssistParty(Me, AmeisenDataHolder.ActiveWoWObjects);
+                    CombatUtils.AssistParty(Me, AmeisenDataHolder.ActiveWoWObjects, AmeisenDataHolder.Partymembers);
                     // clear all friendly targets again
                     AmeisenCore.RunSlashCommand("/cleartarget [noharm][dead]");
                     Me?.Update();
@@ -125,8 +124,16 @@ namespace AmeisenBotFSM.Actions
             {
                 Me?.Update();
                 Target?.Update();
+
                 Spell spellToUse = CombatPackage.SpellStrategy.DoRoutine(Me, Target, Pet);
-                if (spellToUse != null) { CombatUtils.CastSpellByName(Me, Target, spellToUse.Name, false, true); }
+                if (spellToUse != null)
+                {
+                    CombatUtils.CastSpellByName(Me, Target, spellToUse.Name, false, true);
+                }
+                else
+                {
+                    Thread.Sleep(200);
+                }
             }
 
             // Handle Movement stuff

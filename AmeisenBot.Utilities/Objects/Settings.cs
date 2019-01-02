@@ -44,8 +44,8 @@
         public string walkableNodeColorLow = "#FFA0FF00";
         public bool releaseSpirit = true;
         public bool revive = true;
-        public int stateMachineUpdateMillis = 10;
-        public int stateMachineStateUpdateMillis = 100;
+        public int stateMachineUpdateMillis = 250;
+        public int stateMachineStateUpdateMillis = 250;
         public int pathfindingSearchRadius = 2;
         public double pathfindingUsageThreshold = 10;
         public double movementJumpThreshold = 0.1;

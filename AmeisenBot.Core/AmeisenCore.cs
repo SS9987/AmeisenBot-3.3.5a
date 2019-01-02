@@ -182,13 +182,13 @@ namespace AmeisenBotCore
         /// Check if the player's world is in a loadingscreen
         /// </summary>
         /// <returns>true if yes, false if no</returns>
-        public static bool CheckLoadingScreen() => !CheckWorldLoaded();
+        public static bool IsInLoadingScreen() => !IsWorldLoaded();
 
         /// <summary>
         /// Check if the player's world is loaded
         /// </summary>
         /// <returns>true if yes, false if no</returns>
-        public static bool CheckWorldLoaded() => BlackMagic.ReadInt(Offsets.worldLoaded) == 1;
+        public static bool IsWorldLoaded() => BlackMagic.ReadInt(Offsets.worldLoaded) == 1;
 
         /// <summary>
         /// Reads all WoWObject out of WoW's ObjectManager

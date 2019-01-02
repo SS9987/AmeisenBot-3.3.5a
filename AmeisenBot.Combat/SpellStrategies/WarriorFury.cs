@@ -24,6 +24,7 @@ namespace AmeisenBotCombat.SpellStrategies
         private bool IsInterceptKnown { get; set; }
         private bool IsHamstringKnown { get; set; }
         private bool IsBattleShoutKnown { get; set; }
+        private bool IsBerserkerStanceKnown { get; set; }
 
         private bool IsInMainCombo { get; set; }
 
@@ -44,6 +45,7 @@ namespace AmeisenBotCombat.SpellStrategies
             IsInterceptKnown = Spells.Where(spell => spell.Name == "Intercept").ToList().Count > 0;
             IsHamstringKnown = Spells.Where(spell => spell.Name == "Hamstring").ToList().Count > 0;
             IsBattleShoutKnown = Spells.Where(spell => spell.Name == "Battle Shout").ToList().Count > 0;
+            IsBerserkerStanceKnown = Spells.Where(spell => spell.Name == "Berserker Stance").ToList().Count > 0;
 
             IsInMainCombo = false;
         }
@@ -89,7 +91,7 @@ namespace AmeisenBotCombat.SpellStrategies
                 }
 
                 // if we are in our main-combo, use the second part of it, whirlwind
-                if (IsWhirlwindKnown && IsInMainCombo)
+                if (IsWhirlwindKnown && IsInMainCombo && IsBerserkerStanceKnown)
                 {
                     // dont't interrupt main-combo
                     spellToUse = TryUseSpell("Whirlwind", me);
@@ -98,6 +100,9 @@ namespace AmeisenBotCombat.SpellStrategies
                     else if (IsBloodthirstKnown) { spellToUse = TryUseSpell("Bloodthirst", me); }
 
                     return spellToUse;
+                } else if (!IsBerserkerStanceKnown)
+                {
+                    IsInMainCombo = false;
                 }
 
                 // use hamstring so our enemy can't escape

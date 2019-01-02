@@ -15,6 +15,7 @@ namespace AmeisenBotCore
         private Thread EventReader { get; set; }
 
         private Dictionary<string, OnEventFired> EventDictionary { get; set; }
+        public bool IsNotInWorld { get; set; }
 
         public AmeisenEventHook()
         {
@@ -32,6 +33,8 @@ namespace AmeisenBotCore
             luaStuff.Append("end;");
             luaStuff.Append("abFrame:SetScript(\"OnEvent\", abEventHandler);");
             AmeisenCore.LuaDoString(luaStuff.ToString());
+
+            IsNotInWorld = false;
 
             IsActive = true;
             EventReader.Start();
@@ -63,6 +66,12 @@ namespace AmeisenBotCore
         {
             while (IsActive)
             {
+                if (AmeisenCore.IsInLoadingScreen())
+                {
+                    Thread.Sleep(50);
+                    continue;
+                }
+
                 // Unminified lua code is attached down below
                 string eventJson = AmeisenCore.GetLocalizedText("abEventJson='['for a,b in pairs(abEventTable)do abEventJson=abEventJson..'{'for c,d in pairs(b)do if type(d)==\"table\"then abEventJson=abEventJson..'\"args\": ['for e,f in pairs(d)do abEventJson=abEventJson..'\"'..f..'\"'if e<=table.getn(d)then abEventJson=abEventJson..','end end;abEventJson=abEventJson..']}'if a<table.getn(abEventTable)then abEventJson=abEventJson..','end else if type(d)==\"string\"then abEventJson=abEventJson..'\"event\": \"'..d..'\",'else abEventJson=abEventJson..'\"time\": \"'..d..'\",'end end end end;abEventJson=abEventJson..']'abEventTable={}", "abEventJson");
                 AmeisenLogger.Instance.Log(LogLevel.VERBOSE, $"LUA Events Json: {eventJson}", this);

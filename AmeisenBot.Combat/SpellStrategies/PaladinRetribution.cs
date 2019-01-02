@@ -84,7 +84,7 @@ namespace AmeisenBotCombat.SpellStrategies
                 spellToUse = TryUseSpell("Divine Plea", me);
                 if (spellToUse != null)
                 {
-                    CombatUtils.CastSpellByName(me, target, "Divine Plea", false, false); // doesn't trigger GCD 
+                    CombatUtils.CastSpellByName(me, target, "Divine Plea", false, true); // doesn't trigger GCD 
                 }
             }
 
@@ -115,7 +115,7 @@ namespace AmeisenBotCombat.SpellStrategies
                 spellToUse = TryUseSpell("Avenging Wrath", me);
                 if (spellToUse != null)
                 {
-                    CombatUtils.CastSpellByName(me, target, "Avenging Wrath", false, false); // doesn't trigger GCD
+                    CombatUtils.CastSpellByName(me, target, "Avenging Wrath", false, true); // doesn't trigger GCD
                 }
             }
 
