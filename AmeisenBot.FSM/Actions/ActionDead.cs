@@ -13,10 +13,13 @@ namespace AmeisenBotFSM.Actions
         public override Start StartAction { get { return Start; } }
         public override DoThings StartDoThings { get { return DoThings; } }
         public override Exit StartExit { get { return Stop; } }
+
         private Unit ActiveUnit { get; set; }
         private List<Unit> ActiveUnits { get; set; }
         private AmeisenDataHolder AmeisenDataHolder { get; set; }
         private AmeisenDBManager AmeisenDBManager { get; set; }
+
+        private Dictionary<Vector3, Vector3> InstanceEntrances { get; set; }
 
         private Me Me
         {
@@ -24,12 +27,19 @@ namespace AmeisenBotFSM.Actions
             set { AmeisenDataHolder.Me = value; }
         }
 
-        public ActionDead(AmeisenDataHolder ameisenDataHolder,
+        public ActionDead(
+            AmeisenDataHolder ameisenDataHolder,
             AmeisenDBManager ameisenDBManager,
             AmeisenNavmeshClient ameisenNavmeshClient) : base(ameisenDataHolder, ameisenDBManager, ameisenNavmeshClient)
         {
             AmeisenDataHolder = ameisenDataHolder;
             AmeisenDBManager = ameisenDBManager;
+
+            // going to save these in a databse sometime
+            InstanceEntrances = new Dictionary<Vector3, Vector3>
+            {
+                { new Vector3(5776, 2065, -500), new Vector3(5778, 2062, 636) } // Icecrown Citadel
+            };
         }
 
         public override void DoThings()
@@ -45,8 +55,19 @@ namespace AmeisenBotFSM.Actions
         private void GoToCorpseAndRevive()
         {
             Vector3 corpsePosition = AmeisenCore.GetCorpsePosition();
+            corpsePosition.X = (int)corpsePosition.X;
+            corpsePosition.Y = (int)corpsePosition.Y;
+            corpsePosition.Z = (int)corpsePosition.Z;
 
-            if (corpsePosition.X != 0 && corpsePosition.Y != 0 && corpsePosition.Z != 0 && corpsePosition.Z != -20000)
+            if (InstanceEntrances.ContainsKey(corpsePosition))
+            {
+                // Dungeon/Raid workaround
+                // because blizzard decided to put the corpse at very low Z axis values that 
+                // we cant navigate to them, so we are going to use the position of the entrance instead
+                corpsePosition = InstanceEntrances[corpsePosition];
+            }
+
+            if (corpsePosition.X != 0 && corpsePosition.Y != 0 && corpsePosition.Z != 0)
             {
                 if (!WaypointQueue.Contains(corpsePosition))
                 {
@@ -54,7 +75,7 @@ namespace AmeisenBotFSM.Actions
                 }
             }
 
-            if (Utils.GetDistance(Me.pos, corpsePosition) < 10.0)
+            if (Utils.GetDistance(Me.pos, corpsePosition) < 4.0)
             {
                 AmeisenCore.RetrieveCorpse(true);
             }

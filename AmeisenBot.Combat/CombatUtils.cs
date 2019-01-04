@@ -319,10 +319,11 @@ namespace AmeisenBotCombat
             units.Add(me);
             if (units.Count > 0)
             {
-                List<Unit> unitsSorted = units.OrderBy(o => o.HealthPercentage).ToList();
-                unitsSorted[0].Update();
-                AmeisenCore.TargetGUID(unitsSorted[0].Guid);
-                return unitsSorted[0];
+                List<Unit> unitsSorted = units.Where(o => o.HealthPercentage != 0).OrderBy(o => o.HealthPercentage).ToList();
+                unitsSorted.First().Update();
+                AmeisenCore.TargetGUID(unitsSorted.First().Guid);
+                me.Update();
+                return unitsSorted.First();
             }
             return null;
         }
@@ -361,7 +362,7 @@ namespace AmeisenBotCombat
         /// <returns>returns all partymembers in combat</returns>
         public static List<Unit> GetPartymembers(Me me, List<WowObject> activeWowObjects)
         {
-            List<Unit> inCombatUnits = new List<Unit>();
+            List<Unit> partymembers = new List<Unit>();
             try
             {
                 foreach (WowObject obj in activeWowObjects)
@@ -372,14 +373,21 @@ namespace AmeisenBotCombat
                     {
                         if (me.PartymemberGuids.Contains(obj.Guid))
                         {
-                            inCombatUnits.Add(((Unit)obj));
                             ((Unit)obj).Update();
+                            partymembers.Add(((Unit)obj));
                         }
                     }
                 }
             }
             catch { }
-            return inCombatUnits;
+
+            if (!me.PartymemberGuids.Contains(me.PartyleaderGuid))
+            {
+                Unit leader = (Unit)GetWoWObjectFromGUID(me.PartyleaderGuid, activeWowObjects);
+                partymembers.Add(leader);
+            }
+
+            return partymembers;
         }
     }
 }

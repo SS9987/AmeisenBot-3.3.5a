@@ -40,10 +40,10 @@ namespace AmeisenBot.Clients
 
             if (!TcpClient.Connected)
             {
-                try { TcpClient.Connect(Ip, Port); } catch { return path; }
+                try { TcpClient.Connect(Ip, Port); } catch { return null; }
                 if (!TcpClient.Connected)
                 {
-                    return path;
+                    return null;
                 }
             }
 

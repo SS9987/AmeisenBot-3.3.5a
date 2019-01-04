@@ -26,7 +26,7 @@
         public int navigationServerPort = 47110;
         public string databaseUsername = "ameisenbot";
         public int dataRefreshRate = 250;
-        public string energyColor = "#FFFFA160";
+        public string energyColor = "#FF60D4FF";
         public string expColor = "#FFD4A0FF";
         public double followDistance = 3.0;
         public bool followMaster = false;
@@ -63,5 +63,9 @@
         public string landMounts = "";
         public string flyingMounts = "";
         public double useMountFollowDistance = 20;
+        public string randomEmoteList = "dance,shrug,laugh,train,joke,fart,bravo,chicken";
+        public int maxFpsBackground = 20;
+        public int maxFpsForeground = 30;
+        public bool autoUltralowGfx = true;
     }
 }

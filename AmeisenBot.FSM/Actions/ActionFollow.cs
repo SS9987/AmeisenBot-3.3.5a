@@ -64,18 +64,6 @@ namespace AmeisenBotFSM.Actions
                 return;
             }
 
-            // When we are on different maps, stop following
-            if (Me.MapID != ActiveUnit.MapID)
-            {
-                return;
-            }
-
-            // When we are on different zones, stop following
-            if (Me.ZoneID != ActiveUnit.ZoneID)
-            {
-                return;
-            }
-
             /*Vector3 posToMoveTo = ActiveUnit.pos;
             posToMoveTo = CalculateMovementOffset(
                 posToMoveTo,

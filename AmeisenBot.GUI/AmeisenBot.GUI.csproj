@@ -87,6 +87,9 @@
     <Compile Include="GearWindow.xaml.cs">
       <DependentUpon>GearWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\GroupView.xaml.cs">
+      <DependentUpon>GroupView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\BotView.xaml.cs">
       <DependentUpon>BotView.xaml</DependentUpon>
     </Compile>
@@ -98,9 +101,6 @@
     </Compile>
     <Compile Include="GroupWindow.xaml.cs">
       <DependentUpon>GroupWindow.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="MapWindow.xaml.cs">
-      <DependentUpon>MapWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\RememberUnitDialog.xaml.cs">
       <DependentUpon>RememberUnitDialog.xaml</DependentUpon>
@@ -115,6 +115,10 @@
     <Page Include="GearWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\GroupView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\BotView.xaml">
       <SubType>Designer</SubType>
@@ -133,10 +137,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="GroupWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="MapWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -234,10 +234,6 @@
     <ProjectReference Include="..\AmeisenBot.Manager\AmeisenBot.Manager.csproj">
       <Project>{6ca2c759-3166-4b71-a56d-e9ba28e72e33}</Project>
       <Name>AmeisenBot.Manager</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\AmeisenBot.Mapping\AmeisenBot.Mapping.csproj">
-      <Project>{08db57d7-287a-4c12-ab76-f5ee4a0f3395}</Project>
-      <Name>AmeisenBot.Mapping</Name>
     </ProjectReference>
     <ProjectReference Include="..\AmeisenBot.Utilities\AmeisenBot.Utilities.csproj">
       <Project>{5369E077-2DC4-4DE5-9020-2C7DDB41686F}</Project>

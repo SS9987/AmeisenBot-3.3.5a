@@ -62,6 +62,7 @@
     <Compile Include="Objects\RememberedUnit.cs" />
     <Compile Include="Objects\WowColor.cs" />
     <Compile Include="Structs\CastingInfo.cs" />
+    <Compile Include="Structs\GlobalSettings.cs" />
     <Compile Include="Structs\NetworkBot.cs" />
     <Compile Include="Objects\NetworkRegData.cs" />
     <Compile Include="Objects\SendableMe.cs" />
@@ -69,8 +70,8 @@
     <Compile Include="Enums\UnitState.cs" />
     <Compile Include="Enums\WowObjectType.cs" />
     <Compile Include="Objects\Settings.cs" />
-    <Compile Include="Objects\WoWClass.cs" />
-    <Compile Include="Objects\WoWExe.cs" />
+    <Compile Include="Objects\WowClass.cs" />
+    <Compile Include="Objects\WowExe.cs" />
     <Compile Include="Objects\WoWObjects\Container.cs" />
     <Compile Include="Objects\WoWObjects\Corpse.cs" />
     <Compile Include="Objects\WoWObjects\DynObject.cs" />

@@ -12,8 +12,8 @@ namespace AmeisenBotCore
     {
         public delegate void OnEventFired(long timestamp, List<string> args);
         public bool IsActive { get; private set; }
-        private Thread EventReader { get; set; }
 
+        private Thread EventReader { get; set; }
         private Dictionary<string, OnEventFired> EventDictionary { get; set; }
         public bool IsNotInWorld { get; set; }
 
@@ -72,32 +72,40 @@ namespace AmeisenBotCore
                     continue;
                 }
 
-                // Unminified lua code is attached down below
+                // Unminified lua code can be found im my github repo "WowLuaStuff"
                 string eventJson = AmeisenCore.GetLocalizedText("abEventJson='['for a,b in pairs(abEventTable)do abEventJson=abEventJson..'{'for c,d in pairs(b)do if type(d)==\"table\"then abEventJson=abEventJson..'\"args\": ['for e,f in pairs(d)do abEventJson=abEventJson..'\"'..f..'\"'if e<=table.getn(d)then abEventJson=abEventJson..','end end;abEventJson=abEventJson..']}'if a<table.getn(abEventTable)then abEventJson=abEventJson..','end else if type(d)==\"string\"then abEventJson=abEventJson..'\"event\": \"'..d..'\",'else abEventJson=abEventJson..'\"time\": \"'..d..'\",'end end end end;abEventJson=abEventJson..']'abEventTable={}", "abEventJson");
                 AmeisenLogger.Instance.Log(LogLevel.VERBOSE, $"LUA Events Json: {eventJson}", this);
 
                 List<RawEvent> rawEvents = new List<RawEvent>();
                 try
                 {
+                    List<RawEvent> finalEvents = new List<RawEvent>();
                     rawEvents = JsonConvert.DeserializeObject<List<RawEvent>>(eventJson);
+
+                    foreach (RawEvent rawEvent in rawEvents)
+                    {
+                        if (!finalEvents.Contains(rawEvent))
+                        {
+                            finalEvents.Add(rawEvent);
+                        }
+                    }
+
+                    AmeisenLogger.Instance.Log(LogLevel.VERBOSE, $"Parsed {finalEvents.Count} events", this);
+                    if (finalEvents.Count > 0)
+                    {
+                        foreach (RawEvent rawEvent in finalEvents)
+                        {
+                            if (EventDictionary.ContainsKey(rawEvent.@event))
+                            {
+                                EventDictionary[rawEvent.@event].Invoke(rawEvent.time, rawEvent.args);
+                                AmeisenLogger.Instance.Log(LogLevel.VERBOSE, $"Fired OnEventFired: {rawEvent.@event}", this);
+                            }
+                        }
+                    }
                 }
                 catch (Exception e)
                 {
-                    rawEvents = new List<RawEvent>();
                     AmeisenLogger.Instance.Log(LogLevel.ERROR, $"Failed to parse events Json: {e}", this);
-                }
-
-                AmeisenLogger.Instance.Log(LogLevel.VERBOSE, $"Parsed {rawEvents.Count} events", this);
-                if (rawEvents.Count > 0)
-                {
-                    foreach (RawEvent rawEvent in rawEvents)
-                    {
-                        if (EventDictionary.ContainsKey(rawEvent.@event))
-                        {
-                            EventDictionary[rawEvent.@event].Invoke(rawEvent.time, rawEvent.args);
-                            AmeisenLogger.Instance.Log(LogLevel.VERBOSE, $"Fired OnEventFired: {rawEvent.@event}", this);
-                        }
-                    }
                 }
 
                 Thread.Sleep(1000);

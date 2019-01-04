@@ -4,7 +4,6 @@ using AmeisenBotData;
 using AmeisenBotDB;
 using AmeisenBotUtilities;
 using System.Threading;
-using static AmeisenBotFSM.Objects.Delegates;
 
 namespace AmeisenBotFSM.Actions
 {
@@ -28,7 +27,7 @@ namespace AmeisenBotFSM.Actions
 
         public override void DoThings()
         {
-            if(WaypointQueue.Count > 0)
+            if (WaypointQueue.Count > 0)
             {
                 base.DoThings();
             }
@@ -36,9 +35,12 @@ namespace AmeisenBotFSM.Actions
             Unit unitToLoot = AmeisenDataHolder.LootableUnits.Peek();
             double distance = Utils.GetDistance(Me.pos, unitToLoot.pos);
 
-            if(distance > 3)
+            if (distance > 3)
             {
-                UsePathfinding(Me.pos, unitToLoot.pos);
+                if (!WaypointQueue.Contains(unitToLoot.pos))
+                {
+                    WaypointQueue.Enqueue(unitToLoot.pos);
+                }
             }
             else
             {

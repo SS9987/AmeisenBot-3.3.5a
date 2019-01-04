@@ -28,6 +28,7 @@ namespace AmeisenBotData
         public bool IsInWorld { get; set; }
         public bool IsHealer { get; set; }
         public List<Unit> Partymembers { get; set; }
+        public int LastMapId { get; set; }
 
         public AmeisenDataHolder()
         {

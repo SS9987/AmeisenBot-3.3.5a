@@ -8,16 +8,7 @@ namespace AmeisenBotFSM.Actions
 {
     public class ActionIdle : IAction
     {
-        private string[] randomEmoteList = {
-            "dance",
-            "shrug",
-            "laugh",
-            "train",
-            "joke",
-            "fart",
-            "bravo",
-            "chicken"
-        };
+        private string[] randomEmoteList;
 
         public Start StartAction { get { return Start; } }
         public DoThings StartDoThings { get { return DoThings; } }
@@ -27,6 +18,17 @@ namespace AmeisenBotFSM.Actions
 
         public ActionIdle(AmeisenDataHolder ameisenDataHolder)
         {
+            string[] loadedRandomEmoteList = ameisenDataHolder.Settings.randomEmoteList.Split(',');
+
+            if (ameisenDataHolder.Settings.randomEmoteList == "")
+            {
+                randomEmoteList = null;
+            }
+            else if (loadedRandomEmoteList.Length > 0)
+            {
+                randomEmoteList = loadedRandomEmoteList;
+            }
+
             AmeisenDataHolder = ameisenDataHolder;
             TickCountToExecuteRandomEmote = Environment.TickCount + new Random().Next(60000, 600000);
         }
@@ -49,6 +51,11 @@ namespace AmeisenBotFSM.Actions
 
         private void DoRandomEmote()
         {
+            if (randomEmoteList == null)
+            {
+                return;
+            }
+
             if (Environment.TickCount >= TickCountToExecuteRandomEmote)
             {
                 AmeisenCore.LuaDoString($"DoEmote(\"{randomEmoteList[new Random().Next(randomEmoteList.Length)]}\");");

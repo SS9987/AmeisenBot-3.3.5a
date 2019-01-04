@@ -87,10 +87,6 @@
       <Project>{017A67A9-F7BD-46E3-B716-E1D601AFCA4B}</Project>
       <Name>AmeisenBot.Logger</Name>
     </ProjectReference>
-    <ProjectReference Include="..\AmeisenBot.Mapping\AmeisenBot.Mapping.csproj">
-      <Project>{08DB57D7-287A-4C12-AB76-F5EE4A0F3395}</Project>
-      <Name>AmeisenBot.Mapping</Name>
-    </ProjectReference>
     <ProjectReference Include="..\AmeisenBot.Utilities\AmeisenBot.Utilities.csproj">
       <Project>{5369E077-2DC4-4DE5-9020-2C7DDB41686F}</Project>
       <Name>AmeisenBot.Utilities</Name>

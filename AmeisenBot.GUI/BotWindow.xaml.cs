@@ -97,8 +97,7 @@ namespace AmeisenBotGUI
         private void ButtonGroup_Click(object sender, RoutedEventArgs e)
             => new GroupWindow(BotManager).Show();
 
-        private void ButtonMap_Click(object sender, RoutedEventArgs e)
-            => new MapWindow(BotManager, BotManager.AmeisenDBManager).Show();
+        private void ButtonMap_Click(object sender, RoutedEventArgs e) { }
 
         private void ButtonMinimize_Click(object sender, RoutedEventArgs e)
             => WindowState = WindowState.Minimized;
@@ -295,7 +294,7 @@ namespace AmeisenBotGUI
 
             labelMoney.Content = $"{BotManager.Money[2]}g {BotManager.Money[1]}s {BotManager.Money[1]}c";
 
-            labelHookQueue.Content = $"HookJobs {BotManager.HookJobsInQueue}/{30}";
+            labelHookQueue.Content = $"HookJobs pending: {BotManager.HookJobsInQueue}";
             progressbarHookQueue.Value = BotManager.HookJobsInQueue;
 
             switch (BotManager.Me.Class)
@@ -391,7 +390,7 @@ namespace AmeisenBotGUI
             }
         }
 
-        private void UpdateFSMViews() => labelFSMState.Content = $"{BotManager.CurrentFSMState}";
+        private void UpdateFSMViews() => labelFSMState.Content = $"Current State: {BotManager.CurrentFSMState}";
 
         /// <summary>
         /// This thing updates the UI... Note to myself: "may need to improve this thing in the future..."
@@ -406,8 +405,7 @@ namespace AmeisenBotGUI
 
             labelLoadedCombatClass.Content = $"{Path.GetFileName(Settings.combatClassPath)}.cs";
             labelLoadedCombatClassC.Content = $"{BotManager.CurrentCombatClassName}";
-            labelClass.Content = $"{BotManager.Me.Class.ToString()}";
-            labelRace.Content = $"{BotManager.Me.Race.ToString()}";
+            labelRaceClass.Content = $"{BotManager.Me.Race.ToString()} {BotManager.Me.Class.ToString()}";
 
             if (BotManager.Me != null)
             {
@@ -415,6 +413,7 @@ namespace AmeisenBotGUI
                 {
                     UpdateFSMViews();
                     UpdateMyViews();
+                    UpdateGroupViews();
 
                     if (BotManager.Target != null)
                     {
@@ -459,6 +458,16 @@ namespace AmeisenBotGUI
         private void ButtonEquiptAllBetter_Click(object sender, RoutedEventArgs e)
         {
             BotManager.EquipAllBetterItems();
+        }
+
+        private void UpdateGroupViews()
+        {
+            stackpanelGroupViews.Children.Clear();
+            stackpanelGroupViews.Children.Add(new GroupView(BotManager.Me));
+            foreach (Unit unit in BotManager.Partymembers)
+            {
+                stackpanelGroupViews.Children.Add(new GroupView(unit));
+            }
         }
 
         private void CheckBoxDoBotStuff_Click(object sender, RoutedEventArgs e)

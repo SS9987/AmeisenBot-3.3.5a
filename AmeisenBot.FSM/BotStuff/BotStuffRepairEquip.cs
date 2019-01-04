@@ -24,9 +24,7 @@ namespace AmeisenBotFSM.BotStuff
 
         private Me Me => AmeisenDataHolder.Me;
         private Unit Target => AmeisenDataHolder.Target;
-
-        public bool HasPath { get; private set; }
-
+        
         public BotStuffRepairEquip(
             AmeisenDataHolder ameisenDataHolder,
             AmeisenDBManager ameisenDBManager,
@@ -41,7 +39,7 @@ namespace AmeisenBotFSM.BotStuff
 
         public override void DoThings()
         {
-            if (HasPath)
+            if (WaypointQueue.Count > 0)
             {
                 base.DoThings();
             }
@@ -105,8 +103,10 @@ namespace AmeisenBotFSM.BotStuff
             }
             else
             {
-                HasPath = true;
-                UsePathfinding(Me.pos, closestUnit.Position);
+                if (!WaypointQueue.Contains(closestUnit.Position))
+                {
+                    WaypointQueue.Enqueue(closestUnit.Position);
+                }
             }
         }
 
@@ -131,7 +131,6 @@ namespace AmeisenBotFSM.BotStuff
                 AmeisenLogger.Instance.Log(LogLevel.DEBUG, "Repaired all items and sold all gray stuff", this);
                 Thread.Sleep(1000);
             }
-            HasPath = false;
         }
     }
 }

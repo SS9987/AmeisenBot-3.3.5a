@@ -1,8 +1,11 @@
 ﻿using AmeisenBotLogger;
 using AmeisenBotManager;
 using AmeisenBotUtilities;
+using AmeisenBotUtilities.Structs;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Windows;
@@ -19,8 +22,13 @@ namespace AmeisenBotGUI
     {
         private readonly string autoLoginExe = AppDomain.CurrentDomain.BaseDirectory + "/WoWLoginAutomator.exe";
         private readonly string configPath = AppDomain.CurrentDomain.BaseDirectory + "/credentials/";
+        private readonly string globalConfigPath = AppDomain.CurrentDomain.BaseDirectory + "/globalConfig";
         private readonly string extension = ".json";
+
         private bool autologinIsPossible = false;
+        private int pIdOfStartedWow = 0;
+
+        private GlobalSettings globalSettings;
 
         private BotManager BotManager { get; set; }
 
@@ -29,15 +37,17 @@ namespace AmeisenBotGUI
             InitializeComponent();
             BotManager = new BotManager();
 
+            globalSettings.wowExePath = "none";
+            if (File.Exists(globalConfigPath + extension))
+            {
+                globalSettings = Newtonsoft.Json.JsonConvert.DeserializeObject<GlobalSettings>(File.ReadAllText(globalConfigPath + extension));
+            }
+            labelWowPath.Content = globalSettings.wowExePath;
+
             if (File.Exists(autoLoginExe))
             {
                 GetAllAcoounts();
-                loadingForm.Height = 150;
                 autologinIsPossible = true;
-            }
-            else
-            {
-                loadingForm.Height = 58;
             }
         }
 
@@ -82,8 +92,21 @@ namespace AmeisenBotGUI
             Credentials credentials;
             WowExe activeExe = ((WowExe)comboBoxWoWs.SelectedItem);
 
-            if (activeExe != null && autologinIsPossible && activeExe.characterName == "")
+            if (textboxUsername.Text.Length == 0 || textboxPassword.Password.Length == 0)
             {
+                MessageBox.Show("Please select an account or enter credentials to use auto-login", "Error");
+                return;
+            }
+
+            if (activeExe == null)
+            {
+                // launch new wow
+                ButtonLaunchWow_Click(null, null);
+            }
+
+            if (activeExe != null && autologinIsPossible && activeExe.characterName == "not logged in")
+            {
+
                 if (!Directory.Exists(configPath))
                 {
                     Directory.CreateDirectory(configPath);
@@ -107,6 +130,10 @@ namespace AmeisenBotGUI
 
                 ((WowExe)comboBoxWoWs.SelectedItem).characterName = charname;
                 ButtonGo_Click(this, null);
+            }
+            else
+            {
+                MessageBox.Show("Please select a wow process or set the executeable path to auto-start it", "Error");
             }
         }
 
@@ -220,8 +247,49 @@ namespace AmeisenBotGUI
                 || ((WowExe)comboBoxWoWs.SelectedItem).characterName == ""
                 || ((WowExe)comboBoxWoWs.SelectedItem).process == null)
                 {
-                    comboBoxWoWs.SelectedItem = comboBoxWoWs.Items[0];
+                    foreach (WowExe i in comboBoxWoWs.Items)
+                    {
+                        if (!i.alreadyHooked)
+                        {
+                            comboBoxWoWs.SelectedItem = i;
+                            break;
+                        }
+                    }
                 }
+            }
+        }
+
+        private void ButtonLaunchWow_Click(object sender, RoutedEventArgs e)
+        {
+            Process wowProcess = Process.Start(globalSettings.wowExePath);
+            wowProcess.WaitForInputIdle();
+
+            pIdOfStartedWow = wowProcess.Id;
+            SearchForWoW();
+
+            foreach (WowExe i in comboBoxWoWs.Items)
+            {
+                if (i.process.Id == pIdOfStartedWow)
+                {
+                    comboBoxWoWs.SelectedItem = i;
+                }
+            }
+        }
+
+        private void ButtonSelectWowPath_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                AddExtension = true,
+                RestoreDirectory = true,
+                Filter = "WoW Exe *.exe|*.exe"
+            };
+
+            if (openFileDialog.ShowDialog() == true)
+            {
+                globalSettings.wowExePath = openFileDialog.FileName;
+                labelWowPath.Content = globalSettings.wowExePath;
+                File.WriteAllText(globalConfigPath + extension, Newtonsoft.Json.JsonConvert.SerializeObject(globalSettings));
             }
         }
     }

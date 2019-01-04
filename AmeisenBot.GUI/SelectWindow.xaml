@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="AmeisenBot - Select WoW" Height="150" Width="528" ResizeMode="NoResize" Loaded="LoadingForm_Loaded" WindowStyle="None" Topmost="True" MouseDown="LoadingForm_MouseDown" Icon="Icon.ico" BorderThickness="2">
+        Title="AmeisenBot - Select WoW" Height="200" Width="528" ResizeMode="NoResize" Loaded="LoadingForm_Loaded" WindowStyle="None" Topmost="True" MouseDown="LoadingForm_MouseDown" Icon="Icon.ico" BorderThickness="2">
     <Window.BorderBrush>
         <SolidColorBrush Color="{DynamicResource AccentColor}" />
     </Window.BorderBrush>
@@ -12,12 +12,12 @@
         <SolidColorBrush Color="{DynamicResource BackgroundColor}" />
     </Window.Background>
     <Grid Margin="0,0,0,-4">
-        <ComboBox x:Name="comboBoxWoWs" HorizontalAlignment="Left" Margin="9,8,0,0" VerticalAlignment="Top" FontSize="24" Background="{x:Null}" Foreground="Black" BorderThickness="2" FontFamily="Consolas" Width="362" SelectionChanged="ComboBoxWoWs_SelectionChanged">
+        <ComboBox x:Name="comboBoxWoWs" HorizontalAlignment="Left" Margin="10,23,0,0" VerticalAlignment="Top" FontSize="24" Background="{x:Null}" Foreground="Black" BorderThickness="2" FontFamily="Consolas" Width="362" SelectionChanged="ComboBoxWoWs_SelectionChanged" TabIndex="0">
             <ComboBox.BorderBrush>
                 <SolidColorBrush Color="{DynamicResource AccentColor}" />
             </ComboBox.BorderBrush>
         </ComboBox>
-        <Button x:Name="buttonRefresh" Content="↻" HorizontalAlignment="Left" Margin="376,8,0,0" VerticalAlignment="Top" Width="50" Height="34" FontSize="20" Click="ButtonRefresh_Click" Background="{x:Null}" BorderThickness="2" FontWeight="Bold" FontFamily="Arial" IsManipulationEnabled="True">
+        <Button x:Name="buttonRefresh" Content="↻" HorizontalAlignment="Left" Margin="377,23,0,0" VerticalAlignment="Top" Width="62" Height="34" FontSize="20" Click="ButtonRefresh_Click" Background="{x:Null}" BorderThickness="2" FontWeight="Bold" FontFamily="Arial" IsManipulationEnabled="True" TabIndex="1">
             <Button.Foreground>
                 <SolidColorBrush Color="{DynamicResource TextColor}" />
             </Button.Foreground>
@@ -25,7 +25,7 @@
                 <SolidColorBrush Color="{DynamicResource AccentColor}" />
             </Button.BorderBrush>
         </Button>
-        <Button x:Name="buttonGo" Content="➤" HorizontalAlignment="Left" Margin="431,8,0,0" VerticalAlignment="Top" Width="50" Height="34" FontSize="20" Click="ButtonGo_Click" Background="{x:Null}" BorderThickness="2">
+        <Button x:Name="buttonGo" Content="Go ➤" HorizontalAlignment="Left" Margin="444,23,0,0" VerticalAlignment="Top" Width="70" Height="34" FontSize="20" Click="ButtonGo_Click" Background="{x:Null}" BorderThickness="2"  TabIndex="2">
             <Button.BorderBrush>
                 <SolidColorBrush Color="{DynamicResource AccentColor}" />
             </Button.BorderBrush>
@@ -33,7 +33,7 @@
                 <SolidColorBrush Color="{DynamicResource TextColor}" />
             </Button.Foreground>
         </Button>
-        <Button x:Name="buttonExit" Content="X" HorizontalAlignment="Left" Margin="486,8,0,0" VerticalAlignment="Top" Width="28" Height="34" FontSize="20" Click="ButtonExit_Click" Background="{x:Null}" BorderThickness="2">
+        <Button x:Name="buttonExit" Content="X" HorizontalAlignment="Left" Margin="506,-2,-2,0" VerticalAlignment="Top" Width="20" Height="20" Click="ButtonExit_Click" Background="{x:Null}" BorderThickness="2">
             <Button.BorderBrush>
                 <SolidColorBrush Color="{DynamicResource AccentColor}" />
             </Button.BorderBrush>
@@ -41,7 +41,7 @@
                 <SolidColorBrush Color="{DynamicResource TextColor}" />
             </Button.Foreground>
         </Button>
-        <Button x:Name="buttonGoAuto" Content="➤ AutoLogin" HorizontalAlignment="Left" Margin="376,63,0,0" VerticalAlignment="Top" Width="138" Height="34" FontSize="20" Background="{x:Null}" BorderThickness="2" Click="ButtonGoAuto_Click">
+        <Button x:Name="buttonGoAuto" Content="AutoLogin ➤" HorizontalAlignment="Left" Margin="377,113,0,0" VerticalAlignment="Top" Width="138" Height="35" FontSize="20" Background="{x:Null}" BorderThickness="2" Click="ButtonGoAuto_Click" TabIndex="10">
             <Button.BorderBrush>
                 <SolidColorBrush Color="{DynamicResource AccentColor}" />
             </Button.BorderBrush>
@@ -49,24 +49,24 @@
                 <SolidColorBrush Color="{DynamicResource TextColor}" />
             </Button.Foreground>
         </Button>
-        <TextBox x:Name="textboxUsername" HorizontalAlignment="Left" Height="20" Margin="124,118,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="110" />
-        <TextBox x:Name="textboxCharSlot" HorizontalAlignment="Left" Height="20" Margin="352,118,0,0" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Width="28" PreviewTextInput="OnlyNumberTextBox" />
-        <Label Content="Username:" HorizontalAlignment="Left" Margin="119,97,0,0" VerticalAlignment="Top">
+        <TextBox x:Name="textboxUsername" HorizontalAlignment="Left" Height="20" Margin="125,168,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="110" TabIndex="7" />
+        <TextBox x:Name="textboxCharSlot" HorizontalAlignment="Left" Height="20" Margin="353,168,0,0" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Width="28" PreviewTextInput="OnlyNumberTextBox" TabIndex="9" />
+        <Label Content="Username:" HorizontalAlignment="Left" Margin="120,147,0,0" VerticalAlignment="Top">
             <Label.Foreground>
                 <SolidColorBrush Color="{DynamicResource TextColor}" />
             </Label.Foreground>
         </Label>
-        <Label Content="Password:" HorizontalAlignment="Left" Margin="234,97,0,0" VerticalAlignment="Top">
+        <Label Content="Password:" HorizontalAlignment="Left" Margin="235,147,0,0" VerticalAlignment="Top">
             <Label.Foreground>
                 <SolidColorBrush Color="{DynamicResource TextColor}" />
             </Label.Foreground>
         </Label>
-        <Label Content="Slot:" HorizontalAlignment="Left" Margin="347,97,0,0" VerticalAlignment="Top">
+        <Label Content="Slot:" HorizontalAlignment="Left" Margin="348,147,0,0" VerticalAlignment="Top">
             <Label.Foreground>
                 <SolidColorBrush Color="{DynamicResource TextColor}" />
             </Label.Foreground>
         </Label>
-        <CheckBox x:Name="checkboxSave" Content="💾 Save Credentials" HorizontalAlignment="Left" Margin="385,121,0,0" VerticalAlignment="Top" BorderThickness="2" IsChecked="True">
+        <CheckBox x:Name="checkboxSave" Content="💾 Save Account" HorizontalAlignment="Left" Margin="386,171,0,0" VerticalAlignment="Top" BorderThickness="2" FontSize="14" TabIndex="11">
             <CheckBox.Foreground>
                 <SolidColorBrush Color="{DynamicResource TextColor}" />
             </CheckBox.Foreground>
@@ -77,16 +77,52 @@
                 <SolidColorBrush Color="{DynamicResource TextColor}" />
             </CheckBox.Background>
         </CheckBox>
-        <PasswordBox x:Name="textboxPassword" HorizontalAlignment="Left" Margin="239,118,0,0" VerticalAlignment="Top" Width="108" Height="20" />
-        <ComboBox x:Name="comboBoxAccounts" HorizontalAlignment="Left" Margin="9,63,0,0" VerticalAlignment="Top" FontSize="24" Background="{x:Null}" Foreground="Black" BorderThickness="2" FontFamily="Consolas" Width="362" SelectionChanged="ComboBoxAccounts_SelectionChanged">
+        <PasswordBox x:Name="textboxPassword" HorizontalAlignment="Left" Margin="240,168,0,0" VerticalAlignment="Top" Width="108" Height="20" TabIndex="8" />
+        <ComboBox x:Name="comboBoxAccounts" HorizontalAlignment="Left" Margin="10,113,0,0" VerticalAlignment="Top" FontSize="24" Background="{x:Null}" Foreground="Black" BorderThickness="2" FontFamily="Consolas" Width="362" SelectionChanged="ComboBoxAccounts_SelectionChanged" TabIndex="5">
             <ComboBox.BorderBrush>
                 <SolidColorBrush Color="{DynamicResource AccentColor}" />
             </ComboBox.BorderBrush>
         </ComboBox>
-        <TextBox x:Name="textboxCharactername" HorizontalAlignment="Left" Height="20" Margin="9,118,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="110" />
-        <Label Content="Character:" HorizontalAlignment="Left" Margin="3,97,0,0" VerticalAlignment="Top">
+        <TextBox x:Name="textboxCharactername" HorizontalAlignment="Left" Height="20" Margin="10,168,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="110" TabIndex="6" />
+        <Label Content="Character:" HorizontalAlignment="Left" Margin="4,147,0,0" VerticalAlignment="Top">
             <Label.Foreground>
                 <SolidColorBrush Color="{DynamicResource TextColor}" />
+            </Label.Foreground>
+        </Label>
+        <Button x:Name="buttonLaunchWow" Content="Launch WoW" HorizontalAlignment="Left" Margin="377,62,0,0" VerticalAlignment="Top" Width="137" Height="23" Background="{x:Null}" BorderThickness="2" Click="ButtonLaunchWow_Click"  TabIndex="4">
+            <Button.BorderBrush>
+                <SolidColorBrush Color="{DynamicResource AccentColor}" />
+            </Button.BorderBrush>
+            <Button.Foreground>
+                <SolidColorBrush Color="{DynamicResource TextColor}" />
+            </Button.Foreground>
+        </Button>
+        <Label x:Name="labelWowPath" Content="C:/Wow/WoW.exe" HorizontalAlignment="Left" Margin="11,59,0,0" VerticalAlignment="Top" Width="322">
+            <Label.Foreground>
+                <SolidColorBrush Color="{DynamicResource TextColor}"/>
+            </Label.Foreground>
+        </Label>
+        <Button x:Name="buttonSelectWowPath" Content="📁" HorizontalAlignment="Left" Margin="349,62,0,0" VerticalAlignment="Top" Width="23" Height="23" Background="{x:Null}" BorderThickness="2" FontWeight="Bold" FontFamily="Arial" IsManipulationEnabled="True" Click="ButtonSelectWowPath_Click"  TabIndex="3">
+            <Button.Foreground>
+                <SolidColorBrush Color="{DynamicResource TextColor}" />
+            </Button.Foreground>
+            <Button.BorderBrush>
+                <SolidColorBrush Color="{DynamicResource AccentColor}" />
+            </Button.BorderBrush>
+        </Button>
+        <Label Content="Select a WoW process:" HorizontalAlignment="Left" Margin="4,0,0,0" VerticalAlignment="Top" Width="322">
+            <Label.Foreground>
+                <SolidColorBrush Color="{DynamicResource TextColor}"/>
+            </Label.Foreground>
+        </Label>
+        <Rectangle HorizontalAlignment="Left" Height="2" Margin="-2,91,-2,0" VerticalAlignment="Top" Width="528">
+            <Rectangle.Fill>
+                <SolidColorBrush Color="{DynamicResource AccentColor}"/>
+            </Rectangle.Fill>
+        </Rectangle>
+        <Label Content="Select a saved account (or create a new one below):" HorizontalAlignment="Left" Margin="4,91,0,0" VerticalAlignment="Top" Width="322">
+            <Label.Foreground>
+                <SolidColorBrush Color="{DynamicResource TextColor}"/>
             </Label.Foreground>
         </Label>
     </Grid>

@@ -1,6 +1,5 @@
 ﻿using AmeisenBotData;
 using AmeisenBotLogger;
-using AmeisenBotMapping.objects;
 using AmeisenBotUtilities;
 using AmeisenBotUtilities.Enums;
 using AmeisenBotUtilities.Objects;
@@ -90,39 +89,6 @@ namespace AmeisenBotDB
         }
 
         /// <summary>
-        /// Get all saved nodes by the zone & map id
-        /// </summary>
-        /// <param name="zoneID">zone id to get the nodes from</param>
-        /// <param name="mapID">map id to get the nodes from</param>
-        /// <returns>list containing all the MapNodes</returns>
-        public List<MapNode> GetNodes(int zoneID, int mapID, int maxX = 0, int minX = 0, int maxY = 0, int minY = 0)
-        {
-            if (AmeisenDataHolder.IsConnectedToDB)
-            {
-                MySqlConnection sqlConnection = new MySqlConnection(MysqlConnectionString);
-                sqlConnection.Open();
-
-                StringBuilder sqlQuery = new StringBuilder();
-                sqlQuery.Append($"SELECT * FROM {TABLE_NAME_NODES} ");
-                sqlQuery.Append($"WHERE zone_id = {zoneID} AND ");
-                sqlQuery.Append($"map_id = {mapID} ");
-
-                if (maxX >= minX) { sqlQuery.Append($"AND (x BETWEEN {minX} AND {maxX})"); }
-                else { sqlQuery.Append($"AND (x BETWEEN {maxX} AND {minX})"); }
-
-                if (maxX >= minX) { sqlQuery.Append($"AND (y BETWEEN {minY} AND {maxY})"); }
-                else { sqlQuery.Append($"AND (y BETWEEN {maxY} AND {minY})"); }
-
-                sqlQuery.Append(";");
-
-                List<MapNode> nodeList = sqlConnection.Query<MapNode>(sqlQuery.ToString()).AsList();
-                sqlConnection.Close();
-                return nodeList;
-            }
-            return new List<MapNode>();
-        }
-
-        /// <summary>
         /// Initialise the database with Tables
         /// </summary>
         public void InitDB()
@@ -166,35 +132,6 @@ namespace AmeisenBotDB
                 sqlConnection.Close();
                 AmeisenLogger.Instance.Log(LogLevel.DEBUG, "Initialized MySQL DB", this);
             }
-        }
-
-        /// <summary>
-        /// Add a MapNode to the database, duplicate nodes will be ignored
-        /// </summary>
-        /// <param name="mapNode">Node to add</param>
-        /// <returns>affected SQL rows</returns>
-        public int UpdateOrAddNode(MapNode mapNode)
-        {
-            if (AmeisenDataHolder.IsConnectedToDB)
-            {
-                MySqlConnection sqlConnection = new MySqlConnection(MysqlConnectionString);
-                sqlConnection.Open();
-                StringBuilder sqlQuery = new StringBuilder();
-                sqlQuery.Append("INSERT INTO ");
-                sqlQuery.Append(TABLE_NAME_NODES + " (x, y, z, zone_id, map_id) ");
-                sqlQuery.Append($"VALUES({mapNode.X}, {mapNode.Y}, {mapNode.Z}, {mapNode.ZoneID}, {mapNode.MapID}) ");
-                sqlQuery.Append($"ON DUPLICATE KEY UPDATE zone_id = {mapNode.ZoneID}, map_id = {mapNode.MapID};");
-
-                // very rarely getting weird deadlock exception
-                int affectedRows = 0;
-
-                try { affectedRows = sqlConnection.Execute(sqlQuery.ToString()); }
-                catch { /* duplicate rows throw an error lel */ }
-
-                sqlConnection.Close();
-                return affectedRows;
-            }
-            return -1;
         }
 
         public void RememberUnit(RememberedUnit rememberedUnit)

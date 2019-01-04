@@ -45,6 +45,12 @@ namespace AmeisenBotManager
         public AmeisenDBManager AmeisenDBManager { get; private set; }
         public List<WowObject> ActiveWoWObjects { get { return AmeisenDataHolder.ActiveWoWObjects; } }
 
+        public List<Unit> Partymembers
+        {
+            get { return AmeisenDataHolder.Partymembers; }
+            set { AmeisenDataHolder.Partymembers = value; }
+        }
+
         public bool IsAllowedToAssistParty
         {
             get { return AmeisenDataHolder.IsAllowedToAssistParty; }
@@ -127,7 +133,7 @@ namespace AmeisenBotManager
         public WowExe WowExe { get; private set; }
         public Process WowProcess { get; private set; }
         public MeCharacter Character => AmeisenCharacterManager.Character;
-        public int MapID { get { return AmeisenCore.GetMapID(); } }
+        public int MapID { get { return AmeisenCore.GetMapId(); } }
         public int ZoneID { get { return AmeisenCore.GetZoneID(); } }
         public string LoadedConfigName { get { return AmeisenSettings.loadedconfName; } }
         public int HookJobsInQueue => AmeisenHook.JobCount;
@@ -288,6 +294,10 @@ namespace AmeisenBotManager
             // TODO: make this non static
             AmeisenCore.AmeisenHook = AmeisenHook;
 
+            // Unlimit fps to speed up loading, we will limit them later again
+            AmeisenCore.RunSlashCommand($"/console maxfps 30");
+            AmeisenCore.RunSlashCommand($"/console maxfpsbk 30");
+
             // Init our CharacterMangager to keep track of our stats/items/money
             AmeisenCharacterManager = new AmeisenCharacterManager();
             AmeisenCharacterManager.UpdateCharacterAsync();
@@ -350,9 +360,29 @@ namespace AmeisenBotManager
                 ConnectToServer();
             }
 
+            // Ultralow Gfx
+            if (Settings.autoUltralowGfx)
+            {
+                AmeisenCore.RunSlashCommand("/console farclip 350");
+                AmeisenCore.RunSlashCommand("/console groundEffectDensity 0");
+                AmeisenCore.RunSlashCommand("/console groundEffectDistance 0");
+                AmeisenCore.RunSlashCommand("/console environmentDetail 0");
+                AmeisenCore.RunSlashCommand("/console particleDensity 10");
+                AmeisenCore.RunSlashCommand("/console shadowMode 0");
+                AmeisenCore.RunSlashCommand("/console waterDetail 0");
+                AmeisenCore.RunSlashCommand("/console reflectionMode 0");
+                AmeisenCore.RunSlashCommand("/console sunShafts 0");
+                AmeisenCore.RunSlashCommand("/console basemip 1");
+                AmeisenCore.RunSlashCommand("/console terrainMipLevel 1");
+                AmeisenCore.RunSlashCommand("/console projectedTextures 0");
+                AmeisenCore.RunSlashCommand("/console weatherDensity 0");
+                AmeisenCore.RunSlashCommand("/console componentTextureLevel 0");
+                AmeisenCore.RunSlashCommand("/console textureFilteringMode 0");
+            }
+
             // Limit fps
-            AmeisenCore.RunSlashCommand("/console maxfps 30");
-            AmeisenCore.RunSlashCommand("/console maxfpsbk 30");
+            AmeisenCore.RunSlashCommand($"/console maxfps {Settings.maxFpsForeground}");
+            AmeisenCore.RunSlashCommand($"/console maxfpsbk {Settings.maxFpsBackground}");
 
             AmeisenDataHolder.IsInWorld = true;
         }

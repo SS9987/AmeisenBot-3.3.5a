@@ -34,11 +34,15 @@ namespace AmeisenBotUtilities
         {
             base.Update();
 
-            pos.X = BlackMagicInstance.ReadFloat(BaseAddress + 0x24);
-            pos.Y = BlackMagicInstance.ReadFloat(BaseAddress + 0x28);
-            pos.Z = BlackMagicInstance.ReadFloat(BaseAddress + 0x2C);
-            Rotation = BlackMagicInstance.ReadFloat(BaseAddress + 0x20);
-            Owner = BlackMagicInstance.ReadUInt64(BaseAddress + 0x18);
+            try
+            {
+                pos.X = BlackMagicInstance.ReadFloat(BaseAddress + 0x24);
+                pos.Y = BlackMagicInstance.ReadFloat(BaseAddress + 0x28);
+                pos.Z = BlackMagicInstance.ReadFloat(BaseAddress + 0x2C);
+                Rotation = BlackMagicInstance.ReadFloat(BaseAddress + 0x20);
+                Owner = BlackMagicInstance.ReadUInt64(BaseAddress + 0x18);
+            }
+            catch { }
         }
     }
 }

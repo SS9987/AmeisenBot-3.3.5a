@@ -21,8 +21,12 @@ namespace AmeisenBotUtilities
             BaseAddress = baseAddress;
             BlackMagicInstance = blackMagic;
 
-            Descriptor = BlackMagicInstance.ReadUInt(BaseAddress + 0x8);
-            Guid = BlackMagicInstance.ReadUInt64(BaseAddress + 0x30);
+            try
+            {
+                Descriptor = BlackMagicInstance.ReadUInt(BaseAddress + 0x8);
+                Guid = BlackMagicInstance.ReadUInt64(BaseAddress + 0x30);
+            }
+            catch { }
         }
 
         public override string ToString()

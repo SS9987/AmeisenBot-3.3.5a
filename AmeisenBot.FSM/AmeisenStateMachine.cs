@@ -112,11 +112,7 @@ namespace AmeisenBotFSM
         /// Call this to Update the Statemachine and execute actions
         /// </summary>
         public void Update() => GetCurrentStateAction(GetCurrentState())?.StartDoThings.Invoke();
-
-        // TODO: implement this
-        private List<IAction> GetBotStuffToDo()
-            => BotStuffList;
-
+        
         /// <summary>
         /// Map the BotState to an IAction containing Start(), DoThings() and Stop()
         /// </summary>

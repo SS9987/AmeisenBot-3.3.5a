@@ -198,24 +198,28 @@ namespace AmeisenBotCore
         {
             List<WowObject> objects = new List<WowObject>();
 
-            uint currentObjectManager = BlackMagic.ReadUInt(Offsets.currentClientConnection);
-            currentObjectManager = BlackMagic.ReadUInt(currentObjectManager + Offsets.currentManagerOffset);
-
-            uint activeObject = BlackMagic.ReadUInt(currentObjectManager + Offsets.firstObjectOffset);
-            uint objectType = BlackMagic.ReadUInt(activeObject + Offsets.gameobjectTypeOffset);
-
-            // loop through the objects until an object is bigger than 7 or lower than 1 to get all
-            // Objects from manager
-            while (objectType <= 7 && objectType > 0)
+            try
             {
-                WowObject wowObject = ReadWoWObjectFromWoW(activeObject, (WowObjectType)objectType);
-                wowObject.MapID = GetMapID();
-                wowObject.ZoneID = GetZoneID();
-                objects.Add(wowObject);
+                uint currentObjectManager = BlackMagic.ReadUInt(Offsets.currentClientConnection);
+                currentObjectManager = BlackMagic.ReadUInt(currentObjectManager + Offsets.currentManagerOffset);
 
-                activeObject = BlackMagic.ReadUInt(activeObject + Offsets.nextObjectOffset);
-                objectType = BlackMagic.ReadUInt(activeObject + Offsets.gameobjectTypeOffset);
+                uint activeObject = BlackMagic.ReadUInt(currentObjectManager + Offsets.firstObjectOffset);
+                uint objectType = BlackMagic.ReadUInt(activeObject + Offsets.gameobjectTypeOffset);
+
+                // loop through the objects until an object is bigger than 7 or lower than 1 to get all
+                // Objects from manager
+                while (objectType <= 7 && objectType > 0)
+                {
+                    WowObject wowObject = ReadWoWObjectFromWoW(activeObject, (WowObjectType)objectType);
+                    wowObject.MapID = GetMapId();
+                    wowObject.ZoneID = GetZoneID();
+                    objects.Add(wowObject);
+
+                    activeObject = BlackMagic.ReadUInt(activeObject + Offsets.nextObjectOffset);
+                    objectType = BlackMagic.ReadUInt(activeObject + Offsets.gameobjectTypeOffset);
+                }
             }
+            catch { AmeisenLogger.Instance.Log(LogLevel.ERROR, "Failed to read WowObjects...", "AmeisenCore"); }
 
             return objects;
         }
@@ -435,7 +439,7 @@ namespace AmeisenBotCore
         /// Get our current MapID
         /// </summary>
         /// <returns>mapid</returns>
-        public static int GetMapID() => BlackMagic.ReadInt(Offsets.mapId);
+        public static int GetMapId() => BlackMagic.ReadInt(Offsets.mapId);
 
         /// <summary>
         /// Run through the WoWObjectManager and find the BaseAdress corresponding to the given GUID
@@ -475,10 +479,29 @@ namespace AmeisenBotCore
                 AmeisenLogger.Instance.Log(LogLevel.DEBUG, $"Found WoW Process! PID: {p.Id}", "AmeisenCore");
 
                 BlackMagic blackmagic = new BlackMagic(p.Id);
+                uint pDevice = blackmagic.ReadUInt(Offsets.devicePtr1);
+                uint pEnd = blackmagic.ReadUInt(pDevice + Offsets.devicePtr2);
+                uint pScene = blackmagic.ReadUInt(pEnd);
+                uint endscene = blackmagic.ReadUInt(pScene + Offsets.endScene);
+
+                bool isAlreadyHooked = false;
+                try
+                {
+                    isAlreadyHooked = BlackMagic.ReadByte(endscene) == 0xE9;
+                }
+                catch { }
+
+                string name = blackmagic.ReadASCIIString(Offsets.playerName, 12);
+                if (name == "")
+                {
+                    name = "not logged in";
+                }
+
                 wows.Add(new WowExe
                 {
-                    characterName = blackmagic.ReadASCIIString(Offsets.playerName, 12),
-                    process = p
+                    characterName = name,
+                    process = p,
+                    alreadyHooked = isAlreadyHooked
                 });
                 blackmagic.Close();
             }

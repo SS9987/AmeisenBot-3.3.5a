@@ -3,7 +3,6 @@ using AmeisenBotCore;
 using AmeisenBotData;
 using AmeisenBotDB;
 using AmeisenBotLogger;
-using AmeisenBotMapping.objects;
 using AmeisenBotUtilities;
 using System;
 using System.Collections.Generic;
@@ -50,9 +49,7 @@ namespace AmeisenBotManager
             AmeisenDataHolder = ameisenDataHolder;
             AmeisenDBManager = ameisenDBManager;
             RefreshObjects();
-
-            // Get Partymembers
-            ameisenDataHolder.Partymembers = CombatUtils.GetPartymembers(Me, ActiveWoWObjects);
+            AmeisenDataHolder.Partymembers = CombatUtils.GetPartymembers(Me, ActiveWoWObjects);
         }
 
         /// <summary>
@@ -113,22 +110,6 @@ namespace AmeisenBotManager
             objectUpdateTimer.Elapsed += ObjectUpdateTimer;
             objectUpdateThread = new Thread(new ThreadStart(StartTimer));
             objectUpdateThread.Start();
-
-            // Timer to update odes in the DB,
-            // keep in mind this needs performance at the DB side
-            // but will increse mapping details!
-            nodeDBUpdateTimer = new System.Timers.Timer(AmeisenDataHolder.Settings.dataRefreshRate);
-            nodeDBUpdateTimer.Elapsed += NodeDBUpdateTimer;
-            //nodeDBUpdateTimer.Start();
-        }
-
-        private void NodeDBUpdateTimer(object sender, ElapsedEventArgs e)
-        {
-            if (Me != null)
-            {
-                // need lock for this
-                UpdateNodeInDB(Me);
-            }
         }
 
         /// <summary>
@@ -176,6 +157,7 @@ namespace AmeisenBotManager
                 {
                     t.Update();
                     Me = (Me)t;
+                    Me.MapID = AmeisenCore.GetMapId();
                     continue;
                 }
 
@@ -210,6 +192,21 @@ namespace AmeisenBotManager
                 }
             }
 
+            // Get Partymembers
+            //AmeisenDataHolder.Partymembers = CombatUtils.GetPartymembers(Me, ActiveWoWObjects);
+
+            if (AmeisenDataHolder.Partymembers != null)
+            {
+                foreach (Unit unit in AmeisenDataHolder.Partymembers)
+                {
+                    if (unit != null)
+                    {
+                        unit.Update();
+                    }
+                }
+            }
+            
+
             // Best place for this :^)
             AntiAFK();
         }
@@ -233,30 +230,5 @@ namespace AmeisenBotManager
         }
 
         private void StartTimer() => objectUpdateTimer.Start();
-
-        private void UpdateNodeInDB(Me me)
-        {
-            int zoneID = AmeisenCore.GetZoneID();
-            int mapID = AmeisenCore.GetMapID();
-            // Me
-            AmeisenDBManager.UpdateOrAddNode(new MapNode(me.pos, zoneID, mapID));
-
-            List<ulong> copyOfPartymembers = me.PartymemberGuids;
-
-            // fix with a lock or something alike...
-            try
-            {
-                // All partymembers
-                foreach (ulong guid in copyOfPartymembers)
-                {
-                    Unit unit = (Unit)GetWoWObjectFromGUID(guid);
-                    if (unit != null && Utils.GetDistance(me.pos, unit.pos) < 75)
-                    {
-                        AmeisenDBManager.UpdateOrAddNode(new MapNode(unit.pos, zoneID, mapID));
-                    }
-                }
-            }
-            catch { }
-        }
     }
 }

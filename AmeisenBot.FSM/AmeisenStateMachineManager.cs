@@ -9,7 +9,6 @@ using AmeisenBotFSM.Enums;
 using AmeisenBotLogger;
 using AmeisenBotUtilities;
 using AmeisenMovement;
-using System;
 using System.Threading;
 
 namespace AmeisenBotFSM
@@ -127,14 +126,14 @@ namespace AmeisenBotFSM
                     continue;
                 }
 
-                // Is me supposed to follow
-                if (FollowCheck())
+                // Am I dead?
+                if (DeadCheck())
                 {
                     continue;
                 }
 
-                // Am I dead?
-                if (DeadCheck())
+                // Do I need to release my spirit
+                if (ReleaseSpiritCheck())
                 {
                     continue;
                 }
@@ -145,8 +144,8 @@ namespace AmeisenBotFSM
                     continue;
                 }
 
-                // Do I need to release my spirit
-                if (ReleaseSpiritCheck())
+                // Is me supposed to follow
+                if (FollowCheck())
                 {
                     continue;
                 }
@@ -246,7 +245,13 @@ namespace AmeisenBotFSM
                 if (Me.Health == 0)
                 {
                     AmeisenCore.ReleaseSpirit();
-                    Thread.Sleep(2000);
+                    Thread.Sleep(1000);
+
+                    while (AmeisenCore.IsInLoadingScreen())
+                    {
+                        Thread.Sleep(200);
+                    }
+
                     return true;
                 }
             }

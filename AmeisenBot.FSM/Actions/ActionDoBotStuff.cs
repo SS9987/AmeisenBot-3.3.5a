@@ -87,7 +87,7 @@ namespace AmeisenBotFSM.Actions
                 }
             }
 
-            if (grayCount > 8 ) // need to check for full bags|| (&&grayCount > 0))
+            if (grayCount > 8) // need to check for full bags|| (&&grayCount > 0))
             {
                 return true;
             }

@@ -109,17 +109,18 @@ namespace AmeisenBotUtilities
                 PartymemberGuids.Add(BlackMagicInstance.ReadUInt64(Offsets.partyPlayer4));
 
                 // try to add raidmembers
-                for (uint g = 0; g < 8; g++)
+                for (uint p = 0; p < 40; p++)
                 {
-                    for (uint p = 0; p < 5; p++)
+                    try
                     {
-                        uint address = Offsets.raidGroup1 + (g * Offsets.raidGroupOffset) + (p * Offsets.raidPlayerOffset);
+                        uint address = Offsets.raidGroup1 + (p * Offsets.raidPlayerOffset);
                         ulong guid = BlackMagicInstance.ReadUInt64(address);
                         if (!PartymemberGuids.Contains(guid))
                         {
                             PartymemberGuids.Add(guid);
                         }
                     }
+                    catch { }
                 }
             }
             catch { }
