@@ -79,7 +79,7 @@
         public static readonly uint playerClass = 0xC79E89;
         public static readonly uint playerRace = 0xC79E88;
         public static readonly uint raidLeader = 0xBD1990;
-        public static readonly uint raidGroup1 = 0xBF8258;
+        public static readonly uint raidGroupStart = 0xBF8258;
         public static readonly uint raidPlayerOffset = 0x50;
         public static readonly uint realmName = 0xC79B9E;
         public static readonly uint sendMovementPacket = 0x7413F0;

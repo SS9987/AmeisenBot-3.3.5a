@@ -26,12 +26,12 @@ namespace AmeisenBotCore
         public void Init()
         {
             StringBuilder luaStuff = new StringBuilder();
-            luaStuff.Append("abFrame = CreateFrame(\"FRAME\", \"AbotEventFrame\");");
-            luaStuff.Append("abEventTable = {};");
+            luaStuff.Append("abFrame = CreateFrame(\"FRAME\", \"AbotEventFrame\") ");
+            luaStuff.Append("abEventTable = {} ");
             luaStuff.Append("function abEventHandler(self, event, ...) ");
-            luaStuff.Append("table.insert(abEventTable, {time(), event, {...}}) ");
-            luaStuff.Append("end;");
-            luaStuff.Append("abFrame:SetScript(\"OnEvent\", abEventHandler);");
+            luaStuff.Append("table.insert(abEventTable, {time(), event, {...}}) end ");
+            luaStuff.Append("if abFrame:GetScript(\"OnEvent\") == nil then ");
+            luaStuff.Append("abFrame:SetScript(\"OnEvent\", abEventHandler) end");
             AmeisenCore.LuaDoString(luaStuff.ToString());
 
             IsNotInWorld = false;
@@ -45,6 +45,8 @@ namespace AmeisenBotCore
         {
             if (IsActive)
             {
+                AmeisenCore.LuaDoString($"abFrame:UnregisterAllEvents();");
+                AmeisenCore.LuaDoString("abFrame:SetScript(\"OnEvent\", nil)");
                 IsActive = false;
                 EventReader.Join();
             }

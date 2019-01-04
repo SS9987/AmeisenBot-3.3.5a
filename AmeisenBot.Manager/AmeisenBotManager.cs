@@ -312,10 +312,10 @@ namespace AmeisenBotManager
             AmeisenEventHook.Subscribe(WowEvents.PARTY_INVITE_REQUEST, OnPartyInvitation);
             AmeisenEventHook.Subscribe(WowEvents.CONFIRM_SUMMON, OnSummonRequest);
             AmeisenEventHook.Subscribe(WowEvents.RESURRECT_REQUEST, OnResurrectRequest);
-            AmeisenEventHook.Subscribe(WowEvents.ITEM_PUSH, OnNewItem);
             AmeisenEventHook.Subscribe(WowEvents.PLAYER_REGEN_DISABLED, OnRegenDisabled);
             AmeisenEventHook.Subscribe(WowEvents.PLAYER_REGEN_ENABLED, OnRegenEnabled);
             AmeisenEventHook.Subscribe(WowEvents.START_LOOT_ROLL, OnStartLootRoll);
+            AmeisenEventHook.Subscribe(WowEvents.ITEM_PUSH, OnNewItem);
             AmeisenEventHook.Subscribe(WowEvents.PARTY_MEMBERS_CHANGED, OnGroupChanged);
             //AmeisenEventHook.Subscribe(WowEvents.COMBAT_LOG_EVENT_UNFILTERED, OnCombatLogEvent);
 

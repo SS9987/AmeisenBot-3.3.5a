@@ -113,7 +113,7 @@ namespace AmeisenBotUtilities
                 {
                     try
                     {
-                        uint address = Offsets.raidGroup1 + (p * Offsets.raidPlayerOffset);
+                        uint address = Offsets.raidGroupStart + (p * Offsets.raidPlayerOffset);
                         ulong guid = BlackMagicInstance.ReadUInt64(address);
                         if (!PartymemberGuids.Contains(guid))
                         {
