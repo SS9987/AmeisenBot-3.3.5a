@@ -525,7 +525,7 @@ namespace AmeisenBotManager
         private void OnRegenEnabled(long timestamp, List<string> args)
         {
             Me.InCombatEvent = false;
-            CheckForLoot();
+            // CheckForLoot();
         }
 
         private void CheckForLoot()

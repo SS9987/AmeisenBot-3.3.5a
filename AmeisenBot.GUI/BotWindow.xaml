@@ -366,7 +366,7 @@
                 <SolidColorBrush Color="{DynamicResource TextColor}" />
             </Button.Foreground>
         </Button>
-        <Button x:Name="buttonDebugTest" Content="FaceUnit" HorizontalAlignment="Left" Margin="403,66,0,0" VerticalAlignment="Top" Width="79" BorderThickness="1,1,2,2" FontSize="11" Height="23" Click="ButtonDebugTest_Click">
+        <Button x:Name="buttonDebugTest" Content="TargetGuid" HorizontalAlignment="Left" Margin="403,66,0,0" VerticalAlignment="Top" Width="79" BorderThickness="1,1,2,2" FontSize="11" Height="23" Click="ButtonDebugTest_Click">
             <Button.Background>
                 <SolidColorBrush Color="{DynamicResource BackgroundColor}" />
             </Button.Background>
@@ -408,5 +408,6 @@
         </Label>
         <Label Content="🐉" HorizontalAlignment="Left" Margin="432,328,0,-2" VerticalAlignment="Top" FontSize="30" RenderTransformOrigin="4.267,0.515" Height="50" Width="50" Foreground="#19FFFFFF" />
         <WrapPanel x:Name="stackpanelGroupViews" HorizontalAlignment="Left" Height="122" Margin="168,254,0,0" VerticalAlignment="Top" Width="312" Orientation="Horizontal"/>
+        <TextBox x:Name="textboxGuid" HorizontalAlignment="Left" Height="23" Margin="353,66,0,0" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Width="45"/>
     </Grid>
 </Window>

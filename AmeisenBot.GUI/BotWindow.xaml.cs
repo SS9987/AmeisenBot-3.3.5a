@@ -475,7 +475,7 @@ namespace AmeisenBotGUI
 
         private void ButtonDebugTest_Click(object sender, RoutedEventArgs e)
         {
-            AmeisenBotCore.AmeisenCore.FaceUnit(BotManager.Me, BotManager.Target);
+            AmeisenBotCore.AmeisenCore.TargetGUID(ulong.Parse(textboxGuid.Text));
         }
 
         private void ButtonDebugTest2_Click(object sender, RoutedEventArgs e)

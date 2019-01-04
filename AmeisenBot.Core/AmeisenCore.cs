@@ -6,6 +6,7 @@ using Magic;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 
@@ -487,7 +488,7 @@ namespace AmeisenBotCore
                 bool isAlreadyHooked = false;
                 try
                 {
-                    isAlreadyHooked = BlackMagic.ReadByte(endscene) == 0xE9;
+                    isAlreadyHooked = BlackMagic.ReadByte(endscene + 0x2) == 0xE9;
                 }
                 catch { }
 
@@ -752,12 +753,12 @@ namespace AmeisenBotCore
         /// Target a GUID by calling WoW's clientGameUITarget function on our hook
         /// </summary>
         /// <param name="guid">guid to target</param>
-        public static void TargetGUID(ulong guid)
+        public static void TargetGUID(ulong guid, [CallerMemberName]string functionName = "")
         {
-            AmeisenLogger.Instance.Log(LogLevel.DEBUG, $"TargetGUID: {guid}", "AmeisenCore");
-            //BlackMagic.WriteUInt64(Offsets.localTargetGUID, guid);
+            AmeisenLogger.Instance.Log(LogLevel.DEBUG, $"TargetGUID: {guid}", "AmeisenCore", functionName);
+            //BlackMagic.WriteUInt64(Offsets.localTargetGuid, guid);
 
-            byte[] guidBytes = BitConverter.GetBytes(guid);
+            byte[] guidBytes = BitConverter.GetBytes(Convert.ToUInt64(guid));
             string[] asm = new string[]
             {
                 $"PUSH {BitConverter.ToUInt32(guidBytes, 4)}",

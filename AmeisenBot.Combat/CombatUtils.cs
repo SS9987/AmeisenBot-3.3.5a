@@ -245,7 +245,7 @@ namespace AmeisenBotCombat
             => AmeisenCore.RunSlashCommand("/startattack");
 
         /// <summary>
-        /// Get a target to attack by scanniung hwat your partymembers attack
+        /// Get a target to attack by scanniung hat your partymembers attack
         /// </summary>
         /// <param name="me">me object</param>
         /// <param name="activeWowObjects">all active wow objects</param>
@@ -267,6 +267,12 @@ namespace AmeisenBotCombat
                     }
 
                     targetToAttack.Update();
+
+                    // check if the target is a valid object
+                    if (activeWowObjects.FindAll(o => o.Guid == targetToAttack.Guid).Count == 0)
+                    {
+                        continue;
+                    }
 
                     AmeisenCore.TargetGUID(targetToAttack.Guid);
                     me.Update();
@@ -319,7 +325,11 @@ namespace AmeisenBotCombat
             units.Add(me);
             if (units.Count > 0)
             {
-                List<Unit> unitsSorted = units.Where(o => o.HealthPercentage != 0).OrderBy(o => o.HealthPercentage).ToList();
+                List<Unit> unitsSorted = 
+                    units.Where(o => Utils.GetDistance(me.pos, o.pos) < 38)
+                    .Where(o => o.HealthPercentage != 0)
+                    .OrderBy(o => o.HealthPercentage).ToList();
+
                 unitsSorted.First().Update();
                 AmeisenCore.TargetGUID(unitsSorted.First().Guid);
                 me.Update();
