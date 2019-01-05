@@ -422,7 +422,7 @@ namespace AmeisenBotCore
                 AmeisenHook.AddHookJob(ref hookJobDoString);
 
                 // wait for our hook-job to return
-                while (!hookJobDoString.IsFinished) { Thread.Sleep(5); }
+                while (!hookJobDoString.IsFinished) { Thread.Sleep(1); }
 
                 // parse the result bytes to a readable string
                 string result = Encoding.UTF8.GetString((byte[])hookJobDoString.ReturnValue);

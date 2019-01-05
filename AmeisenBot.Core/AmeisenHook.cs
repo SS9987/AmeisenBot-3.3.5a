@@ -87,14 +87,15 @@ namespace AmeisenBotCore
                     if (hookJobs.TryDequeue(out HookJob currentJob))
                     {
                         // process a hook job
-                        InjectAndExecute(currentJob.Asm, currentJob.ReadReturnBytes);
+                        InjectAndExecute(currentJob.Asm, currentJob.ReadReturnBytes, out bool wasJobSuccessful);
 
                         // if its a chained hook job, execute it too
-                        if (currentJob.GetType() == typeof(ReturnHookJob))
+                        if (currentJob.GetType() == typeof(ReturnHookJob) && wasJobSuccessful)
                         {
                             currentJob.ReturnValue = InjectAndExecute(
                                 ((ReturnHookJob)currentJob).ChainedJob.Asm,
-                                ((ReturnHookJob)currentJob).ChainedJob.ReadReturnBytes);
+                                ((ReturnHookJob)currentJob).ChainedJob.ReadReturnBytes,
+                                out bool wasChainedJobSuccessful);
                         }
 
                         currentJob.IsFinished = true;
@@ -149,11 +150,11 @@ namespace AmeisenBotCore
                         codeCave = BlackMagic.AllocateMemory(64);
                         codeCaveForInjection = BlackMagic.AllocateMemory(128);
 
-                        AmeisenLogger.Instance.Log(LogLevel.DEBUG, $"EndScene at: {endscene.ToString("X")}", this);
-                        AmeisenLogger.Instance.Log(LogLevel.DEBUG, $"EndScene returning at: {(endsceneReturnAddress).ToString("X")}", this);
-                        AmeisenLogger.Instance.Log(LogLevel.DEBUG, $"CodeCave at: {codeCave.ToString("X")}", this);
-                        AmeisenLogger.Instance.Log(LogLevel.DEBUG, $"CodeCaveForInjection at: {codeCaveForInjection.ToString("X")}", this);
-                        AmeisenLogger.Instance.Log(LogLevel.DEBUG, $"CodeToExecute at: {codeToExecute.ToString("X")}", this);
+                        AmeisenLogger.Instance.Log(LogLevel.DEBUG, $"EndScene at: 0x{endscene.ToString("X")}", this);
+                        AmeisenLogger.Instance.Log(LogLevel.DEBUG, $"EndScene returning at: 0x{(endsceneReturnAddress).ToString("X")}", this);
+                        AmeisenLogger.Instance.Log(LogLevel.DEBUG, $"CodeCave at: 0x{codeCave.ToString("X")}", this);
+                        AmeisenLogger.Instance.Log(LogLevel.DEBUG, $"CodeCaveForInjection at: 0x{codeCaveForInjection.ToString("X")}", this);
+                        AmeisenLogger.Instance.Log(LogLevel.DEBUG, $"CodeToExecute at: 0x{codeToExecute.ToString("X")}", this);
                         AmeisenLogger.Instance.Log(LogLevel.DEBUG, $"Original Endscene bytes: {Utils.ByteArrayToString(originalEndscene)}", this);
 
                         BlackMagic.Asm.Clear();
@@ -202,7 +203,7 @@ namespace AmeisenBotCore
             }
         }
 
-        private byte[] InjectAndExecute(string[] asm, bool readReturnBytes)
+        private byte[] InjectAndExecute(string[] asm, bool readReturnBytes, out bool successful)
         {
             List<byte> returnBytes = new List<byte>();
 
@@ -210,7 +211,7 @@ namespace AmeisenBotCore
             {
                 if (AmeisenCore.IsInLoadingScreen())
                 {
-                    Thread.Sleep(5);
+                    successful = false;
                     return returnBytes.ToArray();
                 }
 
@@ -268,6 +269,7 @@ namespace AmeisenBotCore
             {
                 // there is code to be executed
                 BlackMagic.WriteInt(codeToExecute, 0);
+                successful = false;
 
                 AmeisenLogger.Instance.Log(
                     LogLevel.ERROR,
@@ -276,6 +278,7 @@ namespace AmeisenBotCore
             }
 
             isInjectionUsed = false;
+            successful = true;
             return returnBytes.ToArray();
         }
     }

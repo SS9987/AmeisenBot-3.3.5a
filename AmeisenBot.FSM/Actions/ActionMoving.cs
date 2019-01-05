@@ -135,18 +135,17 @@ namespace AmeisenBotFSM.Actions
                     {
                         navmeshPath = UsePathfinding(Me.pos, targetPosition);
 
-                        if(navmeshPath == null)
+                        if(navmeshPath == null || navmeshPath.Count == 0)
                         {
+                            Thread.Sleep(1000);
                             return;
                         }
 
-                        if (navmeshPath.Count == 0)
+                        if (navmeshPath.Count > 1)
                         {
-                            Thread.Sleep(500);
-                            return;
+                            navmeshPath.Add(targetPosition); // original position
                         }
 
-                        navmeshPath.Add(targetPosition); // original position
                         movementDistance = AmeisenCore.IsMounted ? 8 : 3; // Mount distance adjustments
 
                         foreach (Vector3 pos in navmeshPath)
@@ -165,10 +164,13 @@ namespace AmeisenBotFSM.Actions
                                 AmeisenCore.MovePlayerToXYZ(pos, InteractionType.MOVE);
                                 posDistance = Utils.GetDistance(Me.pos, pos);
                                 tries++;
-                                Thread.Sleep(100);
+                                Thread.Sleep(20);
                             }
 
-                            if (tries == 10)
+                            Me.Update();
+                            double distanceTraveled = posDistance - Utils.GetDistance(Me.pos, pos);
+                            // if we havent moved 0.2m in thsi time, screw this path
+                            if (tries == 10 && distanceTraveled < 0.2)
                             {
                                 WaypointQueue.Clear();
                                 break;
@@ -187,7 +189,7 @@ namespace AmeisenBotFSM.Actions
             else { }
         }
 
-        private List<Vector3> UsePathfinding(Vector3 initialPosition, Vector3 targetPosition)
+        public List<Vector3> UsePathfinding(Vector3 initialPosition, Vector3 targetPosition)
         {
             Me.Update();
             return AmeisenNavmeshClient.RequestPath(new PathRequest(initialPosition, targetPosition, Me.MapID));

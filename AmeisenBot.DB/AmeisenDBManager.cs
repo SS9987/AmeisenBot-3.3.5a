@@ -6,6 +6,7 @@ using AmeisenBotUtilities.Objects;
 using Dapper;
 using MySql.Data.MySqlClient;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -143,18 +144,17 @@ namespace AmeisenBotDB
                 rememberedUnit.UnitTraitsString = JsonConvert.SerializeObject(rememberedUnit.UnitTraits);
 
                 StringBuilder sqlQuery = new StringBuilder();
-                sqlQuery.Append($"INSERT INTO {TABLE_NAME_REMEMBERED_UNITS} (name, x, y, z, zone_id, map_id, traits) ");
-                sqlQuery.Append($"VALUES(\"{rememberedUnit.Name}\",");
-                sqlQuery.Append($"{(int)rememberedUnit.Position.X},");
-                sqlQuery.Append($"{(int)rememberedUnit.Position.Y},");
-                sqlQuery.Append($"{(int)rememberedUnit.Position.Z},");
-                sqlQuery.Append($"{rememberedUnit.ZoneID},");
-                sqlQuery.Append($"{rememberedUnit.MapID},");
-                sqlQuery.Append($"\"{rememberedUnit.UnitTraitsString}\") ");
-                sqlQuery.Append("ON DUPLICATE KEY UPDATE;");
+                sqlQuery.Append($"INSERT INTO {TABLE_NAME_REMEMBERED_UNITS} (`name`, `x`, `y`, `z`, `zone_id`, `map_id`, `traits`) ");
+                sqlQuery.Append($"VALUES('{rememberedUnit.Name}',");
+                sqlQuery.Append($"'{(int)rememberedUnit.Position.X}',");
+                sqlQuery.Append($"'{(int)rememberedUnit.Position.Y}',");
+                sqlQuery.Append($"'{(int)rememberedUnit.Position.Z}',");
+                sqlQuery.Append($"'{rememberedUnit.ZoneID}',");
+                sqlQuery.Append($"'{rememberedUnit.MapID}',");
+                sqlQuery.Append($"'{rememberedUnit.UnitTraitsString}');");
 
                 try { sqlConnection.Execute(sqlQuery.ToString()); }
-                catch { AmeisenLogger.Instance.Log(LogLevel.ERROR, $"Error adding RememberedUnit: {JsonConvert.SerializeObject(rememberedUnit)}", this); }
+                catch (Exception e) { AmeisenLogger.Instance.Log(LogLevel.ERROR, $"Error adding RememberedUnit: {JsonConvert.SerializeObject(rememberedUnit)}", this); }
                 finally { sqlConnection.Close(); }
             }
         }

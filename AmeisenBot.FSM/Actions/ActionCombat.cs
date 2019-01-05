@@ -6,6 +6,8 @@ using AmeisenBotCore;
 using AmeisenBotData;
 using AmeisenBotDB;
 using AmeisenBotUtilities;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 
 namespace AmeisenBotFSM.Actions
@@ -128,6 +130,12 @@ namespace AmeisenBotFSM.Actions
                 Spell spellToUse = CombatPackage.SpellStrategy.DoRoutine(Me, Target, Pet);
                 if (spellToUse != null)
                 {
+                    while (!IsInLineOfSight(Me, Target))
+                    {
+                        HandleMovement(Target.pos);
+                        Thread.Sleep(500);
+                    }
+
                     CombatUtils.CastSpellByName(Me, Target, spellToUse.Name, false, true);
                 }
                 else
@@ -153,6 +161,21 @@ namespace AmeisenBotFSM.Actions
             {
                 WaypointQueue.Enqueue(pos);
             }
+        }
+
+        private bool IsInLineOfSight(Me me, Unit target)
+        {
+            List<Vector3> path = UsePathfinding(me.pos, target.pos);
+            if (path.Count == 1)
+            {
+                if (target.pos.X == path.First().X
+                 || target.pos.Y == path.First().Y
+                 || target.pos.Z == path.First().Z)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }

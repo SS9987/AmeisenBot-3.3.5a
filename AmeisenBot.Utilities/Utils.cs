@@ -69,7 +69,7 @@ namespace AmeisenBotUtilities
             StringBuilder hex = new StringBuilder(inputBytes.Length * 2);
             foreach (byte b in inputBytes)
             {
-                hex.AppendFormat("{0:x2}", b);
+                hex.AppendFormat("0x{0:x2} ", b);
             }
 
             return hex.ToString();
