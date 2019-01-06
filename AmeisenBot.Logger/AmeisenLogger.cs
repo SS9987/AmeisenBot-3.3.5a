@@ -35,8 +35,8 @@ namespace AmeisenBotLogger
         {
             StringBuilder sb = new StringBuilder();
 
-            sb.Append($"[{id}]");
-            sb.Append($"[{timestamp}]\t");
+            //sb.Append($"[{id}]");
+            sb.Append($"[{timestamp}]");
             sb.Append($"[{loglevel.ToString()}]\t");
             sb.Append($"[{originClass.ToString()}:");
             sb.Append($"{functionName}] - ");

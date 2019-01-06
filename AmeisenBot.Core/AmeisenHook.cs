@@ -209,10 +209,10 @@ namespace AmeisenBotCore
 
             try
             {
-                if (AmeisenCore.IsInLoadingScreen())
+                // wait for the code to be executed
+                while (isInjectionUsed || AmeisenCore.IsInLoadingScreen() || BlackMagic.ReadInt(codeToExecute) > 0)
                 {
-                    successful = false;
-                    return returnBytes.ToArray();
+                    Thread.Sleep(5);
                 }
 
                 isInjectionUsed = true;
@@ -232,10 +232,10 @@ namespace AmeisenBotCore
                 //AmeisenManager.Instance().GetBlackMagic().Asm.AddLine("JMP " + (endsceneReturnAddress));
                 //int asmLenght = BlackMagic.Asm.Assemble().Length;
 
-                // wait for the code ti be executed
+                // wait for the code to be executed
                 while (BlackMagic.ReadInt(codeToExecute) > 0)
                 {
-                    Thread.Sleep(1);
+                    Thread.Sleep(5);
                 }
 
                 // if we want to read the return value, do it
@@ -275,10 +275,24 @@ namespace AmeisenBotCore
                     LogLevel.ERROR,
                     $"Crash at InjectAndExecute: {e.ToString()}",
                     this);
+
+                foreach(string s in asm)
+                {
+                    AmeisenLogger.Instance.Log(
+                        LogLevel.ERROR,
+                        $"ASM Content: {s}",
+                        this);
+                }
+
+                AmeisenLogger.Instance.Log(
+                    LogLevel.ERROR,
+                    $"ReadReturnBytes: {readReturnBytes}",
+                    this);
             }
 
             isInjectionUsed = false;
             successful = true;
+            Thread.Sleep(50);
             return returnBytes.ToArray();
         }
     }

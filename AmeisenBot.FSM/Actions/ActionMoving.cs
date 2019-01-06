@@ -169,7 +169,7 @@ namespace AmeisenBotFSM.Actions
 
                             Me.Update();
                             double distanceTraveled = posDistance - Utils.GetDistance(Me.pos, pos);
-                            // if we havent moved 0.2m in thsi time, screw this path
+                            // if we havent moved 0.2m in this time, screw this path
                             if (tries == 10 && distanceTraveled < 0.2)
                             {
                                 WaypointQueue.Clear();

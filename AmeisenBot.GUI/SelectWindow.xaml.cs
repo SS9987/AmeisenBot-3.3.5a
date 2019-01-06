@@ -202,7 +202,7 @@ namespace AmeisenBotGUI
 
         private void LoadingForm_Loaded(object sender, RoutedEventArgs e)
         {
-            AmeisenLogger.Instance.SetActiveLogLevel(LogLevel.DEBUG);
+            AmeisenLogger.Instance.SetActiveLogLevel(LogLevel.VERBOSE);
             AmeisenLogger.Instance.Log(LogLevel.DEBUG, "Loaded MainWindow", this);
             SearchForWoW();
         }

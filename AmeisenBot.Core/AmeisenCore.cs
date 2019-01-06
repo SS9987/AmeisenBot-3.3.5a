@@ -66,6 +66,9 @@ namespace AmeisenBotCore
 
         public static void DeclineSummon() => LuaDoString("CancelSummon();");
 
+        public static void ClearTargetIfItIsFriendly() => LuaDoString("if not UnitExists(\"target\") or UnitIsFriend(\"player\", \"target\") or UnitIsDead(\"target\") then ClearTarget() end");
+        public static void ClearTargetIfItIsNotFriendly() => LuaDoString("if not UnitExists(\"target\") or not UnitIsFriend(\"player\", \"target\") or UnitIsDead(\"target\") then ClearTarget() end");
+
         public static void KickNpcsOutOfMammoth() => LuaDoString("for i = 1, 2 do EjectPassengerFromSeat(i) end");
 
         public static void SellAllGrayItems() => LuaDoString("local p,N,n=0 for b=0,4 do for s=1,GetContainerNumSlots(b) do n=GetContainerItemLink(b,s) if n and string.find(n,\"9d9d9d\") then N={GetItemInfo(n)} p=p+N[11] UseContainerItem(b,s) print(\"Sold: \"..n) end end end print(\"Total: \"..GetCoinText(p))");
@@ -537,11 +540,11 @@ namespace AmeisenBotCore
         public static CastingInfo GetUnitCastingInfo(LuaUnit luaunit)
         {
             CastingInfo info = new CastingInfo();
-            string cmd = $"castingInfo = \"none|0\"; abSpellName, _, _, _, _, abSpellEndTime = UnitCastingInfo(\"{luaunit.ToString()}\"); abDuration = ((abSpellEndTime/1000) - GetTime()) * 1000; castingInfo = abSpellName..\"|\"..abDuration;";
-            string str = GetLocalizedText(cmd, "castingInfo");
+            string cmd = $"abCastingInfo = \"none,0\"; abSpellName, x, x, x, x, abSpellEndTime = UnitCastingInfo(\"{luaunit.ToString()}\"); abDuration = ((abSpellEndTime/1000) - GetTime()) * 1000; abCastingInfo = abSpellName..\",\"..abDuration;";
+            string str = GetLocalizedText(cmd, "abCastingInfo");
 
-            info.name = str.Split('|')[0];
-            info.duration = Utils.TryParseInt(str.Split('|')[1]);
+            info.name = str.Split(',')[0];
+            info.duration = Utils.TryParseInt(str.Split(',')[1]);
 
             AmeisenLogger.Instance.Log(LogLevel.DEBUG, $"[CastingInfo] Name: {info.name}, Duration: {info.duration} ms", "AmeisenCore");
             return info;
@@ -678,7 +681,7 @@ namespace AmeisenBotCore
         /// <returns>the WoWObject</returns>
         public static WowObject ReadWoWObjectFromWoW(uint baseAddress, WowObjectType woWObjectType, bool isMe = false)
         {
-            AmeisenLogger.Instance.Log(LogLevel.VERBOSE, $"Reading: baseAddress [{baseAddress}]", "AmeisenCore");
+            //AmeisenLogger.Instance.Log(LogLevel.VERBOSE, $"Reading: baseAddress [{baseAddress}]", "AmeisenCore");
 
             if (baseAddress == 0)
             {

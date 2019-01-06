@@ -92,13 +92,13 @@ namespace AmeisenBotFSM.Actions
             else
             {
                 // clear all friendly targets
-                AmeisenCore.RunSlashCommand("/cleartarget [noharm][dead]");
+                AmeisenCore.ClearTargetIfItIsFriendly();
 
                 if (Me.TargetGuid == 0 || Target == null || Target.Guid == 0)
                 {
                     CombatUtils.AssistParty(Me, AmeisenDataHolder.ActiveWoWObjects, AmeisenDataHolder.Partymembers);
                     // clear all friendly targets again
-                    AmeisenCore.RunSlashCommand("/cleartarget [noharm][dead]");
+                    AmeisenCore.ClearTargetIfItIsFriendly();
                     Me?.Update();
                     Target?.Update();
                 }
@@ -165,15 +165,21 @@ namespace AmeisenBotFSM.Actions
 
         private bool IsInLineOfSight(Me me, Unit target)
         {
+            if(target == null)
+            {
+                return true;
+            }
+
             List<Vector3> path = UsePathfinding(me.pos, target.pos);
+
+            if (path == null)
+            {
+                return false;
+            }
+
             if (path.Count == 1)
             {
-                if (target.pos.X == path.First().X
-                 || target.pos.Y == path.First().Y
-                 || target.pos.Z == path.First().Z)
-                {
-                    return true;
-                }
+                return true;
             }
             return false;
         }
