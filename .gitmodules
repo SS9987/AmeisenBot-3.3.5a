@@ -7,6 +7,3 @@
 [submodule "AmeisenMovement"]
 	path = AmeisenMovement
 	url = https://github.com/Jnnshschl/AmeisenMovement
-[submodule "AmeisenCombatEngine"]
-	path = AmeisenCombatEngine
-	url = https://github.com/Jnnshschl/AmeisenCombatEngine
