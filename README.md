@@ -34,7 +34,7 @@ My main focus regarding this bot is to make it a Party/Raid assistant that does 
 * Inventory/Equipment
     * Inventory/Equipment management
     * Auto equip better items
-    * Auto roll on items (W.I.P)
+    * *Auto roll on items (W.I.P)*
 * AI stuff
     * Remember units and what the bot can do at this unit
     * Auto repair equipment
@@ -45,18 +45,20 @@ My main focus regarding this bot is to make it a Party/Raid assistant that does 
     * Execute LUA
     * Capture WoW's events
 
+Supported Classes:
+
 **Class** | **Spec A** | **Spec B** | **Spec C**
 ------------ | ------------- | ------------- | -------------
-**Druid** | Balance ❌ | Feral ❌ | Restoration ✔️
-**Hunter** | Marksmanship ✔️ | Beast Mastery ❌ | Survival ❌
-**Mage** | Fire ✔️ | Frost ❌ | Arcane ❌
-**Paladin** | Holy ❌ | Retribution ✔️ | Protection ❌
-**Priest** | Holy ✔️ | Discipline ❌ | Shadow ✔️
-**Rogue** | Combat ✔️ | Assasination ❌ | Sublety ❌
-**Shaman** | Elemental ❌ | Enhancement ❌ | Restoration ❌
-**Warlock** | Affliction ✔️ | Demonology ❌ | Destruction ❌
-**Warrior** | Arms ❌ | Fury ✔️ | Protection ❌
-**Death Knight** | Blood ❌ | Frost ❌ | Unholy ❌
+**Druid** | ❌ Balance | ❌ Feral | ✔️ Restoration 
+**Hunter** | ✔️ Marksmanship | ❌ Beast Mastery | ❌ Survival
+**Mage** | ✔️ Fire | ❌ Frost | ❌ Arcane
+**Paladin** | ❌ Holy | ✔️ Retribution | ❌ Protection
+**Priest** | ✔️ Holy | ❌ Discipline | ✔️ Shadow
+**Rogue** | ✔️ Combat | ❌ Assasination | ❌ Sublety
+**Shaman** | ❌ Elemental | ❌Enhancement | ❌ Restoration
+**Warlock** | ✔️ Affliction | ❌ Demonology | ❌ Destruction
+**Warrior** | ❌ Arms | ✔️ Fury | ❌ Protection
+**Death Knight** | ❌ Blood | ❌ Frost | ❌ Unholy
 
 ## Usage
 
