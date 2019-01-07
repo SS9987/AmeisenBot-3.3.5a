@@ -52,7 +52,7 @@ namespace AmeisenBotGUI
                     foreach (NetworkBot bot in networkBots)
                     {
                         BotView botView = new BotView();
-                        SendableMe me = bot.GetMe();
+                        SendableMe me = bot.GetSendableMe();
                         botView.botName.Content = me.Name;
                         botView.botLevel.Content = me.Level;
 

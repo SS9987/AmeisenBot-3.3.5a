@@ -14,6 +14,6 @@ namespace AmeisenBotUtilities
         public string me;
         public string name;
 
-        public SendableMe GetMe() => JsonConvert.DeserializeObject<SendableMe>(me);
+        public SendableMe GetSendableMe() => JsonConvert.DeserializeObject<SendableMe>(me);
     }
 }

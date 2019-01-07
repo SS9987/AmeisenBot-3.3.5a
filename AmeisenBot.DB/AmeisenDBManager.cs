@@ -154,7 +154,7 @@ namespace AmeisenBotDB
                 sqlQuery.Append($"'{rememberedUnit.UnitTraitsString}');");
 
                 try { sqlConnection.Execute(sqlQuery.ToString()); }
-                catch (Exception e) { AmeisenLogger.Instance.Log(LogLevel.ERROR, $"Error adding RememberedUnit: {JsonConvert.SerializeObject(rememberedUnit)}", this); }
+                catch { AmeisenLogger.Instance.Log(LogLevel.ERROR, $"Error adding RememberedUnit: {JsonConvert.SerializeObject(rememberedUnit)}", this); }
                 finally { sqlConnection.Close(); }
             }
         }

@@ -84,6 +84,9 @@
     <Compile Include="CombatEditor.xaml.cs">
       <DependentUpon>CombatEditor.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\ChangeRealmlistDialog.xaml.cs">
+      <DependentUpon>ChangeRealmlistDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="GearWindow.xaml.cs">
       <DependentUpon>GearWindow.xaml</DependentUpon>
     </Compile>
@@ -111,6 +114,10 @@
     <Page Include="CombatEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\ChangeRealmlistDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="GearWindow.xaml">
       <SubType>Designer</SubType>

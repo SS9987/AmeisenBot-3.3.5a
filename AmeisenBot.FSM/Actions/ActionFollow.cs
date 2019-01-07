@@ -141,7 +141,7 @@ namespace AmeisenBotFSM.Actions
                 foreach (NetworkBot bot in AmeisenDataHolder.ActiveNetworkBots)
                 {
                     PartyPosition++;
-                    if (bot.GetMe().Guid == Me.Guid)
+                    if (bot.GetSendableMe().Guid == Me.Guid)
                     {
                         break;
                     }

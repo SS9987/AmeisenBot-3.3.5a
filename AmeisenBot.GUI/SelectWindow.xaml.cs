@@ -37,12 +37,26 @@ namespace AmeisenBotGUI
             InitializeComponent();
             BotManager = new BotManager();
 
-            globalSettings.wowExePath = "none";
             if (File.Exists(globalConfigPath + extension))
             {
                 globalSettings = Newtonsoft.Json.JsonConvert.DeserializeObject<GlobalSettings>(File.ReadAllText(globalConfigPath + extension));
+
+                if (globalSettings.wowRealmlists.Count > 1)
+                {
+                    globalSettings.wowRealmlists.RemoveAt(0);
+                }
+
+                labelWowPath.Content = globalSettings.wowExePath;
+                labelWowRealmlistPath.Content = globalSettings.wowRealmlistPath;
+                labelWowRealmlist.Content = globalSettings.wowRealmlists[globalSettings.wowSelectedRealmlist];
             }
-            labelWowPath.Content = globalSettings.wowExePath;
+            else
+            {
+                globalSettings = new GlobalSettings();
+                labelWowPath.Content = "path to wow.exe not set";
+                labelWowRealmlist.Content = "path to realmlist.wtf not set";
+                labelWowRealmlistPath.Content = "path to realmlist.wtf not set";
+            }
 
             if (File.Exists(autoLoginExe))
             {
@@ -289,6 +303,67 @@ namespace AmeisenBotGUI
             {
                 globalSettings.wowExePath = openFileDialog.FileName;
                 labelWowPath.Content = globalSettings.wowExePath;
+                File.WriteAllText(globalConfigPath + extension, Newtonsoft.Json.JsonConvert.SerializeObject(globalSettings));
+            }
+        }
+
+        private void ButtonSelectWowRealmlist_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog
+            {
+                AddExtension = true,
+                RestoreDirectory = true,
+                Filter = "Realmlist WTF *.wtf|*.wtf"
+            };
+
+            if (openFileDialog.ShowDialog() == true)
+            {
+                globalSettings.wowRealmlistPath = openFileDialog.FileName;
+
+                if (File.Exists(globalSettings.wowRealmlistPath))
+                {
+                    string filecontent = File.ReadAllText(globalSettings.wowRealmlistPath);
+                    if (filecontent.Split(' ').Length < 2)
+                    {
+                        filecontent = "127.0.0.1";
+                        File.WriteAllText(globalSettings.wowRealmlistPath, "set realmlist 127.0.0.1");
+                    }
+
+                    if (globalSettings.wowRealmlists.Contains($"set realmlist {filecontent}"))
+                    {
+                        int count = 0;
+                        foreach (string s in globalSettings.wowRealmlists)
+                        {
+                            if (s == filecontent) { break; }
+                            count++;
+                        }
+                        globalSettings.wowSelectedRealmlist = count;
+                    }
+                    else
+                    {
+                        globalSettings.wowSelectedRealmlist = globalSettings.wowRealmlists.Count;
+                        globalSettings.wowRealmlists.Add($"set realmlist {filecontent}");
+                    }
+
+                    labelWowRealmlistPath.Content = globalSettings.wowRealmlistPath;
+                    File.WriteAllText(globalConfigPath + extension, Newtonsoft.Json.JsonConvert.SerializeObject(globalSettings));
+                }
+            }
+        }
+
+        private void ButtonChangeWowRealmlist_Click(object sender, RoutedEventArgs e)
+        {
+            ChangeRealmlistDialog changeRealmlistDialog = new ChangeRealmlistDialog(globalSettings.wowRealmlists, globalSettings.wowSelectedRealmlist);
+            changeRealmlistDialog.ShowDialog();
+
+            if (changeRealmlistDialog.ApplyChanges)
+            {
+                globalSettings.wowRealmlists = changeRealmlistDialog.Realmlists;
+                globalSettings.wowSelectedRealmlist = changeRealmlistDialog.SelectedRealmlist;
+
+                labelWowRealmlist.Content = changeRealmlistDialog.Realmlists[changeRealmlistDialog.SelectedRealmlist];
+
+                File.WriteAllText(globalSettings.wowRealmlistPath, $"{changeRealmlistDialog.Realmlists[changeRealmlistDialog.SelectedRealmlist]}");
                 File.WriteAllText(globalConfigPath + extension, Newtonsoft.Json.JsonConvert.SerializeObject(globalSettings));
             }
         }
