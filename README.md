@@ -1,5 +1,4 @@
-# AmeisenBot - WoW 3.3.5a Bot [![Build Status](https://jenkins.jnns.de/buildStatus/icon?job=AmeisenBot)](https://jenkins.jnns.de/job/AmeisenBot/) [![codecov](https://codecov.io/gh/Jnnshschl/WoW-3.3.5a-Bot/branch/master/graph/badge.svg)](https://codecov.io/gh/Jnnshschl/WoW-3.3.5a-Bot) [![HitCount](http://hits.dwyl.io/jnnshschl/WoW-3.3.5a-Bot.svg)](http://hits.dwyl.io/jnnshschl/WoW-3.3.5a-Bot)
-
+# AmeisenBot - WoW 3.3.5a Bot 
 
 A bot written in (at this time) C# only for World of Warcraft WotLK (3.3.5a 12340) (the best WoW :P).
 This project will be developed like "Kraut und Rüben" (Herb and beet?) as we say here in Germany, its a synonym for messy, so deal with it 😎.
@@ -9,6 +8,55 @@ This project will be developed like "Kraut und Rüben" (Herb and beet?) as we sa
 ## Credits
 
 ❤️ **Blackmagic** (Memory Editing) - https://github.com/acidburn974/Blackmagic
+
+## Features
+
+My main focus regarding this bot is to make it a Party/Raid assistant that does specific things on its own.
+
+* Base
+    * Auto Revive/Run to the corpse
+* Additional    
+    * Change/Manage realmlists
+    * Auto login
+    * Auto launch WoW
+    * Auto limit WoW's FPS
+    * Auto set ulow GFX settings
+* Party/Raid
+    * Combat
+        * DPS
+        * Healing
+        * *Tank (not tested)*
+        * See below for currently supported specs/classes
+    * Following
+    * Auto accept party invite
+* Navmesh based movement
+    * See [AmeisenNavigation](https://github.com/Jnnshschl/AmeisenNavigation)
+* Inventory/Equipment
+    * Inventory/Equipment management
+    * Auto equip better items
+    * Auto roll on items (W.I.P)
+* AI stuff
+    * Remember units and what the bot can do at this unit
+    * Auto repair equipment
+        * Use the mammoth to repair if the bot got it
+    * Auto sell grays from bags
+    * Do random emotes when at idle
+* LUA
+    * Execute LUA
+    * Capture WoW's events
+
+**Class** | **Spec A** | **Spec B** | **Spec C**
+------------ | ------------- | ------------- | -------------
+**Druid** | Balance ❌ | Feral ❌ | Restoration ✔️
+**Hunter** | Marksmanship ✔️ | Beast Mastery ❌ | Survival ❌
+**Mage** | Fire ✔️ | Frost ❌ | Arcane ❌
+**Paladin** | Holy ❌ | Retribution ✔️ | Protection ❌
+**Priest** | Holy ✔️ | Discipline ❌ | Shadow ✔️
+**Rogue** | Combat ✔️ | Assasination ❌ | Sublety ❌
+**Shaman** | Elemental ❌ | Enhancement ❌ | Restoration ❌
+**Warlock** | Affliction ✔️ | Demonology ❌ | Destruction ❌
+**Warrior** | Arms ❌ | Fury ✔️ | Protection ❌
+**Death Knight** | Blood ❌ | Frost ❌ | Unholy ❌
 
 ## Usage
 
@@ -43,8 +91,6 @@ Template \*.cs file:
 
 **AmeisenBot.Manager**: Create a new Bot instance here and manage it
 
-**AmeisenBot.Mapping**: Mapping related stuff like loading/saving nodes
-
 **AmeisenBot.Test**: Maybe some tests will appear in this module in the near future
 
 **AmeisenBot.Utilities**: Memory offsets, data structs and a few math related funtions
@@ -57,26 +103,10 @@ Template \*.cs file:
 
 **Maybe outdated!**
 
-### Character selection without AutoLogin
-
-![alt text](https://github.com/Jnnshschl/WoW-3.3.5a-Bot/blob/master/images/charselect.PNG?raw=true "Character selection")
-
-### Character selection with AutoLogin
+### Character Selection Window
 
 ![alt text](https://github.com/Jnnshschl/WoW-3.3.5a-Bot/blob/master/images/charselect_auto.PNG?raw=true "Character selection Autologin")
 
-### Main bot screen
+### Main Bot Screen
 
 ![alt text](https://github.com/Jnnshschl/WoW-3.3.5a-Bot/blob/master/images/mainscreen.PNG?raw=true "Mainscreen")
-
-### Settings
-
-![alt text](https://github.com/Jnnshschl/WoW-3.3.5a-Bot/blob/master/images/settings.PNG?raw=true "Settings")
-
-### Map
-
-![alt text](https://github.com/Jnnshschl/WoW-3.3.5a-Bot/blob/master/images/map.PNG?raw=true "Map")
-
-### Debug UI
-
-![alt text](https://github.com/Jnnshschl/WoW-3.3.5a-Bot/blob/master/images/debug.PNG?raw=true "Debug GUI")
