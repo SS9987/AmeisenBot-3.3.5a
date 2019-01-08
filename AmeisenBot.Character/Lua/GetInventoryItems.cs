@@ -15,4 +15,3 @@ namespace AmeisenBot.Character.Lua
         public static string OutVar() => "abotInventoryResult";
     }
 }
-

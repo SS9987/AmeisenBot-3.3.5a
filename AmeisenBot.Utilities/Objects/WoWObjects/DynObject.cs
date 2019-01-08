@@ -22,8 +22,8 @@ namespace AmeisenBotUtilities
             sb.Append($" >> PosZ: {pos.Z}");
             sb.Append($" >> Rotation: {Rotation}");
             sb.Append($" >> Distance: {Distance}");
-            sb.Append($" >> MapID: {MapID}");
-            sb.Append($" >> ZoneID: {ZoneID}");
+            sb.Append($" >> MapID: {MapId}");
+            sb.Append($" >> ZoneID: {ZoneId}");
 
             return sb.ToString();
         }
@@ -31,6 +31,15 @@ namespace AmeisenBotUtilities
         public override void Update()
         {
             base.Update();
+
+            try
+            {
+                pos.X = BlackMagicInstance.ReadFloat(BaseAddress + 0x798);
+                pos.Y = BlackMagicInstance.ReadFloat(BaseAddress + 0x79C);
+                pos.Z = BlackMagicInstance.ReadFloat(BaseAddress + 0x7A0);
+                Rotation = BlackMagicInstance.ReadFloat(BaseAddress + 0x7A8);
+            }
+            catch { }
         }
     }
 }

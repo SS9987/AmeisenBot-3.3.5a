@@ -14,9 +14,6 @@ namespace AmeisenBotGUI
     /// </summary>
     public partial class SettingsWindow : Window
     {
-        private BotManager BotManager { get; }
-        private Settings Settings { get; set; }
-
         public SettingsWindow(BotManager botManager)
         {
             InitializeComponent();
@@ -24,6 +21,9 @@ namespace AmeisenBotGUI
             Settings = botManager.Settings;
             Topmost = Settings.topMost;
         }
+
+        private BotManager BotManager { get; }
+        private Settings Settings { get; set; }
 
         private void ButtonExit_Click(object sender, RoutedEventArgs e)
             => Close();
@@ -45,27 +45,57 @@ namespace AmeisenBotGUI
             }
         }
 
+        private void ColorBackground_Click(object sender, RoutedEventArgs e)
+            => SelectColor("BackgroundColor");
+
+        private void ColorEnergy_Click(object sender, RoutedEventArgs e)
+            => SelectColor("EnergyColor");
+
+        private void ColorExp_Click(object sender, RoutedEventArgs e)
+            => SelectColor("EXPColor");
+
+        private void ColorHealth_Click(object sender, RoutedEventArgs e)
+            => SelectColor("HealthColor");
+
         private void ColorMe_Click(object sender, RoutedEventArgs e)
-            => SelectColor("MeNodeColor");
+                                            => SelectColor("MeNodeColor");
+
+        private void ColorOutline_Click(object sender, RoutedEventArgs e)
+            => SelectColor("AccentColor");
+
+        private void ColorTargetEnergy_Click(object sender, RoutedEventArgs e)
+            => SelectColor("TargetEnergyColor");
+
+        private void ColorTargetHealth_Click(object sender, RoutedEventArgs e)
+            => SelectColor("TargetHealthColor");
+
+        private void ColorText_Click(object sender, RoutedEventArgs e)
+            => SelectColor("TextColor");
+
+        private void ColorThreads_Click(object sender, RoutedEventArgs e)
+            => SelectColor("holoLogoColor");
 
         private void ColorWalkable_Click(object sender, RoutedEventArgs e)
-            => SelectColor("WalkableNodeColorLow");
+                                                    => SelectColor("WalkableNodeColorLow");
 
         private void ColorWalkableNodeHigh_Click(object sender, RoutedEventArgs e)
             => SelectColor("WalkableNodeColorHigh");
 
-        private void LoadAmeisenServerSettings()
-        {
-            textboxIP.Text = Settings.ameisenServerIp;
-            textboxPort.Text = Settings.ameisenServerPort.ToString();
-            checkboxAutoConnect.IsChecked = Settings.serverAutoConnect;
-        }
+        private Color GetColorFromResources(string resString)
+            => (Color)Application.Current.Resources[resString];
 
         private void LoadAmeisenNavServerSettings()
         {
             textboxIPNavServer.Text = Settings.navigationServerIp;
             textboxPortNavServer.Text = Settings.navigationServerPort.ToString();
             checkboxAutoConnectNavServer.IsChecked = Settings.navigationServerAutoConnect;
+        }
+
+        private void LoadAmeisenServerSettings()
+        {
+            textboxIP.Text = Settings.ameisenServerIp;
+            textboxPort.Text = Settings.ameisenServerPort.ToString();
+            checkboxAutoConnect.IsChecked = Settings.serverAutoConnect;
         }
 
         private void LoadBotPicture(string fileName)
@@ -109,6 +139,14 @@ namespace AmeisenBotGUI
             checkboxDBAutoConnect.IsChecked = Settings.databaseAutoConnect;
         }
 
+        private void LoadMovementSettings()
+        {
+            textboxPathfindingThreshold.Text = Settings.pathfindingUsageThreshold.ToString();
+            textboxJumpThreshold.Text = Settings.movementJumpThreshold.ToString();
+            textboxPathfindingFactor.Text = Settings.pathfindingSearchRadius.ToString();
+            checkboxUsePathfinding.IsChecked = Settings.usePathfinding;
+        }
+
         /// <summary>
         /// Load settings to UI
         /// </summary>
@@ -127,20 +165,11 @@ namespace AmeisenBotGUI
             // Colors are already loaded
         }
 
-        private void LoadMovementSettings()
+        private void SaveAmeisenNavServerSettings()
         {
-            textboxPathfindingThreshold.Text = Settings.pathfindingUsageThreshold.ToString();
-            textboxJumpThreshold.Text = Settings.movementJumpThreshold.ToString();
-            textboxPathfindingFactor.Text = Settings.pathfindingSearchRadius.ToString();
-            checkboxUsePathfinding.IsChecked = Settings.usePathfinding;
-        }
-
-        private void SaveMovementSettings()
-        {
-            Settings.pathfindingUsageThreshold = double.Parse(textboxPathfindingThreshold.Text);
-            Settings.movementJumpThreshold = double.Parse(textboxJumpThreshold.Text);
-            Settings.pathfindingSearchRadius = int.Parse(textboxPathfindingFactor.Text);
-            Settings.usePathfinding = (bool)checkboxUsePathfinding.IsChecked;
+            Settings.navigationServerIp = textboxIPNavServer.Text;
+            Settings.navigationServerPort = Convert.ToInt32(textboxPortNavServer.Text);
+            Settings.navigationServerAutoConnect = (bool)checkboxAutoConnectNavServer.IsChecked;
         }
 
         private void SaveAmeisenServerSettings()
@@ -148,13 +177,6 @@ namespace AmeisenBotGUI
             Settings.ameisenServerIp = textboxIP.Text;
             Settings.ameisenServerPort = Convert.ToInt32(textboxPort.Text);
             Settings.serverAutoConnect = (bool)checkboxAutoConnect.IsChecked;
-        }
-
-        private void SaveAmeisenNavServerSettings()
-        {
-            Settings.navigationServerIp = textboxIPNavServer.Text;
-            Settings.navigationServerPort = Convert.ToInt32(textboxPortNavServer.Text);
-            Settings.navigationServerAutoConnect = (bool)checkboxAutoConnectNavServer.IsChecked;
         }
 
         private void SaveDatabaseSettings()
@@ -180,14 +202,19 @@ namespace AmeisenBotGUI
             Settings.holoLogoColor = GetColorFromResources("holoLogoColor").ToString();
         }
 
-        private Color GetColorFromResources(string resString)
-            => (Color)Application.Current.Resources[resString];
-
         private void SaveMapUISettings()
         {
             Settings.walkableNodeColorLow = GetColorFromResources("WalkableNodeColorLow").ToString();
             Settings.walkableNodeColorHigh = GetColorFromResources("WalkableNodeColorHigh").ToString();
             Settings.meNodeColor = GetColorFromResources("MeNodeColor").ToString();
+        }
+
+        private void SaveMovementSettings()
+        {
+            Settings.pathfindingUsageThreshold = double.Parse(textboxPathfindingThreshold.Text);
+            Settings.movementJumpThreshold = double.Parse(textboxJumpThreshold.Text);
+            Settings.pathfindingSearchRadius = int.Parse(textboxPathfindingFactor.Text);
+            Settings.usePathfinding = (bool)checkboxUsePathfinding.IsChecked;
         }
 
         /// <summary>
@@ -288,32 +315,5 @@ namespace AmeisenBotGUI
             try { DragMove(); }
             catch { }
         }
-
-        private void ColorBackground_Click(object sender, RoutedEventArgs e)
-            => SelectColor("BackgroundColor");
-
-        private void ColorOutline_Click(object sender, RoutedEventArgs e)
-            => SelectColor("AccentColor");
-
-        private void ColorText_Click(object sender, RoutedEventArgs e)
-            => SelectColor("TextColor");
-
-        private void ColorHealth_Click(object sender, RoutedEventArgs e)
-            => SelectColor("HealthColor");
-
-        private void ColorEnergy_Click(object sender, RoutedEventArgs e)
-            => SelectColor("EnergyColor");
-
-        private void ColorExp_Click(object sender, RoutedEventArgs e)
-            => SelectColor("EXPColor");
-
-        private void ColorTargetHealth_Click(object sender, RoutedEventArgs e)
-            => SelectColor("TargetHealthColor");
-
-        private void ColorTargetEnergy_Click(object sender, RoutedEventArgs e)
-            => SelectColor("TargetEnergyColor");
-
-        private void ColorThreads_Click(object sender, RoutedEventArgs e)
-            => SelectColor("holoLogoColor");
     }
 }

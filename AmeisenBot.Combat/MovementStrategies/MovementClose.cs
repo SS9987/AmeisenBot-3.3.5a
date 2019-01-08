@@ -5,8 +5,6 @@ namespace AmeisenBotCombat.MovementStrategies
 {
     public class MovementClose : IMovementStrategy
     {
-        private double Distance { get; set; }
-
         public MovementClose(double distance = 3.0)
         {
             Distance = distance;
@@ -21,5 +19,7 @@ namespace AmeisenBotCombat.MovementStrategies
 
             return me.pos;
         }
+
+        private double Distance { get; set; }
     }
 }

@@ -13,10 +13,6 @@ namespace AmeisenBotGUI
     /// </summary>
     public partial class GroupWindow : Window
     {
-        private List<BotView> botViews;
-        private DispatcherTimer uiUpdateTimer;
-        private BotManager BotManager { get; set; }
-
         public GroupWindow(BotManager botManager)
         {
             InitializeComponent();
@@ -25,6 +21,10 @@ namespace AmeisenBotGUI
             botViews = new List<BotView>();
             Topmost = BotManager.Settings.topMost;
         }
+
+        private List<BotView> botViews;
+        private DispatcherTimer uiUpdateTimer;
+        private BotManager BotManager { get; set; }
 
         private void ButtonExit_Click(object sender, RoutedEventArgs e)
             => Close();

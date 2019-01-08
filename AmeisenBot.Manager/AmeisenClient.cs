@@ -13,22 +13,6 @@ namespace AmeisenBotManager
 {
     public class AmeisenClient : IDisposable
     {
-        private static readonly HttpClient httpClient = new HttpClient();
-        private Timer botListUpdateTimer;
-        private Timer botUpdateTimer;
-        public int BotID { get; private set; }
-        public List<NetworkBot> Bots { get; private set; }
-        public bool IsRegistered { get; private set; }
-        public IPAddress ConnectedIP { get; private set; }
-        public int ConnectedPort { get; private set; }
-        private AmeisenDataHolder AmeisenDataHolder { get; set; }
-
-        private Me Me
-        {
-            get { return AmeisenDataHolder.Me; }
-            set { AmeisenDataHolder.Me = value; }
-        }
-
         public AmeisenClient(AmeisenDataHolder ameisenDataHolder)
         {
             AmeisenDataHolder = ameisenDataHolder;
@@ -41,11 +25,23 @@ namespace AmeisenBotManager
             botListUpdateTimer.Elapsed += UpdateBotList;
         }
 
+        public int BotID { get; private set; }
+        public List<NetworkBot> Bots { get; private set; }
+        public IPAddress ConnectedIP { get; private set; }
+        public int ConnectedPort { get; private set; }
+        public bool IsRegistered { get; private set; }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
         public bool Register(Me me, IPAddress ip, int port = 5000)
         {
             if (!AmeisenDataHolder.IsConnectedToServer)
             {
-                 IRestResponse response = SendRequest(me, ip, port, HttpMethod.Post, true);
+                IRestResponse response = SendRequest(me, ip, port, HttpMethod.Post, true);
 
                 if (response == null)
                 {
@@ -71,6 +67,57 @@ namespace AmeisenBotManager
                 return false;
             }
             else { return true; }
+        }
+
+        public void Unregister(Me me, IPAddress ip, int port = 5000)
+        {
+            if (AmeisenDataHolder.IsConnectedToServer)
+            {
+                IRestResponse response = SendRequest(me, ip, port, HttpMethod.Delete);
+                if (response.StatusCode == HttpStatusCode.OK)
+                {
+                    IsRegistered = false;
+                    NetworkBot responseBot = JsonConvert.DeserializeObject<NetworkBot>(response.Content);
+                    BotID = responseBot.id;
+
+                    botUpdateTimer.Close();
+                    botListUpdateTimer.Close();
+                }
+                AmeisenDataHolder.IsConnectedToServer = false;
+            }
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                ((IDisposable)botListUpdateTimer).Dispose();
+                ((IDisposable)botUpdateTimer).Dispose();
+                httpClient.Dispose();
+            }
+        }
+
+        private static readonly HttpClient httpClient = new HttpClient();
+        private Timer botListUpdateTimer;
+        private Timer botUpdateTimer;
+        private AmeisenDataHolder AmeisenDataHolder { get; set; }
+
+        private Me Me
+        {
+            get { return AmeisenDataHolder.Me; }
+            set { AmeisenDataHolder.Me = value; }
+        }
+
+        private IRestResponse GetAllBots(IPAddress ip, int port)
+        {
+            if (AmeisenDataHolder.IsConnectedToServer)
+            {
+                RestClient client = new RestClient($"http://{ip}:{port}");
+                // client.Authenticator = new HttpBasicAuthenticator(username, password);
+                RestRequest request = new RestRequest("allbots/", Method.GET);
+                return client.Execute(request);
+            }
+            return null;
         }
 
         private IRestResponse SendRequest(Me me, IPAddress ip, int port, HttpMethod post, bool sendPicture = false)
@@ -104,40 +151,6 @@ namespace AmeisenBotManager
             return client.Execute(request);
         }
 
-        public void Unregister(Me me, IPAddress ip, int port = 5000)
-        {
-            if (AmeisenDataHolder.IsConnectedToServer)
-            {
-                IRestResponse response = SendRequest(me, ip, port, HttpMethod.Delete);
-                if (response.StatusCode == HttpStatusCode.OK)
-                {
-                    IsRegistered = false;
-                    NetworkBot responseBot = JsonConvert.DeserializeObject<NetworkBot>(response.Content);
-                    BotID = responseBot.id;
-
-                    botUpdateTimer.Close();
-                    botListUpdateTimer.Close();
-                }
-                AmeisenDataHolder.IsConnectedToServer = false;
-            }
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                ((IDisposable)botListUpdateTimer).Dispose();
-                ((IDisposable)botUpdateTimer).Dispose();
-                httpClient.Dispose();
-            }
-        }
-
         private void UpdateBot(object source, ElapsedEventArgs e)
         {
             if (AmeisenDataHolder.IsConnectedToServer)
@@ -161,18 +174,6 @@ namespace AmeisenBotManager
                     Bots = JsonConvert.DeserializeObject<List<NetworkBot>>(response.Content);
                 }
             }
-        }
-
-        private IRestResponse GetAllBots(IPAddress ip, int port)
-        {
-            if (AmeisenDataHolder.IsConnectedToServer)
-            {
-                RestClient client = new RestClient($"http://{ip}:{port}");
-                // client.Authenticator = new HttpBasicAuthenticator(username, password);
-                RestRequest request = new RestRequest("allbots/", Method.GET);
-                return client.Execute(request);
-            }
-            return null;
         }
     }
 }

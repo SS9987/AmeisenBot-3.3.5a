@@ -29,6 +29,5 @@
                 <SolidColorBrush Color="{DynamicResource AccentColor}" />
             </Button.BorderBrush>
         </Button>
-
     </Grid>
 </Window>

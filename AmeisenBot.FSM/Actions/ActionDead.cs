@@ -10,23 +10,6 @@ namespace AmeisenBotFSM.Actions
 {
     public class ActionDead : ActionMoving
     {
-        public override Start StartAction { get { return Start; } }
-        public override DoThings StartDoThings { get { return DoThings; } }
-        public override Exit StartExit { get { return Stop; } }
-
-        private Unit ActiveUnit { get; set; }
-        private List<Unit> ActiveUnits { get; set; }
-        private AmeisenDataHolder AmeisenDataHolder { get; set; }
-        private AmeisenDBManager AmeisenDBManager { get; set; }
-
-        private Dictionary<Vector3, Vector3> InstanceEntrances { get; set; }
-
-        private Me Me
-        {
-            get { return AmeisenDataHolder.Me; }
-            set { AmeisenDataHolder.Me = value; }
-        }
-
         public ActionDead(
             AmeisenDataHolder ameisenDataHolder,
             AmeisenDBManager ameisenDBManager,
@@ -42,6 +25,10 @@ namespace AmeisenBotFSM.Actions
             };
         }
 
+        public override Start StartAction { get { return Start; } }
+        public override DoThings StartDoThings { get { return DoThings; } }
+        public override Exit StartExit { get { return Stop; } }
+
         public override void DoThings()
         {
             GoToCorpseAndRevive();
@@ -51,6 +38,19 @@ namespace AmeisenBotFSM.Actions
         public override void Start() => base.Start();
 
         public override void Stop() => base.Stop();
+
+        private Unit ActiveUnit { get; set; }
+        private List<Unit> ActiveUnits { get; set; }
+        private AmeisenDataHolder AmeisenDataHolder { get; set; }
+        private AmeisenDBManager AmeisenDBManager { get; set; }
+
+        private Dictionary<Vector3, Vector3> InstanceEntrances { get; set; }
+
+        private Me Me
+        {
+            get { return AmeisenDataHolder.Me; }
+            set { AmeisenDataHolder.Me = value; }
+        }
 
         private void GoToCorpseAndRevive()
         {
@@ -62,7 +62,7 @@ namespace AmeisenBotFSM.Actions
             if (InstanceEntrances.ContainsKey(corpsePosition))
             {
                 // Dungeon/Raid workaround
-                // because blizzard decided to put the corpse at very low Z axis values that 
+                // because blizzard decided to put the corpse at very low Z axis values that
                 // we cant navigate to them, so we are going to use the position of the entrance instead
                 corpsePosition = InstanceEntrances[corpsePosition];
             }

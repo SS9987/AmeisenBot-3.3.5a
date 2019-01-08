@@ -8,10 +8,6 @@ namespace AmeisenBotGUI
     /// </summary>
     public partial class ChangeRealmlistDialog : Window
     {
-        public bool ApplyChanges { get; set; }
-        public int SelectedRealmlist { get; private set; }
-        public List<string> Realmlists { get; set; }
-
         public ChangeRealmlistDialog(List<string> realmlists, int currentSelection)
         {
             InitializeComponent();
@@ -20,10 +16,9 @@ namespace AmeisenBotGUI
             SelectedRealmlist = currentSelection;
         }
 
-        private void ButtonExit_Click(object sender, RoutedEventArgs e)
-        {
-            Close();
-        }
+        public bool ApplyChanges { get; set; }
+        public List<string> Realmlists { get; set; }
+        public int SelectedRealmlist { get; private set; }
 
         private void ButtonAdd_Click(object sender, RoutedEventArgs e)
         {
@@ -32,23 +27,6 @@ namespace AmeisenBotGUI
                 listboxRealmlists.Items.Add($"{textboxRealmlist.Text}");
                 Realmlists.Add($"set realmlist {textboxRealmlist.Text}");
             }
-        }
-
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            foreach (string s in Realmlists)
-            {
-                if (s.Split(' ').Length == 3)
-                {
-                    listboxRealmlists.Items.Add(s.Split(' ')[2]);
-                }
-            }
-            listboxRealmlists.SelectedIndex = SelectedRealmlist;
-        }
-
-        private void ButtonCancel_Click(object sender, RoutedEventArgs e)
-        {
-            Close();
         }
 
         private void ButtonAddDeleteRealmlist_Click(object sender, RoutedEventArgs e)
@@ -70,9 +48,31 @@ namespace AmeisenBotGUI
             Close();
         }
 
+        private void ButtonCancel_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
+
+        private void ButtonExit_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
+
         private void ListboxRealmlists_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
             SelectedRealmlist = listboxRealmlists.SelectedIndex;
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            foreach (string s in Realmlists)
+            {
+                if (s.Split(' ').Length == 3)
+                {
+                    listboxRealmlists.Items.Add(s.Split(' ')[2]);
+                }
+            }
+            listboxRealmlists.SelectedIndex = SelectedRealmlist;
         }
 
         private void Window_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)

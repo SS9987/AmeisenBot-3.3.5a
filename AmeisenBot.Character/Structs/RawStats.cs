@@ -2,14 +2,14 @@
 {
     public struct RawStats
     {
-        public int armor;
-        public int stamina;
         public int agility;
-        public int strenght;
-        public int intellect;
-        public int spirit;
+        public int armor;
         public int attackpower;
-        public int spellpower;
+        public int intellect;
         public int mana;
+        public int spellpower;
+        public int spirit;
+        public int stamina;
+        public int strenght;
     }
 }

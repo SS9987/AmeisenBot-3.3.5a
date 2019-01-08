@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace AmeisenBotUtilities.Structs
 {
@@ -10,7 +6,7 @@ namespace AmeisenBotUtilities.Structs
     {
         public string wowExePath = "none";
         public string wowRealmlistPath = "none";
-        public int wowSelectedRealmlist = 0;
         public List<string> wowRealmlists = new List<string>() { "127.0.0.1" };
+        public int wowSelectedRealmlist = 0;
     }
 }

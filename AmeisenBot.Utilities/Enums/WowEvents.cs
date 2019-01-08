@@ -3,6 +3,11 @@
     public static class WowEvents
     {
         /// <summary>
+        /// CombatLog events
+        /// </summary>
+        public const string COMBAT_LOG_EVENT_UNFILTERED = "COMBAT_LOG_EVENT_UNFILTERED";
+
+        /// <summary>
         /// Gets fired when you need to confirm to roll on BoP items
         /// </summary>
         public const string CONFIRM_LOOT_ROLL = "CONFIRM_LOOT_ROLL";
@@ -51,6 +56,11 @@
         /// Gets fired when you get a paryt invite
         /// </summary>
         public const string PARTY_INVITE_REQUEST = "PARTY_INVITE_REQUEST";
+
+        /// <summary>
+        /// new, removed, moved player from group/raid
+        /// </summary>
+        public const string PARTY_MEMBERS_CHANGED = "PARTY_MEMBERS_CHANGED";
 
         /// <summary>
         /// Gets fired when you gain control
@@ -133,14 +143,14 @@
         public const string TRADE_SHOW = "TRADE_SHOW";
 
         /// <summary>
-        /// Gets fired when the trainer window shows
-        /// </summary>
-        public const string TRAINER_SHOW = "TRAINER_SHOW";
-
-        /// <summary>
         /// Gets fired when the trainer window closes
         /// </summary>
         public const string TRAINER_CLOSED = "TRAINER_CLOSED";
+
+        /// <summary>
+        /// Gets fired when the trainer window shows
+        /// </summary>
+        public const string TRAINER_SHOW = "TRAINER_SHOW";
 
         /// <summary>
         /// Gets fired when an error appears (red text)
@@ -156,15 +166,5 @@
         /// Gets fired when world events trigger (BG when somebody takes the flag)
         /// </summary>
         public const string UPDATE_WORLD_STATES = "UPDATE_WORLD_STATES";
-
-        /// <summary>
-        /// CombatLog events
-        /// </summary>
-        public const string COMBAT_LOG_EVENT_UNFILTERED = "COMBAT_LOG_EVENT_UNFILTERED";
-
-        /// <summary>
-        /// new, removed, moved player from group/raid
-        /// </summary>
-        public const string PARTY_MEMBERS_CHANGED = "PARTY_MEMBERS_CHANGED";
     }
 }

@@ -15,20 +15,16 @@ namespace AmeisenBotData
     public class AmeisenSettings
     {
         public string loadedconfName;
-        private static readonly string configPath = AppDomain.CurrentDomain.BaseDirectory + "config/";
-        private static readonly string extension = ".json";
+
+        public AmeisenSettings(AmeisenDataHolder ameisenDataHolder)
+        {
+            AmeisenDataHolder = ameisenDataHolder;
+        }
 
         public Settings Settings
         {
             get { return AmeisenDataHolder.Settings; }
             set { AmeisenDataHolder.Settings = value; }
-        }
-
-        private AmeisenDataHolder AmeisenDataHolder { get; set; }
-
-        public AmeisenSettings(AmeisenDataHolder ameisenDataHolder)
-        {
-            AmeisenDataHolder = ameisenDataHolder;
         }
 
         /// <summary>
@@ -71,5 +67,9 @@ namespace AmeisenBotData
             // Serialize our object with the help of NewtosoftJSON
             File.WriteAllText(configPath + filename.ToLower() + extension, JsonConvert.SerializeObject(Settings));
         }
+
+        private static readonly string configPath = AppDomain.CurrentDomain.BaseDirectory + "config/";
+        private static readonly string extension = ".json";
+        private AmeisenDataHolder AmeisenDataHolder { get; set; }
     }
 }

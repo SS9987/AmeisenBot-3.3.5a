@@ -9,24 +9,6 @@ namespace AmeisenBotCombat.SpellStrategies
 {
     public class PaladinRetribution : ICombatClass
     {
-        private List<Spell> Spells { get; set; }
-
-        private bool IsSealOfVengeanceKnown { get; set; }
-        private bool IsBlessingOfMightKnown { get; set; }
-        private bool IsLayOnHandsKnown { get; set; }
-        private bool IsHammerOfJusticeKnown { get; set; }
-        private bool IsJudgementOfLightKnown { get; set; }
-        private bool IsJudgementOfWisdomKnown { get; set; }
-        private bool IsHammerOfWrathKnown { get; set; }
-        private bool IsCrusaderStrikeKnown { get; set; }
-        private bool IsDivineStormKnown { get; set; }
-        private bool IsConsecrationKnown { get; set; }
-        private bool IsExorcismKnown { get; set; }
-        private bool IsAvengingWrathKnown { get; set; }
-        private bool IsFlashHealKnown { get; set; }
-        private bool IsHolyLightKnown { get; set; }
-        private bool IsDivinePleaKnown { get; set; }
-
         public PaladinRetribution(List<Spell> spells)
         {
             Spells = spells;
@@ -47,8 +29,6 @@ namespace AmeisenBotCombat.SpellStrategies
             IsHolyLightKnown = Spells.Where(spell => spell.Name == "Holy Light").ToList().Count > 0;
             IsDivinePleaKnown = Spells.Where(spell => spell.Name == "Divine Plea").ToList().Count > 0;
         }
-
-        public void Startup(Me me, Unit target, Unit pet) { }
 
         public Spell DoRoutine(Me me, Unit target, Unit pet)
         {
@@ -84,7 +64,7 @@ namespace AmeisenBotCombat.SpellStrategies
                 spellToUse = TryUseSpell("Divine Plea", me);
                 if (spellToUse != null)
                 {
-                    CombatUtils.CastSpellByName(me, target, "Divine Plea", false, true); // doesn't trigger GCD 
+                    CombatUtils.CastSpellByName(me, target, "Divine Plea", false, true); // doesn't trigger GCD
                 }
             }
 
@@ -187,6 +167,27 @@ namespace AmeisenBotCombat.SpellStrategies
             return null;
         }
 
+        public void Startup(Me me, Unit target, Unit pet)
+        {
+        }
+
+        private bool IsAvengingWrathKnown { get; set; }
+        private bool IsBlessingOfMightKnown { get; set; }
+        private bool IsConsecrationKnown { get; set; }
+        private bool IsCrusaderStrikeKnown { get; set; }
+        private bool IsDivinePleaKnown { get; set; }
+        private bool IsDivineStormKnown { get; set; }
+        private bool IsExorcismKnown { get; set; }
+        private bool IsFlashHealKnown { get; set; }
+        private bool IsHammerOfJusticeKnown { get; set; }
+        private bool IsHammerOfWrathKnown { get; set; }
+        private bool IsHolyLightKnown { get; set; }
+        private bool IsJudgementOfLightKnown { get; set; }
+        private bool IsJudgementOfWisdomKnown { get; set; }
+        private bool IsLayOnHandsKnown { get; set; }
+        private bool IsSealOfVengeanceKnown { get; set; }
+        private List<Spell> Spells { get; set; }
+
         private Spell TryUseSpell(string spellname, Me me)
         {
             Spell spellToUse = Spells.Where(spell => spell.Name == spellname).FirstOrDefault();
@@ -200,6 +201,5 @@ namespace AmeisenBotCombat.SpellStrategies
             }
             return null;
         }
-
     }
 }

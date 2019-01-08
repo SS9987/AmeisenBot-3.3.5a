@@ -377,7 +377,7 @@
                 <SolidColorBrush Color="{DynamicResource TextColor}" />
             </Button.Foreground>
         </Button>
-        <ProgressBar x:Name="progressbarHookQueue" HorizontalAlignment="Left" Height="76" Margin="160,176,0,0" VerticalAlignment="Top" Width="6" Foreground="Yellow" Background="{x:Null}" BorderBrush="{x:Null}" Orientation="Vertical" Maximum="30"/>
+        <ProgressBar x:Name="progressbarHookQueue" HorizontalAlignment="Left" Height="76" Margin="160,176,0,0" VerticalAlignment="Top" Width="6" Foreground="Yellow" Background="{x:Null}" BorderBrush="{x:Null}" Orientation="Vertical" Maximum="30" />
         <Label x:Name="labelHookQueue" Content="HookJobs: 0/30" HorizontalAlignment="Left" Margin="0,215,0,0" VerticalAlignment="Top" FontSize="10">
             <Label.Foreground>
                 <SolidColorBrush Color="{DynamicResource TextColor}" />
@@ -407,7 +407,7 @@
             </Label.Foreground>
         </Label>
         <Label Content="🐉" HorizontalAlignment="Left" Margin="432,328,0,-2" VerticalAlignment="Top" FontSize="30" RenderTransformOrigin="4.267,0.515" Height="50" Width="50" Foreground="#19FFFFFF" />
-        <WrapPanel x:Name="stackpanelGroupViews" HorizontalAlignment="Left" Height="122" Margin="168,254,0,0" VerticalAlignment="Top" Width="312" Orientation="Horizontal"/>
-        <TextBox x:Name="textboxGuid" HorizontalAlignment="Left" Height="23" Margin="353,66,0,0" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Width="45"/>
+        <WrapPanel x:Name="stackpanelGroupViews" HorizontalAlignment="Left" Height="122" Margin="168,254,0,0" VerticalAlignment="Top" Width="312" Orientation="Horizontal" />
+        <TextBox x:Name="textboxGuid" HorizontalAlignment="Left" Height="23" Margin="353,66,0,0" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" Width="45" />
     </Grid>
 </Window>

@@ -2,7 +2,6 @@
 using AmeisenBot.Character.Objects;
 using AmeisenBotManager;
 using AmeisenBotUtilities.Objects;
-using System;
 using System.Threading;
 using System.Windows;
 using System.Windows.Input;
@@ -15,40 +14,22 @@ namespace AmeisenBotGUI
     /// </summary>
     public partial class GearWindow : Window
     {
-        private BotManager BotManager { get; set; }
-
         public GearWindow(BotManager botManager)
         {
             InitializeComponent();
             BotManager = botManager;
         }
 
-        private void Mainscreen_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) => DragMove();
+        private BotManager BotManager { get; set; }
 
-        private void Mainscreen_Loaded(object sender, RoutedEventArgs e)
+        private void ButtonExit_Click(object sender, RoutedEventArgs e)
         {
-            while (!BotManager.Character.FullyLoaded) Thread.Sleep(250);
+            Close();
+        }
 
-            foreach (Item item in BotManager.Character.Equipment.AsList())
-            {
-                listboxEquipped.Items.Add(
-                    new DataItem(item.ToString(), 
-                    GetBrushByItemQuality(item.Quality)));
-            }
-
-            foreach (Item item in BotManager.Character.InventoryItems)
-            {
-                listboxInventory.Items.Add(
-                    new DataItem(item.ToString(),
-                    GetBrushByItemQuality(item.Quality)));
-            }
-
-            foreach (Spell spell in BotManager.Character.Spells)
-            {
-                listboxSpells.Items.Add(
-                    new DataItem(spell.ToString(),
-                    GetBrushForSpellbook(spell.SpellbookName)));
-            }
+        private void ButtonMinimize_Click(object sender, RoutedEventArgs e)
+        {
+            WindowState = WindowState.Minimized;
         }
 
         private Brush GetBrushByItemQuality(ItemQuality quality)
@@ -73,14 +54,35 @@ namespace AmeisenBotGUI
             }
         }
 
-        private void ButtonExit_Click(object sender, RoutedEventArgs e)
+        private void Mainscreen_Loaded(object sender, RoutedEventArgs e)
         {
-            Close();
+            while (!BotManager.Character.FullyLoaded)
+            {
+                Thread.Sleep(250);
+            }
+
+            foreach (Item item in BotManager.Character.Equipment.AsList())
+            {
+                listboxEquipped.Items.Add(
+                    new DataItem(item.ToString(),
+                    GetBrushByItemQuality(item.Quality)));
+            }
+
+            foreach (Item item in BotManager.Character.InventoryItems)
+            {
+                listboxInventory.Items.Add(
+                    new DataItem(item.ToString(),
+                    GetBrushByItemQuality(item.Quality)));
+            }
+
+            foreach (Spell spell in BotManager.Character.Spells)
+            {
+                listboxSpells.Items.Add(
+                    new DataItem(spell.ToString(),
+                    GetBrushForSpellbook(spell.SpellbookName)));
+            }
         }
 
-        private void ButtonMinimize_Click(object sender, RoutedEventArgs e)
-        {
-            WindowState = WindowState.Minimized;
-        }
+        private void Mainscreen_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) => DragMove();
     }
 }

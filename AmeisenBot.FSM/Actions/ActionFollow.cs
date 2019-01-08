@@ -5,8 +5,6 @@ using AmeisenBotUtilities;
 using AmeisenMovement;
 using AmeisenMovement.Structs;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using static AmeisenBotFSM.Objects.Delegates;
 
@@ -14,25 +12,6 @@ namespace AmeisenBotFSM.Actions
 {
     public class ActionFollow : ActionMoving
     {
-        public override Start StartAction { get { return Start; } }
-        public override DoThings StartDoThings { get { return DoThings; } }
-        public override Exit StartExit { get { return Stop; } }
-        private Unit ActiveUnit { get; set; }
-        private AmeisenDataHolder AmeisenDataHolder { get; set; }
-        private AmeisenDBManager AmeisenDBManager { get; set; }
-        private AmeisenMovementEngine AmeisenMovementEngine { get; set; }
-
-        private double XOffset { get; set; }
-        private double YOffset { get; set; }
-
-        private Me Me
-        {
-            get { return AmeisenDataHolder.Me; }
-            set { AmeisenDataHolder.Me = value; }
-        }
-
-        public int PartyPosition { get; private set; }
-
         public ActionFollow(
             AmeisenDataHolder ameisenDataHolder,
             AmeisenDBManager ameisenDBManager,
@@ -45,6 +24,11 @@ namespace AmeisenBotFSM.Actions
             PartyPosition = 0;
         }
 
+        public int PartyPosition { get; private set; }
+        public override Start StartAction { get { return Start; } }
+        public override DoThings StartDoThings { get { return DoThings; } }
+        public override Exit StartExit { get { return Stop; } }
+
         public override void DoThings()
         {
             if (WaypointQueue.Count > 0)
@@ -53,8 +37,8 @@ namespace AmeisenBotFSM.Actions
                 base.DoThings();
                 Thread.Sleep(100);
                 return;
-            }          
-            
+            }
+
             RefreshActiveUnit();
             Me?.Update();
             ActiveUnit?.Update();
@@ -78,7 +62,6 @@ namespace AmeisenBotFSM.Actions
                                     new Vector4(ActiveUnit.pos.X, ActiveUnit.pos.Y, ActiveUnit.pos.Z, ActiveUnit.Rotation),
                                     AmeisenDataHolder.Settings.followDistance / 10,
                                     GetMyPartyPosition());
-
 
             Vector3 posToMoveTo = new Vector3(targetPos.X, targetPos.Y, targetPos.Z);
 
@@ -127,6 +110,31 @@ namespace AmeisenBotFSM.Actions
             base.Stop();
         }
 
+        private Unit ActiveUnit { get; set; }
+        private AmeisenDataHolder AmeisenDataHolder { get; set; }
+        private AmeisenDBManager AmeisenDBManager { get; set; }
+        private AmeisenMovementEngine AmeisenMovementEngine { get; set; }
+
+        private Me Me
+        {
+            get { return AmeisenDataHolder.Me; }
+            set { AmeisenDataHolder.Me = value; }
+        }
+
+        private double XOffset { get; set; }
+        private double YOffset { get; set; }
+
+        private Vector3 CalculateMovementOffset(Vector3 posToMoveTo, double angle, double distance)
+        {
+            return new Vector3(
+                posToMoveTo.X + (Math.Cos(angle) * (distance / 2) - XOffset),
+                posToMoveTo.Y + (Math.Sin(angle) * (distance / 2) - YOffset),
+                posToMoveTo.Z);
+        }
+
+        private double GetFollowAngle(int memberCount, int myPosition)
+            => 2 * Math.PI / (memberCount * myPosition);
+
         private int GetMyPartyPosition()
         {
             Random rnd = new Random();
@@ -171,18 +179,6 @@ namespace AmeisenBotFSM.Actions
 
             return count;
         }
-
-        private double GetFollowAngle(int memberCount, int myPosition)
-            => 2 * Math.PI / (memberCount * myPosition);
-
-        private Vector3 CalculateMovementOffset(Vector3 posToMoveTo, double angle, double distance)
-        {
-            return new Vector3(
-                posToMoveTo.X + (Math.Cos(angle) * (distance / 2) - XOffset),
-                posToMoveTo.Y + (Math.Sin(angle) * (distance / 2) - YOffset),
-                posToMoveTo.Z);
-        }
-
 
         private void RefreshActiveUnit()
         {

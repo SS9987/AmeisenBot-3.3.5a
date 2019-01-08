@@ -32,12 +32,6 @@ namespace AmeisenBotGUI
                 { UnitTrait.AUCTIONMASTER, "💸" },
             };
 
-        private string lastImgPath;
-        private DispatcherTimer uiUpdateTimer;
-        private BotManager BotManager { get; }
-        private Settings Settings => BotManager.Settings;
-        private ulong LastGuid { get; set; }
-
         public BotWindow(WowExe wowExe, BotManager botManager)
         {
             InitializeComponent();
@@ -62,6 +56,12 @@ namespace AmeisenBotGUI
             }
         }
 
+        private Settings Settings => BotManager.Settings;
+        private string lastImgPath;
+        private DispatcherTimer uiUpdateTimer;
+        private BotManager BotManager { get; }
+        private ulong LastGuid { get; set; }
+
         private void ApplyConfigColors()
         {
             ResourceDictionary resources = Application.Current.Resources;
@@ -81,11 +81,29 @@ namespace AmeisenBotGUI
             resources["holoLogoColor"] = ParseColor(Settings.holoLogoColor);
         }
 
-        private Color ParseColor(string colorString) => (Color)ColorConverter.ConvertFromString(colorString);
-
         private void ButtonCobatClassEditor_Click(object sender, RoutedEventArgs e)
         {
             new GearWindow(BotManager).Show();
+        }
+
+        private void ButtonCombatEditor_Click(object sender, RoutedEventArgs e)
+        {
+            new CombatEditor(BotManager).ShowDialog();
+        }
+
+        private void ButtonDebugTest_Click(object sender, RoutedEventArgs e)
+        {
+            AmeisenBotCore.AmeisenCore.TargetGUID(ulong.Parse(textboxGuid.Text));
+        }
+
+        private void ButtonDebugTest2_Click(object sender, RoutedEventArgs e)
+        {
+            AmeisenBotCore.AmeisenCore.LuaDoString("TurnRightStop();");
+        }
+
+        private void ButtonEquiptAllBetter_Click(object sender, RoutedEventArgs e)
+        {
+            BotManager.EquipAllBetterItems();
         }
 
         private void ButtonExit_Click(object sender, RoutedEventArgs e)
@@ -97,7 +115,9 @@ namespace AmeisenBotGUI
         private void ButtonGroup_Click(object sender, RoutedEventArgs e)
             => new GroupWindow(BotManager).Show();
 
-        private void ButtonMap_Click(object sender, RoutedEventArgs e) { }
+        private void ButtonMap_Click(object sender, RoutedEventArgs e)
+        {
+        }
 
         private void ButtonMinimize_Click(object sender, RoutedEventArgs e)
             => WindowState = WindowState.Minimized;
@@ -117,6 +137,28 @@ namespace AmeisenBotGUI
             }
         }
 
+        private void ButtonRefreshCharacterEquip_Click(object sender, RoutedEventArgs e)
+        {
+            BotManager.RefreshCurrentItems();
+        }
+
+        private void ButtonRememberUnit_Click(object sender, RoutedEventArgs e)
+        {
+            if (BotManager.Target != null && BotManager.Target.Guid != 0)
+            {
+                RememberUnitWindow rememberUnitWindow = new RememberUnitWindow(BotManager.Target)
+                {
+                    Topmost = Settings.topMost
+                };
+                rememberUnitWindow.ShowDialog();
+
+                if (rememberUnitWindow.ShouldRemember)
+                {
+                    BotManager.RememberUnit(rememberUnitWindow.UnitToRemmeber);
+                }
+            }
+        }
+
         private void ButtonSettings_Click(object sender, RoutedEventArgs e)
             => new SettingsWindow(BotManager).ShowDialog();
 
@@ -126,32 +168,17 @@ namespace AmeisenBotGUI
         private void CheckBoxAssistPartyBuff_Click(object sender, RoutedEventArgs e)
             => BotManager.IsAllowedToBuff = (bool)checkBoxAssistPartyBuff.IsChecked;
 
-        private void RadioButtonSpecA_Click(object sender, RoutedEventArgs e)
-        {
-            BotManager.IsSpecA = true;
-            BotManager.IsSpecB = false;
-            BotManager.IsSpecC = false;
-            BotManager.RefreshCombatClass();
-        }
-
-        private void RadioButtonSpecB_Click(object sender, RoutedEventArgs e)
-        {
-            BotManager.IsSpecA = false;
-            BotManager.IsSpecB = true;
-            BotManager.IsSpecC = false;
-            BotManager.RefreshCombatClass();
-        }
-
-        private void RadioButtonSpecC_Click(object sender, RoutedEventArgs e)
-        {
-            BotManager.IsSpecA = false;
-            BotManager.IsSpecB = false;
-            BotManager.IsSpecC = true;
-            BotManager.RefreshCombatClass();
-        }
+        private void CheckBoxDoBotStuff_Click(object sender, RoutedEventArgs e)
+            => BotManager.IsAllowedToDoOwnStuff = (bool)checkBoxDoBotStuff.IsChecked;
 
         private void CheckBoxFollowMaster_Click(object sender, RoutedEventArgs e)
             => BotManager.IsAllowedToFollowParty = (bool)checkBoxFollowParty.IsChecked;
+
+        private void CheckBoxReleaseSpirit_Click(object sender, RoutedEventArgs e)
+            => BotManager.IsAllowedToReleaseSpirit = (bool)checkBoxReleaseSpirit.IsChecked;
+
+        private void CheckBoxReleaseSpirit_Copy_Click(object sender, RoutedEventArgs e)
+            => BotManager.IsAllowedToRevive = (bool)checkBoxRevive.IsChecked;
 
         private void CheckBoxTopMost_Click(object sender, RoutedEventArgs e)
             => SetTopMost();
@@ -221,6 +248,47 @@ namespace AmeisenBotGUI
             catch { }
         }
 
+        private Color ParseColor(string colorString) => (Color)ColorConverter.ConvertFromString(colorString);
+
+        private string ProcessKMValue(double value)
+        {
+            if (value > 1000000)
+            {
+                return $"{(int)value / 1000000}M";
+            }
+
+            if (value > 1000)
+            {
+                return $"{(int)value / 1000}K";
+            }
+
+            return $"{value}";
+        }
+
+        private void RadioButtonSpecA_Click(object sender, RoutedEventArgs e)
+        {
+            BotManager.IsSpecA = true;
+            BotManager.IsSpecB = false;
+            BotManager.IsSpecC = false;
+            BotManager.RefreshCombatClass();
+        }
+
+        private void RadioButtonSpecB_Click(object sender, RoutedEventArgs e)
+        {
+            BotManager.IsSpecA = false;
+            BotManager.IsSpecB = true;
+            BotManager.IsSpecC = false;
+            BotManager.RefreshCombatClass();
+        }
+
+        private void RadioButtonSpecC_Click(object sender, RoutedEventArgs e)
+        {
+            BotManager.IsSpecA = false;
+            BotManager.IsSpecB = false;
+            BotManager.IsSpecC = true;
+            BotManager.RefreshCombatClass();
+        }
+
         private void SaveViewSettings()
         {
             Settings.behaviourAttack = (bool)radiobuttonSpecA.IsChecked;
@@ -266,6 +334,18 @@ namespace AmeisenBotGUI
             }
         }
 
+        private void UpdateFSMViews() => labelFSMState.Content = $"Current State: {BotManager.CurrentFSMState}";
+
+        private void UpdateGroupViews()
+        {
+            stackpanelGroupViews.Children.Clear();
+            stackpanelGroupViews.Children.Add(new GroupView(BotManager.Me));
+            foreach (Unit unit in BotManager.Partymembers)
+            {
+                stackpanelGroupViews.Children.Add(new GroupView(unit));
+            }
+        }
+
         private void UpdateMyViews()
         {
             try
@@ -284,8 +364,8 @@ namespace AmeisenBotGUI
             labelName.Content = BotManager.Me.Name + " lvl." + BotManager.Me.Level;
             labelHP.Content = $"Health {ProcessKMValue(BotManager.Me.Health)} / {ProcessKMValue(BotManager.Me.MaxHealth)}";
 
-            labelMapID.Content = $"MapId: {BotManager.Me.MapID}";
-            labelZoneID.Content = $"ZoneId: {BotManager.Me.ZoneID}";
+            labelMapID.Content = $"MapId: {BotManager.Me.MapId}";
+            labelZoneID.Content = $"ZoneId: {BotManager.Me.ZoneId}";
 
             labelLeaderGuid.Content = $"LeaderGuid: {BotManager.Me.PartyleaderGuid}";
 
@@ -330,21 +410,6 @@ namespace AmeisenBotGUI
             progressBarXP.Value = BotManager.Me.Exp;
         }
 
-        private string ProcessKMValue(double value)
-        {
-            if (value > 1000000)
-            {
-                return $"{(int)value / 1000000}M";
-            }
-
-            if (value > 1000)
-            {
-                return $"{(int)value / 1000}K";
-            }
-
-            return $"{value}";
-        }
-
         private void UpdateTargetViews()
         {
             labelNameTarget.Content = $"{BotManager.Target.Name} lvl.{BotManager.Target.Level}";
@@ -366,7 +431,7 @@ namespace AmeisenBotGUI
                 if (target.Guid != LastGuid)
                 {
                     target.Update();
-                    RememberedUnit rememberedUnit = BotManager.CheckForRememberedUnit(target.Name, target.ZoneID, target.MapID);
+                    RememberedUnit rememberedUnit = BotManager.CheckForRememberedUnit(target.Name, target.ZoneId, target.MapId);
 
                     if (rememberedUnit != null)
                     {
@@ -389,8 +454,6 @@ namespace AmeisenBotGUI
                 }
             }
         }
-
-        private void UpdateFSMViews() => labelFSMState.Content = $"Current State: {BotManager.CurrentFSMState}";
 
         /// <summary>
         /// This thing updates the UI... Note to myself: "may need to improve this thing in the future..."
@@ -425,67 +488,6 @@ namespace AmeisenBotGUI
                     AmeisenLogger.Instance.Log(LogLevel.ERROR, e.ToString(), this);
                 }
             }
-        }
-
-        private void CheckBoxReleaseSpirit_Click(object sender, RoutedEventArgs e)
-            => BotManager.IsAllowedToReleaseSpirit = (bool)checkBoxReleaseSpirit.IsChecked;
-
-        private void CheckBoxReleaseSpirit_Copy_Click(object sender, RoutedEventArgs e)
-            => BotManager.IsAllowedToRevive = (bool)checkBoxRevive.IsChecked;
-
-        private void ButtonRememberUnit_Click(object sender, RoutedEventArgs e)
-        {
-            if (BotManager.Target != null && BotManager.Target.Guid != 0)
-            {
-                RememberUnitWindow rememberUnitWindow = new RememberUnitWindow(BotManager.Target)
-                {
-                    Topmost = Settings.topMost
-                };
-                rememberUnitWindow.ShowDialog();
-
-                if (rememberUnitWindow.ShouldRemember)
-                {
-                    BotManager.RememberUnit(rememberUnitWindow.UnitToRemmeber);
-                }
-            }
-        }
-
-        private void ButtonRefreshCharacterEquip_Click(object sender, RoutedEventArgs e)
-        {
-            BotManager.RefreshCurrentItems();
-        }
-
-        private void ButtonEquiptAllBetter_Click(object sender, RoutedEventArgs e)
-        {
-            BotManager.EquipAllBetterItems();
-        }
-
-        private void UpdateGroupViews()
-        {
-            stackpanelGroupViews.Children.Clear();
-            stackpanelGroupViews.Children.Add(new GroupView(BotManager.Me));
-            foreach (Unit unit in BotManager.Partymembers)
-            {
-                stackpanelGroupViews.Children.Add(new GroupView(unit));
-            }
-        }
-
-        private void CheckBoxDoBotStuff_Click(object sender, RoutedEventArgs e)
-            => BotManager.IsAllowedToDoOwnStuff = (bool)checkBoxDoBotStuff.IsChecked;
-
-        private void ButtonDebugTest_Click(object sender, RoutedEventArgs e)
-        {
-            AmeisenBotCore.AmeisenCore.TargetGUID(ulong.Parse(textboxGuid.Text));
-        }
-
-        private void ButtonDebugTest2_Click(object sender, RoutedEventArgs e)
-        {
-            AmeisenBotCore.AmeisenCore.LuaDoString("TurnRightStop();");
-        }
-
-        private void ButtonCombatEditor_Click(object sender, RoutedEventArgs e)
-        {
-            new CombatEditor(BotManager).ShowDialog();
         }
     }
 }

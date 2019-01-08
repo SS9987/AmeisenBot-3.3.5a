@@ -9,19 +9,29 @@ namespace AmeisenBotGUI
     /// </summary>
     public partial class ColorPickWindow : Window
     {
-        public Color ActiveColor { get; private set; }
-        public bool ApplyColor { get; set; }
-        private bool InteractionPossible { get; set; }
-
         public ColorPickWindow(Color activeColor)
         {
             InitializeComponent();
             ActiveColor = activeColor;
         }
 
+        public Color ActiveColor { get; private set; }
+        public bool ApplyColor { get; set; }
+        private bool InteractionPossible { get; set; }
+
         private void ButtonCancel_Click(object sender, RoutedEventArgs e)
         {
             Close();
+        }
+
+        private void ButtonExit_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
+
+        private void ButtonMinimize_Click(object sender, RoutedEventArgs e)
+        {
+            WindowState = WindowState.Minimized;
         }
 
         private void ButtonOK_Click(object sender, RoutedEventArgs e)
@@ -47,11 +57,6 @@ namespace AmeisenBotGUI
             }
         }
 
-        private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            DragMove();
-        }
-
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             sliderAlpha.Value = ActiveColor.A;
@@ -67,14 +72,9 @@ namespace AmeisenBotGUI
             InteractionPossible = true;
         }
 
-        private void ButtonExit_Click(object sender, RoutedEventArgs e)
+        private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            Close();
-        }
-
-        private void ButtonMinimize_Click(object sender, RoutedEventArgs e)
-        {
-            WindowState = WindowState.Minimized;
+            DragMove();
         }
     }
 }

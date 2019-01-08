@@ -9,17 +9,6 @@ namespace AmeisenBotCombat.SpellStrategies
 {
     public class PriestHoly : ICombatClass
     {
-        private List<Spell> Spells { get; set; }
-
-        private bool IsPrayerOfMendingKnown { get; set; }
-        private bool IsPowerwordFortitudeKnown { get; set; }
-        private bool IsInnerFireKnown { get; set; }
-        private bool IsShadowfiendKnown { get; set; }
-        private bool IsRenewKnown { get; set; }
-        private bool IsBindingHealKnown { get; set; }
-        private bool IsGreaterHealKnown { get; set; }
-        private bool IsFlashHealKnown { get; set; }
-
         public PriestHoly(List<Spell> spells)
         {
             Spells = spells;
@@ -33,8 +22,6 @@ namespace AmeisenBotCombat.SpellStrategies
             IsGreaterHealKnown = Spells.Where(spell => spell.Name == "Greater Heal").ToList().Count > 0;
             IsFlashHealKnown = Spells.Where(spell => spell.Name == "Flash Heal").ToList().Count > 0;
         }
-
-        public void Startup(Me me, Unit target, Unit pet) { }
 
         public Spell DoRoutine(Me me, Unit target, Unit pet)
         {
@@ -111,6 +98,20 @@ namespace AmeisenBotCombat.SpellStrategies
             return null;
         }
 
+        public void Startup(Me me, Unit target, Unit pet)
+        {
+        }
+
+        private bool IsBindingHealKnown { get; set; }
+        private bool IsFlashHealKnown { get; set; }
+        private bool IsGreaterHealKnown { get; set; }
+        private bool IsInnerFireKnown { get; set; }
+        private bool IsPowerwordFortitudeKnown { get; set; }
+        private bool IsPrayerOfMendingKnown { get; set; }
+        private bool IsRenewKnown { get; set; }
+        private bool IsShadowfiendKnown { get; set; }
+        private List<Spell> Spells { get; set; }
+
         private Spell TryUseSpell(string spellname, Me me)
         {
             Spell spellToUse = Spells.Where(spell => spell.Name == spellname).FirstOrDefault();
@@ -124,6 +125,5 @@ namespace AmeisenBotCombat.SpellStrategies
             }
             return null;
         }
-
     }
 }

@@ -9,21 +9,6 @@ namespace AmeisenBotCombat.SpellStrategies
 {
     public class MageFire : ICombatClass
     {
-        private List<Spell> Spells { get; set; }
-
-        private bool IsArcaneIntellectKnown { get; set; }
-        private bool IsMageArmorKnown { get; set; }
-        private bool IsManaShieldKnown { get; set; }
-        private bool IsEvocationKnown { get; set; }
-        private bool IsMirrorImageKnown { get; set; }
-        private bool IsScorchKnown { get; set; }
-        private bool IsPyroblastKnown { get; set; }
-        private bool IsForstfireBoltKnown { get; set; }
-        private bool IsFireballKnown { get; set; }
-        private bool IsLivingBombKnown { get; set; }
-        private bool IsIceBlockKnown { get; set; }
-        private bool IsMoltenArmorKnown { get; set; }
-
         public MageFire(List<Spell> spells)
         {
             Spells = spells;
@@ -41,8 +26,6 @@ namespace AmeisenBotCombat.SpellStrategies
             IsIceBlockKnown = Spells.Where(spell => spell.Name == "Ice Block").ToList().Count > 0;
             IsMoltenArmorKnown = Spells.Where(spell => spell.Name == "Molten Armor").ToList().Count > 0;
         }
-
-        public void Startup(Me me, Unit target, Unit pet) { }
 
         public Spell DoRoutine(Me me, Unit target, Unit pet)
         {
@@ -148,6 +131,24 @@ namespace AmeisenBotCombat.SpellStrategies
             return null;
         }
 
+        public void Startup(Me me, Unit target, Unit pet)
+        {
+        }
+
+        private bool IsArcaneIntellectKnown { get; set; }
+        private bool IsEvocationKnown { get; set; }
+        private bool IsFireballKnown { get; set; }
+        private bool IsForstfireBoltKnown { get; set; }
+        private bool IsIceBlockKnown { get; set; }
+        private bool IsLivingBombKnown { get; set; }
+        private bool IsMageArmorKnown { get; set; }
+        private bool IsManaShieldKnown { get; set; }
+        private bool IsMirrorImageKnown { get; set; }
+        private bool IsMoltenArmorKnown { get; set; }
+        private bool IsPyroblastKnown { get; set; }
+        private bool IsScorchKnown { get; set; }
+        private List<Spell> Spells { get; set; }
+
         private Spell TryUseSpell(string spellname, Me me)
         {
             Spell spellToUse = Spells.Where(spell => spell.Name == spellname).FirstOrDefault();
@@ -161,6 +162,5 @@ namespace AmeisenBotCombat.SpellStrategies
             }
             return null;
         }
-
     }
 }

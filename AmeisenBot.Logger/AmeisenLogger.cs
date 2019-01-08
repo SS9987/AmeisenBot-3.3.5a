@@ -48,16 +48,7 @@ namespace AmeisenBotLogger
 
     public class AmeisenLogger
     {
-        private static readonly object padlock = new object();
-        private static AmeisenLogger instance;
-        private string logName;
         public string currentUsername;
-        private readonly string logPath = AppDomain.CurrentDomain.BaseDirectory + "/logs/";
-        private LogLevel activeLogLevel;
-        private ConcurrentQueue<AmeisenLogEntry> entries;
-        private int logcount = 0;
-        private bool loggingActive;
-        private Thread loggingThread;
 
         /// <summary>
         /// Initialize/Get the instance of our singleton
@@ -77,21 +68,6 @@ namespace AmeisenBotLogger
                     return instance;
                 }
             }
-        }
-
-        private AmeisenLogger()
-        {
-            activeLogLevel = LogLevel.WARNING; // Default to avoid spam
-            loggingActive = true;
-            entries = new ConcurrentQueue<AmeisenLogEntry>();
-            loggingThread = new Thread(new ThreadStart(WorkOnQueue));
-            loggingThread.Start();
-            if (currentUsername == null || currentUsername == "")
-            {
-                currentUsername = Utils.GenerateRandonString(8, "ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-            }
-
-            logName = $"{DateTime.Now.ToString("dd-MM-yyyy")}_{DateTime.Now.ToString("HH-mm")}-{currentUsername}.txt";
         }
 
         /// <summary>
@@ -124,6 +100,23 @@ namespace AmeisenBotLogger
             return logEntry;
         }
 
+        public void RefreshLogName()
+        {
+            string newLogName = $"{DateTime.Now.ToString("dd-MM-yyyy")}_{DateTime.Now.ToString("HH-mm")}-{currentUsername}.txt";
+
+            if (File.Exists(logPath + logName))
+            {
+                if (File.Exists(logPath + newLogName))
+                {
+                    File.Delete(logPath + newLogName);
+                }
+
+                File.Move(logPath + logName, logPath + newLogName);
+            }
+
+            logName = newLogName;
+        }
+
         /// <summary>
         /// Set the LogLevel that is going to be saved in the logs
         /// </summary>
@@ -134,6 +127,31 @@ namespace AmeisenBotLogger
         /// Stop the logging thread, dont forget it!
         /// </summary>
         public void StopLogging() => loggingActive = false;
+
+        private static readonly object padlock = new object();
+        private static AmeisenLogger instance;
+        private readonly string logPath = AppDomain.CurrentDomain.BaseDirectory + "/logs/";
+        private LogLevel activeLogLevel;
+        private ConcurrentQueue<AmeisenLogEntry> entries;
+        private int logcount = 0;
+        private bool loggingActive;
+        private Thread loggingThread;
+        private string logName;
+
+        private AmeisenLogger()
+        {
+            activeLogLevel = LogLevel.WARNING; // Default to avoid spam
+            loggingActive = true;
+            entries = new ConcurrentQueue<AmeisenLogEntry>();
+            loggingThread = new Thread(new ThreadStart(WorkOnQueue));
+            loggingThread.Start();
+            if (currentUsername == null || currentUsername == "")
+            {
+                currentUsername = Utils.GenerateRandonString(8, "ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+            }
+
+            logName = $"{DateTime.Now.ToString("dd-MM-yyyy")}_{DateTime.Now.ToString("HH-mm")}-{currentUsername}.txt";
+        }
 
         private void SaveLogToFile(AmeisenLogEntry entry)
         {
@@ -155,23 +173,6 @@ namespace AmeisenBotLogger
                 }
                 Thread.Sleep(10);
             }
-        }
-
-        public void RefreshLogName()
-        {
-            string newLogName = $"{DateTime.Now.ToString("dd-MM-yyyy")}_{DateTime.Now.ToString("HH-mm")}-{currentUsername}.txt";
-
-            if (File.Exists(logPath + logName))
-            {
-                if(File.Exists(logPath + newLogName))
-                {
-                    File.Delete(logPath + newLogName);
-                }
-
-                File.Move(logPath + logName, logPath + newLogName);
-            }
-
-            logName = newLogName;
         }
     }
 }

@@ -42,8 +42,8 @@
         public static readonly uint gameobjectTypeOffset = 0x14;
         public static readonly uint gameState = 0xB6A9E0;
         public static readonly uint isBattlegroundOver = 0xBEA588;
-        public static readonly uint isLoading = 0xB6AA30;
         public static readonly uint isIndoor = 0xB4AA94;
+        public static readonly uint isLoading = 0xB6AA30;
         public static readonly uint localComboPoint = 0xBD0845;
         public static readonly uint localLastTarget = 0xBD07B0;
         public static readonly uint localLootWindowOpen = 0xBFA8D0;
@@ -69,6 +69,7 @@
         public static readonly uint partyPlayer4 = partyPlayer3 + 0x8;
         public static readonly uint petGuid = 0xC234D0;
         public static readonly uint playerBase = 0xCD87A8;
+        public static readonly uint playerClass = 0xC79E89;
         public static readonly uint playerCorpseX = 0xBD0A58;
         public static readonly uint playerCorpseY = playerCorpseX + 0x4;
         public static readonly uint playerCorpseZ = playerCorpseY + 0x4;
@@ -76,10 +77,9 @@
         public static readonly uint playerIsIngame = 0xBD0792;
         public static readonly uint playerIsLoadingscreen = 0xB6AA38;
         public static readonly uint playerName = 0xC79D18;
-        public static readonly uint playerClass = 0xC79E89;
         public static readonly uint playerRace = 0xC79E88;
-        public static readonly uint raidLeader = 0xBD1990;
         public static readonly uint raidGroupStart = 0xBF8258;
+        public static readonly uint raidLeader = 0xBD1990;
         public static readonly uint raidPlayerOffset = 0x50;
         public static readonly uint realmName = 0xC79B9E;
         public static readonly uint sendMovementPacket = 0x7413F0;

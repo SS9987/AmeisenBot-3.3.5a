@@ -14,14 +14,14 @@ namespace AmeisenBotGUI
     /// </summary>
     public partial class DebugWindow : Window
     {
-        private BotManager BotManager { get; }
-
         public DebugWindow(BotManager botManager)
         {
             InitializeComponent();
             BotManager = botManager;
             Topmost = BotManager.Settings.topMost;
         }
+
+        private BotManager BotManager { get; }
 
         private void ButtonExit_Click(object sender, RoutedEventArgs e)
             => Close();
@@ -34,6 +34,9 @@ namespace AmeisenBotGUI
 
         private void DebugUI_MouseDown(object sender, MouseButtonEventArgs e)
             => DragMove();
+
+        private Color GetColorFromResources(string resString)
+                => (Color)Application.Current.Resources[resString];
 
         private void ListboxObjects_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -121,9 +124,6 @@ namespace AmeisenBotGUI
             uiUpdateTimer.Interval = new TimeSpan(0, 0, 0, 1, 0);
             uiUpdateTimer.Start();
         }
-
-        private Color GetColorFromResources(string resString)
-                => (Color)Application.Current.Resources[resString];
     }
 
     /// <summary>
@@ -131,13 +131,13 @@ namespace AmeisenBotGUI
     /// </summary>
     internal class DataItem
     {
-        public Brush Background { get; set; }
-        public string Text { get; set; }
-
         public DataItem(string text, Brush background)
         {
             Text = text;
             Background = background;
         }
+
+        public Brush Background { get; set; }
+        public string Text { get; set; }
     }
 }

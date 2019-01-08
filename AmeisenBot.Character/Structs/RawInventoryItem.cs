@@ -2,23 +2,23 @@
 {
     public struct RawInventoryItem
     {
-        public string id;
-        public string count;
-        public string quality;
-        public string curDurability;
-        public string maxDurability;
-        public string cooldownStart;
         public string cooldownEnd;
-        public string lootable;
-        public string readable;
-        public string name;
-        public string link;
-        public string level;
-        public string minLevel;
-        public string type;
-        public string subtype;
-        public string maxStack;
+        public string cooldownStart;
+        public string count;
+        public string curDurability;
         public string equiplocation;
+        public string id;
+        public string level;
+        public string link;
+        public string lootable;
+        public string maxDurability;
+        public string maxStack;
+        public string minLevel;
+        public string name;
+        public string quality;
+        public string readable;
         public string sellprice;
+        public string subtype;
+        public string type;
     }
 }

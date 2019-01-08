@@ -11,22 +11,26 @@ namespace AmeisenBot.Character.Objects
 {
     public class Item
     {
-        public int Id { get; set; }
-        public string ItemLink { get; set; }
-        public int Slot { get; set; }
-        public string Name { get; set; }
-        public string ItemType { get; set; }
-        public string ItemSubtype { get; set; }
-        public int MaxStack { get; set; }
-        public int Count { get; set; }
-        public int Level { get; set; }
-        public int RequiredLevel { get; set; }
-        public int Price { get; set; }
-        public string EquipLocation { get; set; }
+        public Item()
+        {
+        }
+
+        public Item(string itemName)
+        {
+            Name = itemName;
+            Update(true);
+        }
+
+        public Item(int slot)
+        {
+            Slot = slot;
+            Update();
+        }
 
         public int Cooldown => CooldownEnd - CooldownStart;
-        public int CooldownStart { get; set; }
         public int CooldownEnd { get; set; }
+        public int CooldownStart { get; set; }
+        public int Count { get; set; }
 
         public double Durability
         {
@@ -43,31 +47,79 @@ namespace AmeisenBot.Character.Objects
             }
         }
 
-        public int DurabilityMax { get; set; }
         public int DurabilityCurrent { get; set; }
-
-        public ItemQuality Quality { get; set; }
-
+        public int DurabilityMax { get; set; }
+        public string EquipLocation { get; set; }
+        public int Id { get; set; }
+        public string ItemLink { get; set; }
+        public string ItemSubtype { get; set; }
+        public string ItemType { get; set; }
+        public int Level { get; set; }
+        public int MaxStack { get; set; }
+        public string Name { get; set; }
+        public int Price { get; set; }
         public PrimaryStats PrimaryStats { get; set; }
-
-        public Item() { }
-
-        public Item(string itemName)
-        {
-            Name = itemName;
-            Update(true);
-        }
-
-        public Item(int slot)
-        {
-            Slot = slot;
-            Update();
-        }
+        public ItemQuality Quality { get; set; }
+        public int RequiredLevel { get; set; }
+        public int Slot { get; set; }
 
         public override string ToString()
         {
             return $"{(Slot != -1 ? $"[{((InventorySlot)Slot).ToString()}] " : "")}[{Quality.ToString()}] [{Name}] {Level}";
         }
+
+        /// <summary>
+        /// Read one of the following deatails:
+        ///
+        /// itemName, itemLink, itemRarity, itemLevel, itemMinLevel,
+        /// itemType, itemSubType, itemStackCount, itemEquipLoc,
+        /// itemIcon, itemSellPrice, itemClassID, itemSubClassID,
+        /// bindType, expacID, itemSetID, isCraftingReagent.
+        ///
+        /// May returns nothing when the item is still beeing queried!
+        /// </summary>
+        /// <param name="detailToRead">detail to read</param>
+        /// <returns>detail as string</returns>
+        private string ReadItemDetail(string detailToRead)
+        {
+            StringBuilder cmd = new StringBuilder();
+            cmd.Append("itemName, itemLink, itemRarity, itemLevel, itemMinLevel, ");
+            cmd.Append("itemType, itemSubType, itemStackCount, itemEquipLoc, ");
+            cmd.Append("itemIcon, itemSellPrice, itemClassID, itemSubClassID, ");
+            cmd.Append("bindType, expacID, itemSetID, isCraftingReagent = ");
+            cmd.Append($"GetItemInfo({Id})");
+            return AmeisenCore.GetLocalizedText(cmd.ToString(), detailToRead);
+        }
+
+        /// <summary>
+        /// Read a single int from an item
+        /// </summary>
+        /// <param name="functionName">Function to run (example: GetInventoryItemID)</param>
+        /// <returns>the int you wanted to read</returns>
+        private int ReadItemIntAttribute(string functionName)
+            => Utils.TryParseInt(
+                AmeisenCore.GetLocalizedText(
+                    $"xvara = {functionName}(\"player\", {Slot});",
+                    "xvara")
+                );
+
+        /// <summary>
+        /// Read an int tuple from item
+        /// </summary>
+        /// <param name="functionName">Function to run (example: GetInventoryItemDurability)</param>
+        /// <returns>the int tuple you wanted to read</returns>
+        private (int, int) ReadItemIntTuple(string functionName)
+            => (Utils.TryParseInt(
+                    AmeisenCore.GetLocalizedText(
+                        $"xvara, xvarb = {functionName}(\"player\", {Slot});",
+                        "xvara")
+                ),
+                Utils.TryParseInt(
+                    AmeisenCore.GetLocalizedText(
+                        $"xvara, xvarb = {functionName}(\"player\", {Slot});",
+                        "xvarb")
+                    )
+                );
 
         private void Update(bool fromItemName = false)
         {
@@ -113,58 +165,5 @@ namespace AmeisenBot.Character.Objects
 
             PrimaryStats = new PrimaryStats(this);
         }
-
-        /// <summary>
-        /// Read one of the following deatails:
-        ///
-        /// itemName, itemLink, itemRarity, itemLevel, itemMinLevel,
-        /// itemType, itemSubType, itemStackCount, itemEquipLoc,
-        /// itemIcon, itemSellPrice, itemClassID, itemSubClassID,
-        /// bindType, expacID, itemSetID, isCraftingReagent.
-        ///
-        /// May returns nothing when the item is still beeing queried!
-        /// </summary>
-        /// <param name="detailToRead">detail to read</param>
-        /// <returns>detail as string</returns>
-        private string ReadItemDetail(string detailToRead)
-        {
-            StringBuilder cmd = new StringBuilder();
-            cmd.Append("itemName, itemLink, itemRarity, itemLevel, itemMinLevel, ");
-            cmd.Append("itemType, itemSubType, itemStackCount, itemEquipLoc, ");
-            cmd.Append("itemIcon, itemSellPrice, itemClassID, itemSubClassID, ");
-            cmd.Append("bindType, expacID, itemSetID, isCraftingReagent = ");
-            cmd.Append($"GetItemInfo({Id})");
-            return AmeisenCore.GetLocalizedText(cmd.ToString(), detailToRead);
-        }
-
-        /// <summary>
-        /// Read an int tuple from item
-        /// </summary>
-        /// <param name="functionName">Function to run (example: GetInventoryItemDurability)</param>
-        /// <returns>the int tuple you wanted to read</returns>
-        private (int, int) ReadItemIntTuple(string functionName)
-            => (Utils.TryParseInt(
-                    AmeisenCore.GetLocalizedText(
-                        $"xvara, xvarb = {functionName}(\"player\", {Slot});",
-                        "xvara")
-                ),
-                Utils.TryParseInt(
-                    AmeisenCore.GetLocalizedText(
-                        $"xvara, xvarb = {functionName}(\"player\", {Slot});",
-                        "xvarb")
-                    )
-                );
-
-        /// <summary>
-        /// Read a single int from an item
-        /// </summary>
-        /// <param name="functionName">Function to run (example: GetInventoryItemID)</param>
-        /// <returns>the int you wanted to read</returns>
-        private int ReadItemIntAttribute(string functionName)
-            => Utils.TryParseInt(
-                AmeisenCore.GetLocalizedText(
-                    $"xvara = {functionName}(\"player\", {Slot});",
-                    "xvara")
-                );
     }
 }

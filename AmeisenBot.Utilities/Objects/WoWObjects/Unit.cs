@@ -6,36 +6,39 @@ namespace AmeisenBotUtilities
 {
     public partial class Unit : WowObject
     {
-        public BitVector32 DynamicUFlags { get; set; }
-        public int Mana { get; set; }
-        public int Health { get; set; }
-        public double HealthPercentage => (Health / (double)MaxHealth) * 100.0;
-        public double ManaPercentage => (Mana / (double)MaxMana) * 100.0;
-        public double RagePercentage => (Rage / (double)MaxRage) * 100.0;
-        public double EnergyPercentage => (Energy / (double)MaxEnergy) * 100.0;
-        public double RuneEnergyPercentage => (RuneEnergy / (double)MaxRuneEnergy) * 100.0;
-        public bool InCombat => UFlags[(int)UnitFlags.COMBAT] || InCombatEvent;
-        public bool IsCasting { get; set; }
-        public bool IsDead { get; set; }
-        public bool IsLootable => UFlags[(int)DynamicUnitFlags.LOOTABLE];
-        public int Level { get; set; }
-        public int MaxMana { get; set; }
-        public int Rage { get; set; }
-        public int MaxRage { get; set; }
-        public int Energy { get; set; }
-        public int MaxEnergy { get; set; }
-        public int RuneEnergy { get; set; }
-        public int MaxRuneEnergy { get; set; }
-        public int MaxHealth { get; set; }
-        public bool NeedToRevive => Health == 0;
-        public ulong TargetGuid { get; set; }
-        public BitVector32 UFlags { get; set; }
-        public BitVector32 UFlags2 { get; set; }
-        public bool InCombatEvent { get; set; }
-
         public Unit(uint baseAddress, BlackMagic blackMagic) : base(baseAddress, blackMagic)
         {
         }
+
+        public int CurrentlyCastingId { get; set; }
+        public int CurrentlyChannelingId { get; set; }
+        public BitVector32 DynamicUFlags { get; set; }
+        public int Energy { get; set; }
+        public double EnergyPercentage => (Energy / (double)MaxEnergy) * 100.0;
+        public int Health { get; set; }
+        public double HealthPercentage => (Health / (double)MaxHealth) * 100.0;
+        public bool InCombat => UFlags[(int)UnitFlags.COMBAT] || InCombatEvent;
+        public bool InCombatEvent { get; set; }
+        public bool IsCasting => CurrentlyCastingId > 0;
+        public bool IsChanneling => CurrentlyChannelingId > 0;
+        public bool IsDead { get; set; }
+        public bool IsLootable => UFlags[(int)DynamicUnitFlags.LOOTABLE];
+        public int Level { get; set; }
+        public int Mana { get; set; }
+        public double ManaPercentage => (Mana / (double)MaxMana) * 100.0;
+        public int MaxEnergy { get; set; }
+        public int MaxHealth { get; set; }
+        public int MaxMana { get; set; }
+        public int MaxRage { get; set; }
+        public int MaxRuneEnergy { get; set; }
+        public bool NeedToRevive => Health == 0;
+        public int Rage { get; set; }
+        public double RagePercentage => (Rage / (double)MaxRage) * 100.0;
+        public int RuneEnergy { get; set; }
+        public double RuneEnergyPercentage => (RuneEnergy / (double)MaxRuneEnergy) * 100.0;
+        public ulong TargetGuid { get; set; }
+        public BitVector32 UFlags { get; set; }
+        public BitVector32 UFlags2 { get; set; }
 
         /// <summary>
         /// Get any NPC's name by its BaseAdress
@@ -64,8 +67,8 @@ namespace AmeisenBotUtilities
             sb.Append($" >> PosZ: {pos.Z}");
             sb.Append($" >> Rotation: {Rotation}");
             sb.Append($" >> Distance: {Distance}");
-            sb.Append($" >> MapID: {MapID}");
-            sb.Append($" >> ZoneID: {ZoneID}");
+            sb.Append($" >> MapID: {MapId}");
+            sb.Append($" >> ZoneID: {ZoneId}");
             sb.Append($" >> Target: {TargetGuid}");
             sb.Append($" >> level: {Level}");
             sb.Append($" >> health: {Health}");
@@ -94,11 +97,8 @@ namespace AmeisenBotUtilities
 
                 TargetGuid = BlackMagicInstance.ReadUInt64(Descriptor + 0x48);
 
-                int currentlyCastingID = BlackMagicInstance.ReadInt(BaseAddress + 0xA6C);
-                int currentlyChannelingID = BlackMagicInstance.ReadInt(BaseAddress + 0xA80);
-                int combined = currentlyCastingID + currentlyChannelingID;
-
-                IsCasting = combined > 0;
+                CurrentlyCastingId = BlackMagicInstance.ReadInt(BaseAddress + 0xA6C);
+                CurrentlyChannelingId = BlackMagicInstance.ReadInt(BaseAddress + 0xA80);
             }
             catch { }
 

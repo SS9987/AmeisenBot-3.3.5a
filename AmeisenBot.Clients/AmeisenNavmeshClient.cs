@@ -11,10 +11,6 @@ namespace AmeisenBot.Clients
 {
     public class AmeisenNavmeshClient
     {
-        private string Ip { get; set; }
-        private int Port { get; set; }
-        private TcpClient TcpClient { get; set; }
-
         public AmeisenNavmeshClient(string ip, int port)
         {
             Ip = ip;
@@ -26,12 +22,6 @@ namespace AmeisenBot.Clients
                 TcpClient.Connect(IPAddress.Parse(ip), port);
             }
             catch { }
-        }
-
-        ~AmeisenNavmeshClient()
-        {
-            TcpClient.Close();
-            TcpClient.Dispose();
         }
 
         public List<Vector3> RequestPath(PathRequest pathRequest)
@@ -65,5 +55,15 @@ namespace AmeisenBot.Clients
 
             return path;
         }
+
+        ~AmeisenNavmeshClient()
+        {
+            TcpClient.Close();
+            TcpClient.Dispose();
+        }
+
+        private string Ip { get; set; }
+        private int Port { get; set; }
+        private TcpClient TcpClient { get; set; }
     }
 }

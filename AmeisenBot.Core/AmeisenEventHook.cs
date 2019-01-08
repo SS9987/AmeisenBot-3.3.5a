@@ -10,18 +10,17 @@ namespace AmeisenBotCore
 {
     public class AmeisenEventHook
     {
-        public delegate void OnEventFired(long timestamp, List<string> args);
-        public bool IsActive { get; private set; }
-
-        private Thread EventReader { get; set; }
-        private Dictionary<string, OnEventFired> EventDictionary { get; set; }
-        public bool IsNotInWorld { get; set; }
-
         public AmeisenEventHook()
         {
             EventReader = new Thread(new ThreadStart(ReadEvents));
             EventDictionary = new Dictionary<string, OnEventFired>();
         }
+
+        public delegate void OnEventFired(long timestamp, List<string> args);
+
+        public bool IsActive { get; private set; }
+
+        public bool IsNotInWorld { get; set; }
 
         public void Init()
         {
@@ -63,6 +62,9 @@ namespace AmeisenBotCore
             AmeisenCore.LuaDoString($"abFrame:UnregisterEvent(\"{eventName}\");");
             EventDictionary.Remove(eventName);
         }
+
+        private Dictionary<string, OnEventFired> EventDictionary { get; set; }
+        private Thread EventReader { get; set; }
 
         private void ReadEvents()
         {

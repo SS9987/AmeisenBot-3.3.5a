@@ -12,44 +12,23 @@ namespace AmeisenBotGUI
     /// </summary>
     public partial class RememberUnitWindow : Window
     {
-        public bool ShouldRemember { get; private set; }
-        public RememberedUnit UnitToRemmeber { get; private set; }
-        public int ZoneID { get; private set; }
-        public int MapID { get; private set; }
-        public Vector3 Position { get; private set; }
-        private string UnitName { get; set; }
-
         public RememberUnitWindow(Unit unit)
         {
             InitializeComponent();
 
             unit.Update();
             UnitName = unit.Name;
-            ZoneID = unit.ZoneID;
-            MapID = unit.MapID;
+            ZoneID = unit.ZoneId;
+            MapID = unit.MapId;
             Position = unit.pos;
         }
 
-        private void ButtonExit_Click(object sender, RoutedEventArgs e)
-        {
-            Close();
-        }
-
-        private void ButtonMinimize_Click(object sender, RoutedEventArgs e)
-        {
-            WindowState = WindowState.Minimized;
-        }
-
-        private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            DragMove();
-        }
-
-        private void ButtonCancel_Click(object sender, RoutedEventArgs e)
-        {
-            ShouldRemember = false;
-            Close();
-        }
+        public int MapID { get; private set; }
+        public Vector3 Position { get; private set; }
+        public bool ShouldRemember { get; private set; }
+        public RememberedUnit UnitToRemmeber { get; private set; }
+        public int ZoneID { get; private set; }
+        private string UnitName { get; set; }
 
         private void ButtonAdd_Click(object sender, RoutedEventArgs e)
         {
@@ -97,9 +76,30 @@ namespace AmeisenBotGUI
             Close();
         }
 
+        private void ButtonCancel_Click(object sender, RoutedEventArgs e)
+        {
+            ShouldRemember = false;
+            Close();
+        }
+
+        private void ButtonExit_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
+
+        private void ButtonMinimize_Click(object sender, RoutedEventArgs e)
+        {
+            WindowState = WindowState.Minimized;
+        }
+
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             labelName.Content = UnitName;
+        }
+
+        private void Window_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            DragMove();
         }
     }
 }

@@ -14,15 +14,15 @@
     <Grid>
         <Label Content="🛡️ Equipment" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="20" Margin="6,0,0,0">
             <Label.Foreground>
-                <SolidColorBrush Color="{DynamicResource TextColor}"/>
+                <SolidColorBrush Color="{DynamicResource TextColor}" />
             </Label.Foreground>
         </Label>
         <ListBox x:Name="listboxEquipped" HorizontalAlignment="Left" Height="320" Margin="10,42,0,0" VerticalAlignment="Top" Width="380" Background="{x:Null}">
             <ListBox.Foreground>
-                <SolidColorBrush Color="{DynamicResource TextColor}"/>
+                <SolidColorBrush Color="{DynamicResource TextColor}" />
             </ListBox.Foreground>
             <ListBox.BorderBrush>
-                <SolidColorBrush Color="{DynamicResource AccentColor}"/>
+                <SolidColorBrush Color="{DynamicResource AccentColor}" />
             </ListBox.BorderBrush>
             <ListBox.ItemContainerStyle>
                 <Style TargetType="ListBoxItem">
@@ -37,10 +37,10 @@
         </ListBox>
         <ListBox x:Name="listboxInventory" HorizontalAlignment="Left" Height="320" Margin="406,42,0,0" VerticalAlignment="Top" Width="380" Background="{x:Null}">
             <ListBox.Foreground>
-                <SolidColorBrush Color="{DynamicResource TextColor}"/>
+                <SolidColorBrush Color="{DynamicResource TextColor}" />
             </ListBox.Foreground>
             <ListBox.BorderBrush>
-                <SolidColorBrush Color="{DynamicResource AccentColor}"/>
+                <SolidColorBrush Color="{DynamicResource AccentColor}" />
             </ListBox.BorderBrush>
             <ListBox.ItemContainerStyle>
                 <Style TargetType="ListBoxItem">
@@ -71,10 +71,10 @@
         </Button>
         <ListBox x:Name="listboxSpells" HorizontalAlignment="Left" Height="177" Margin="10,409,0,0" VerticalAlignment="Top" Width="776" Background="{x:Null}">
             <ListBox.Foreground>
-                <SolidColorBrush Color="{DynamicResource TextColor}"/>
+                <SolidColorBrush Color="{DynamicResource TextColor}" />
             </ListBox.Foreground>
             <ListBox.BorderBrush>
-                <SolidColorBrush Color="{DynamicResource AccentColor}"/>
+                <SolidColorBrush Color="{DynamicResource AccentColor}" />
             </ListBox.BorderBrush>
             <ListBox.ItemContainerStyle>
                 <Style TargetType="ListBoxItem">
@@ -89,14 +89,13 @@
         </ListBox>
         <Label Content="🎒 Inventory" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="20" Margin="406,0,0,0">
             <Label.Foreground>
-                <SolidColorBrush Color="{DynamicResource TextColor}"/>
+                <SolidColorBrush Color="{DynamicResource TextColor}" />
             </Label.Foreground>
         </Label>
         <Label Content="⚔ Spells" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="20" Margin="10,367,0,0">
             <Label.Foreground>
-                <SolidColorBrush Color="{DynamicResource TextColor}"/>
+                <SolidColorBrush Color="{DynamicResource TextColor}" />
             </Label.Foreground>
         </Label>
-
     </Grid>
 </Window>

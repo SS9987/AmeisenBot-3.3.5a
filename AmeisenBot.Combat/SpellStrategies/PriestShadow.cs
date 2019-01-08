@@ -9,18 +9,6 @@ namespace AmeisenBotCombat.SpellStrategies
 {
     public class PriestShadow : ICombatClass
     {
-        private List<Spell> Spells { get; set; }
-
-        private bool IsPowerwordFortitudeKnown { get; set; }
-        private bool IsShadowformKnown { get; set; }
-        private bool IsVampiricEmbraceKnown { get; set; }
-        private bool IsVampiricTouchKnown { get; set; }
-        private bool IsDevouringPlagueKnown { get; set; }
-        private bool IsShadowWordPainKnown { get; set; }
-        private bool IsMindBlastKnown { get; set; }
-        private bool IsMindFlayKnown { get; set; }
-        private bool IsFlashHealKnown { get; set; }
-
         public PriestShadow(List<Spell> spells)
         {
             Spells = spells;
@@ -35,8 +23,6 @@ namespace AmeisenBotCombat.SpellStrategies
             IsMindFlayKnown = Spells.Where(spell => spell.Name == "Mind Flay").ToList().Count > 0;
             IsFlashHealKnown = Spells.Where(spell => spell.Name == "Flash Heal").ToList().Count > 0;
         }
-
-        public void Startup(Me me, Unit target, Unit pet) { }
 
         public Spell DoRoutine(Me me, Unit target, Unit pet)
         {
@@ -121,6 +107,21 @@ namespace AmeisenBotCombat.SpellStrategies
             return null;
         }
 
+        public void Startup(Me me, Unit target, Unit pet)
+        {
+        }
+
+        private bool IsDevouringPlagueKnown { get; set; }
+        private bool IsFlashHealKnown { get; set; }
+        private bool IsMindBlastKnown { get; set; }
+        private bool IsMindFlayKnown { get; set; }
+        private bool IsPowerwordFortitudeKnown { get; set; }
+        private bool IsShadowformKnown { get; set; }
+        private bool IsShadowWordPainKnown { get; set; }
+        private bool IsVampiricEmbraceKnown { get; set; }
+        private bool IsVampiricTouchKnown { get; set; }
+        private List<Spell> Spells { get; set; }
+
         private Spell TryUseSpell(string spellname, Me me)
         {
             Spell spellToUse = Spells.Where(spell => spell.Name == spellname).FirstOrDefault();
@@ -134,6 +135,5 @@ namespace AmeisenBotCombat.SpellStrategies
             }
             return null;
         }
-
     }
 }

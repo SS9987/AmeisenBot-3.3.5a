@@ -7,12 +7,12 @@ namespace AmeisenBotUtilities
     /// </summary>
     public struct NetworkBot
     {
-        public string picture;
         public int id;
         public string ip;
         public long lastActive;
         public string me;
         public string name;
+        public string picture;
 
         public SendableMe GetSendableMe() => JsonConvert.DeserializeObject<SendableMe>(me);
     }

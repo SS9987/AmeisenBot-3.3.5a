@@ -5,9 +5,6 @@ namespace AmeisenBot.Character.Objects
 {
     public class InventoryItem : Item
     {
-        public bool Lootable { get; private set; }
-        public bool Readable { get; private set; }
-
         public InventoryItem(RawInventoryItem rawInventoryItem)
         {
             try
@@ -34,5 +31,8 @@ namespace AmeisenBot.Character.Objects
             }
             catch { AmeisenLogger.Instance.Log(LogLevel.ERROR, "Error parsing InventoryItem", this); }
         }
+
+        public bool Lootable { get; private set; }
+        public bool Readable { get; private set; }
     }
 }

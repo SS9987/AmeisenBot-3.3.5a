@@ -4,25 +4,24 @@ using AmeisenBotCore;
 using AmeisenBotLogger;
 using AmeisenBotUtilities;
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 
 namespace AmeisenBot.Character.Objects
 {
     public class MeCharacter
     {
-        public bool FullyLoaded { get; private set; }
-        public PrimaryStats PrimaryStats { get; set; }
-        public SecondaryStats SecondaryStats { get; set; }
-        public Resistances Resistances { get; set; }
+        public MeCharacter()
+        {
+        }
 
-        public int Money { get; set; }
-
-        public List<Spell> Spells { get; set; }
-        public List<InventoryItem> InventoryItems { get; set; }
         public Equipment Equipment { get; set; }
-
-        public MeCharacter() { }
+        public bool FullyLoaded { get; private set; }
+        public List<InventoryItem> InventoryItems { get; set; }
+        public int Money { get; set; }
+        public PrimaryStats PrimaryStats { get; set; }
+        public Resistances Resistances { get; set; }
+        public SecondaryStats SecondaryStats { get; set; }
+        public List<Spell> Spells { get; set; }
 
         public void Update()
         {
@@ -68,6 +67,8 @@ namespace AmeisenBot.Character.Objects
             }
         }
 
+        public void UpdateMoney() => Money = Utils.TryParseInt(AmeisenCore.GetLocalizedText("moneyX = GetMoney();", "moneyX"));
+
         public void UpdateSpells()
         {
             Spells = new List<Spell>();
@@ -89,7 +90,5 @@ namespace AmeisenBot.Character.Objects
                 Spells.Add(new Spell(rawSpell));
             }
         }
-
-        public void UpdateMoney() => Money = Utils.TryParseInt(AmeisenCore.GetLocalizedText("moneyX = GetMoney();", "moneyX"));
     }
 }

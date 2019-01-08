@@ -18,67 +18,37 @@ namespace AmeisenBotCore
     /// </summary>
     public abstract class AmeisenCore
     {
-        public static BlackMagic BlackMagic { get; set; }
         public static AmeisenHook AmeisenHook { get; set; }
-
+        public static BlackMagic BlackMagic { get; set; }
         public static bool IsFalling => ParseLuaIntResult("isFalling = IsFalling();", "isFalling");
 
+        public static bool IsFlying => ParseLuaIntResult("isFlying = IsFlying();", "isFlying");
+        public static bool IsInFlyableArea => ParseLuaIntResult("isFlyableArea = IsFlyableArea();", "isFlyableArea");
+        public static bool IsInStealth => ParseLuaIntResult("isStealthed = IsStealthed();", "isStealthed");
+        public static bool IsMounted => ParseLuaIntResult("isMounted = IsMounted();", "isMounted");
         public static bool IsOutdoors => ParseLuaIntResult("isOutdoor = IsOutdoors();", "isOutdoor");
 
+        public static bool IsPvPFlagged => ParseLuaIntResult("isPvp = GetPVPDesired();", "isPvp");
+        public static bool IsResting => ParseLuaIntResult("isResting = IsResting();", "isResting");
         public static bool IsSwimming => ParseLuaIntResult("isSwimming = IsSwimming();", "isSwimming");
 
-        public static bool IsFlying => ParseLuaIntResult("isFlying = IsFlying();", "isFlying");
-
-        public static bool IsMounted => ParseLuaIntResult("isMounted = IsMounted();", "isMounted");
-
-        public static bool IsInFlyableArea => ParseLuaIntResult("isFlyableArea = IsFlyableArea();", "isFlyableArea");
-
-        public static bool IsResting => ParseLuaIntResult("isResting = IsResting();", "isResting");
-
-        public static bool IsInStealth => ParseLuaIntResult("isStealthed = IsStealthed();", "isStealthed");
-
-        internal static void EnableAutoBoPConfirm()
-        {
-            StringBuilder sb = new StringBuilder();
-
-            sb.Append("abAutoBoPFrame = CreateFrame(\"Frame\", \"ABot\");");
-            sb.Append("abAutoBoPFrame:RegisterEvent(\"CONFIRM_LOOT_ROLL\");");
-            sb.Append("abAutoBoPFrame:SetScript(\"OnEvent\", function(self,event,...) ");
-            sb.Append("if event == \"CONFIRM_LOOT_ROLL\" then ");
-            sb.Append("RollID = select(1, ...);");
-            sb.Append("roll = select(2, ...);");
-            sb.Append("ConfirmLootRoll( RollID, roll );");
-            sb.Append("end;");
-            sb.Append("end);");
-
-            LuaDoString(sb.ToString());
-        }
-
-        public static bool IsPvPFlagged => ParseLuaIntResult("isPvp = GetPVPDesired();", "isPvp");
+        public static void AcceptGroupInvite()
+            => LuaDoString("AcceptGroup();");
 
         public static void AcceptResurrect() => LuaDoString("AcceptResurrect();");
 
-        public static void DeclineResurrect() => LuaDoString("DeclineResurrect();");
-
-        public static void TargetLuaUnit(LuaUnit unit) => LuaDoString($"TargetUnit(\"{unit.ToString()}\");");
-
         public static void AcceptSummon() => LuaDoString("ConfirmSummon();");
-
-        public static void DeclineSummon() => LuaDoString("CancelSummon();");
-
-        public static void ClearTargetIfItIsFriendly() => LuaDoString("if not UnitExists(\"target\") or UnitIsFriend(\"player\", \"target\") or UnitIsDead(\"target\") then ClearTarget() end");
-        public static void ClearTargetIfItIsNotFriendly() => LuaDoString("if not UnitExists(\"target\") or not UnitIsFriend(\"player\", \"target\") or UnitIsDead(\"target\") then ClearTarget() end");
-
-        public static void KickNpcsOutOfMammoth() => LuaDoString("for i = 1, 2 do EjectPassengerFromSeat(i) end");
-
-        public static void SellAllGrayItems() => LuaDoString("local p,N,n=0 for b=0,4 do for s=1,GetContainerNumSlots(b) do n=GetContainerItemLink(b,s) if n and string.find(n,\"9d9d9d\") then N={GetItemInfo(n)} p=p+N[11] UseContainerItem(b,s) print(\"Sold: \"..n) end end end print(\"Total: \"..GetCoinText(p))");
-
-        public static void TargetNpcByName(string name, bool exactMatch = true) => LuaDoString($"TargetUnit(\"{name}\", {(exactMatch ? "true" : "false")});");
 
         /// <summary>
         /// AntiAFK
         /// </summary>
         public static void AntiAFK() => BlackMagic.WriteInt(Offsets.tickCount, Environment.TickCount);
+
+        public static bool CanAttack(LuaUnit luaunit, LuaUnit otherluaunit = LuaUnit.player)
+            => ParseLuaIntResult($"canAttack = UnitCanAttack({luaunit.ToString()}, {otherluaunit.ToString()});", "canAttack");
+
+        public static bool CanCooperate(LuaUnit luaunit, LuaUnit otherluaunit = LuaUnit.player)
+            => ParseLuaIntResult($"canCoop = UnitCanCooperate({luaunit.ToString()}, {otherluaunit.ToString()});", "canCoop");
 
         /// <summary>
         /// Switch shapeshift forms, use for example "WoWDruid.ShapeshiftForms.Bear"
@@ -90,17 +60,8 @@ namespace AmeisenBotCore
             LuaDoString($"CastShapeshiftForm(\"{index}\");");
         }
 
-        public static void MoveLeftRight()
-        {
-            if (new Random().Next(0, 2) == 1)
-            {
-                SendKey(new IntPtr(0x51), 60, 380); // the "A" key to go a bit Left TODO: find better method
-            }
-            else
-            {
-                SendKey(new IntPtr(0x45), 60, 380); // the "D" key to go a bit Right TODO: find better method
-            }
-        }
+        public static void CastSpellById(int spellId)
+            => LuaDoString($"CastSpell({spellId});");
 
         /// <summary>
         /// Cast a spell by its name
@@ -120,57 +81,6 @@ namespace AmeisenBotCore
             }
         }
 
-        public static void RepairAllItems() => LuaDoString("RepairAllItems();");
-
-        public static bool IsEnemy(LuaUnit luaunit, LuaUnit otherluaunit = LuaUnit.player)
-            => ParseLuaIntResult($"isEnemy = UnitIsEnemy({luaunit.ToString()}, {otherluaunit.ToString()});", "isEnemy");
-
-        public static bool CanCooperate(LuaUnit luaunit, LuaUnit otherluaunit = LuaUnit.player)
-            => ParseLuaIntResult($"canCoop = UnitCanCooperate({luaunit.ToString()}, {otherluaunit.ToString()});", "canCoop");
-
-        public static bool CanAttack(LuaUnit luaunit, LuaUnit otherluaunit = LuaUnit.player)
-            => ParseLuaIntResult($"canAttack = UnitCanAttack({luaunit.ToString()}, {otherluaunit.ToString()});", "canAttack");
-
-        private static bool ParseLuaIntResult(string command, string outputVariable)
-        {
-            try
-            {
-                return int.Parse(GetLocalizedText(command, outputVariable)) > 0;
-            }
-            catch { return false; }
-        }
-
-        public static void MountRandomMount(string landMounts, string flyingMounts = "")
-        {
-            if (landMounts.Length > 0 || flyingMounts.Length > 0)
-            {
-                StringBuilder cmd = new StringBuilder();
-                cmd.Append("/castrandom ");
-                if (flyingMounts.Length > 0)
-                {
-                    cmd.Append($"[flyable] {flyingMounts} ; ");
-                }
-                if (landMounts.Length > 0)
-                {
-                    cmd.Append($"{landMounts} ;");
-                }
-                RunSlashCommand(cmd.ToString());
-            }
-        }
-
-        public static void CastSpellById(int spellId)
-            => LuaDoString($"CastSpell({spellId});");
-
-        public static UnitReaction GetUnitReaction(LuaUnit luaunit, LuaUnit otherluaunit = LuaUnit.player)
-        {
-            try
-            {
-                string cmd = $"reaction = UnitReaction(\"{luaunit.ToString()}\", \"{otherluaunit.ToString()}\");";
-                return (UnitReaction)int.Parse(GetLocalizedText(cmd, "reaction"));
-            }
-            catch { return UnitReaction.NONE; }
-        }
-
         /// <summary>
         /// Let the bot jump by pressing the spacebar once for 20-40ms
         ///
@@ -182,17 +92,26 @@ namespace AmeisenBotCore
             new Thread(CharacterJump).Start();
         }
 
-        /// <summary>
-        /// Check if the player's world is in a loadingscreen
-        /// </summary>
-        /// <returns>true if yes, false if no</returns>
-        public static bool IsInLoadingScreen() => !IsWorldLoaded();
+        public static void ClearTargetIfItIsFriendly() => LuaDoString("if not UnitExists(\"target\") or UnitIsFriend(\"player\", \"target\") or UnitIsDead(\"target\") then ClearTarget() end");
 
-        /// <summary>
-        /// Check if the player's world is loaded
-        /// </summary>
-        /// <returns>true if yes, false if no</returns>
-        public static bool IsWorldLoaded() => BlackMagic.ReadInt(Offsets.worldLoaded) == 1;
+        public static void ClearTargetIfItIsNotFriendly() => LuaDoString("if not UnitExists(\"target\") or not UnitIsFriend(\"player\", \"target\") or UnitIsDead(\"target\") then ClearTarget() end");
+
+        public static void ConfirmReadyCheck()
+            => LuaDoString("ConfirmReadyCheck(1);");
+
+        public static void DeclineResurrect() => LuaDoString("DeclineResurrect();");
+
+        public static void DeclineSummon() => LuaDoString("CancelSummon();");
+
+        public static void DenyReadyCheck()
+            => LuaDoString("ConfirmReadyCheck(0);");
+
+        public static void FaceUnit(Me me, Unit unit)
+        {
+            BlackMagic.WriteFloat(me.BaseAddress + 0x7A8, Utils.GetFacingAngle(me.pos, me.Rotation, unit.pos));
+            //LuaDoString("MoveBackwardStart();MoveBackwardStop();MoveBackwardStop();MoveBackwardStop();"); This is trash lel
+            SendKey(new IntPtr(0x41), 0, 0); // the "S" key to go a bit backwards TODO: find better method 0x53
+        }
 
         /// <summary>
         /// Reads all WoWObject out of WoW's ObjectManager
@@ -215,8 +134,8 @@ namespace AmeisenBotCore
                 while (objectType <= 7 && objectType > 0)
                 {
                     WowObject wowObject = ReadWoWObjectFromWoW(activeObject, (WowObjectType)objectType);
-                    wowObject.MapID = GetMapId();
-                    wowObject.ZoneID = GetZoneID();
+                    wowObject.MapId = GetMapId();
+                    wowObject.ZoneId = GetZoneId();
                     objects.Add(wowObject);
 
                     activeObject = BlackMagic.ReadUInt(activeObject + Offsets.nextObjectOffset);
@@ -226,6 +145,18 @@ namespace AmeisenBotCore
             catch { AmeisenLogger.Instance.Log(LogLevel.ERROR, "Failed to read WowObjects...", "AmeisenCore"); }
 
             return objects;
+        }
+
+        /// <summary>
+        /// Check for Auras/Buffs
+        /// </summary>
+        /// <param name="luaUnit">LuaUnit to get the Auras of</param>
+        /// <returns>returns unit Auras as string list</returns>
+        public static List<string> GetAuras(LuaUnit luaUnit)
+        {
+            List<string> result = new List<string>(GetBuffs(luaUnit));
+            result.AddRange(GetDebuffs(luaUnit));
+            return result;
         }
 
         /// <summary>
@@ -259,12 +190,24 @@ namespace AmeisenBotCore
             return resultLowered;
         }
 
-        public static void FaceUnit(Me me, Unit unit)
-        {
-            BlackMagic.WriteFloat(me.BaseAddress + 0x7A8, Utils.GetFacingAngle(me.pos, me.Rotation, unit.pos));
-            //LuaDoString("MoveBackwardStart();MoveBackwardStop();MoveBackwardStop();MoveBackwardStop();"); This is trash lel
-            SendKey(new IntPtr(0x41), 0, 0); // the "S" key to go a bit backwards TODO: find better method 0x53
-        }
+        /// <summary>
+        /// Returns the current combat state
+        /// </summary>
+        /// <param name="LuaUnit">LuaUnit to check</param>
+        /// <returns>true if unit is in combat, false if not</returns>
+        public static bool GetCombatState(LuaUnit LuaUnit)
+            => ParseLuaIntResult($"affectingCombat = UnitAffectingCombat(\"{LuaUnit.ToString()}\");", "affectingCombat");
+
+        /// <summary>
+        /// Get our active Corpse position
+        /// </summary>
+        /// <returns>corpse position</returns>
+        public static Vector3 GetCorpsePosition() => new Vector3
+        (
+            BlackMagic.ReadFloat(Offsets.corpseX),
+            BlackMagic.ReadFloat(Offsets.corpseY),
+            BlackMagic.ReadFloat(Offsets.corpseZ)
+        );
 
         /// <summary>
         /// Check for Debuffs
@@ -295,88 +238,6 @@ namespace AmeisenBotCore
             }
 
             return resultLowered;
-        }
-
-        /// <summary>
-        /// Check for Auras/Buffs
-        /// </summary>
-        /// <param name="luaUnit">LuaUnit to get the Auras of</param>
-        /// <returns>returns unit Auras as string list</returns>
-        public static List<string> GetAuras(LuaUnit luaUnit)
-        {
-            List<string> result = new List<string>(GetBuffs(luaUnit));
-            result.AddRange(GetDebuffs(luaUnit));
-            return result;
-        }
-
-        /// <summary>
-        /// Returns the current combat state
-        /// </summary>
-        /// <param name="LuaUnit">LuaUnit to check</param>
-        /// <returns>true if unit is in combat, false if not</returns>
-        public static bool GetCombatState(LuaUnit LuaUnit)
-            => ParseLuaIntResult($"affectingCombat = UnitAffectingCombat(\"{LuaUnit.ToString()}\");", "affectingCombat");
-
-        public static void AcceptGroupInvite()
-            => LuaDoString("AcceptGroup();");
-
-        public static void ConfirmReadyCheck()
-            => LuaDoString("ConfirmReadyCheck(1);");
-
-        public static void DenyReadyCheck()
-            => LuaDoString("ConfirmReadyCheck(0);");
-
-        /// <summary>
-        /// Set WoW's window position and dimensions by its handle
-        /// </summary>
-        /// <param name="mainWindowHandle">WoW's windowHandle</param>
-        /// <param name="x">x position on screen</param>
-        /// <param name="y">y position on screen</param>
-        /// <param name="width">window width</param>
-        /// <param name="height">window height</param>
-        public static void SetWindowPosition(IntPtr mainWindowHandle, int x, int y, int width, int height)
-            => SafeNativeMethods.MoveWindow(mainWindowHandle, x, y, height, width, true);
-
-        public static RollInfo ReadRollItemName(string id)
-        {
-            RollInfo info = new RollInfo();
-            string cmd = $"rollInfo = \"none|0|0\"; _, abItemName, abItemCount, abItemQuality = GetLootRollItemInfo({id}); rollInfo = abItemName..\"|\"..abItemCount..\"|\"..abItemQuality;";
-            string str = GetLocalizedText(cmd, "rollInfo");
-
-            info.name = str.Split('|')[0];
-            info.count = Utils.TryParseInt(str.Split('|')[1]);
-            info.quality = Utils.TryParseInt(str.Split('|')[2]);
-
-            AmeisenLogger.Instance.Log(LogLevel.DEBUG, $"[RollInfo] Name: {info.name}, Count: {info.count}, Quality: {info.quality}", "AmeisenCore");
-            return info;
-        }
-
-        /// <summary>
-        /// Returns WoW's window size as a native RECT struct by a given windowHandle
-        /// </summary>
-        /// <param name="mainWindowHandle">WoW's windowHandle</param>
-        /// <returns>WoW's window size</returns>
-        public static SafeNativeMethods.Rect GetWowDiemsions(IntPtr mainWindowHandle)
-        {
-            SafeNativeMethods.Rect rect = new SafeNativeMethods.Rect();
-            SafeNativeMethods.GetWindowRect(mainWindowHandle, ref rect);
-            return rect;
-        }
-
-        /// <summary>
-        /// Get our active Corpse position
-        /// </summary>
-        /// <returns>corpse position</returns>
-        public static Vector3 GetCorpsePosition() => new Vector3
-        (
-            BlackMagic.ReadFloat(Offsets.corpseX),
-            BlackMagic.ReadFloat(Offsets.corpseY),
-            BlackMagic.ReadFloat(Offsets.corpseZ)
-        );
-
-        public static void LootEveryThing()
-        {
-            LuaDoString("abLootCount=GetNumLootItems();for i = abLootCount,1,-1 do LootSlot(i); ConfirmLootSlot(i); end");
         }
 
         /// <summary>
@@ -550,16 +411,33 @@ namespace AmeisenBotCore
             return info;
         }
 
-        public static void RollOnLoot(int slot, LootRoll lootRoll)
+        public static UnitReaction GetUnitReaction(LuaUnit luaunit, LuaUnit otherluaunit = LuaUnit.player)
         {
-            //LuaDoString($"local b = _G[\"GroupLootFrame\"..{slot}].{lootRoll.ToString()} if b:IsVisible() then b:Click() StaticPopup1Button1:Click() end");
+            try
+            {
+                string cmd = $"reaction = UnitReaction(\"{luaunit.ToString()}\", \"{otherluaunit.ToString()}\");";
+                return (UnitReaction)int.Parse(GetLocalizedText(cmd, "reaction"));
+            }
+            catch { return UnitReaction.NONE; }
+        }
+
+        /// <summary>
+        /// Returns WoW's window size as a native RECT struct by a given windowHandle
+        /// </summary>
+        /// <param name="mainWindowHandle">WoW's windowHandle</param>
+        /// <returns>WoW's window size</returns>
+        public static SafeNativeMethods.Rect GetWowDiemsions(IntPtr mainWindowHandle)
+        {
+            SafeNativeMethods.Rect rect = new SafeNativeMethods.Rect();
+            SafeNativeMethods.GetWindowRect(mainWindowHandle, ref rect);
+            return rect;
         }
 
         /// <summary>
         /// Get our active ZoneID
         /// </summary>
         /// <returns>zoneid that wer'e currently in</returns>
-        public static int GetZoneID() => BlackMagic.ReadInt(Offsets.zoneId);
+        public static int GetZoneId() => BlackMagic.ReadInt(Offsets.zoneId);
 
         /// <summary>
         /// Move the player to the given guid npc, object or whatever and iteract with it.
@@ -590,6 +468,16 @@ namespace AmeisenBotCore
         public static bool IsDeadOrGhost(LuaUnit LuaUnit)
             => ParseLuaIntResult($"isDeadOrGhost = UnitIsDeadOrGhost(\"{LuaUnit.ToString()}\");", "isDeadOrGhost");
 
+        public static bool IsEnemy(LuaUnit luaunit, LuaUnit otherluaunit = LuaUnit.player)
+            => ParseLuaIntResult($"isEnemy = UnitIsEnemy({luaunit.ToString()}, {otherluaunit.ToString()});", "isEnemy");
+
+        /// <summary>
+        /// Returns true or false, wether the Target is friendly or not
+        /// </summary>
+        /// <returns>true if unit is friendly, false if not</returns>
+        public static bool IsFriend(LuaUnit luaunit, LuaUnit otherluaunit = LuaUnit.player)
+            => ParseLuaIntResult($"isFriendly = UnitIsFriend({luaunit.ToString()}, {otherluaunit.ToString()});", "isFriendly");
+
         /// <summary>
         /// returns true if the LuaUnit is a ghost
         /// </summary>
@@ -599,6 +487,12 @@ namespace AmeisenBotCore
             => ParseLuaIntResult($"isGhost = UnitIsDeadOrGhost(\"{LuaUnit.ToString()}\");", "isGhost");
 
         /// <summary>
+        /// Check if the player's world is in a loadingscreen
+        /// </summary>
+        /// <returns>true if yes, false if no</returns>
+        public static bool IsInLoadingScreen() => !IsWorldLoaded();
+
+        /// <summary>
         /// Check if the spell is on cooldown
         /// </summary>
         /// <param name="spell">spellname</param>
@@ -606,12 +500,29 @@ namespace AmeisenBotCore
         public static bool IsOnCooldown(string spell)
             => ParseLuaIntResult($"start, abDuration, enabled = GetSpellCooldown(\"{spell}\");", "abDuration");
 
+        public static bool IsSpellKnown(int spellId)
+             => ParseLuaIntResult($"abIsKnown = GetSpellInfo({spellId}); if abIsKnown then abIsKnown = 1 else abIsKnown = 0 end;", "abIsKnown");
+
         /// <summary>
-        /// Returns true or false, wether the Target is friendly or not
+        /// Checks wether you can or can't cast the specific spell right now
         /// </summary>
-        /// <returns>true if unit is friendly, false if not</returns>
-        public static bool IsFriend(LuaUnit luaunit, LuaUnit otherluaunit = LuaUnit.player)
-            => ParseLuaIntResult($"isFriendly = UnitIsFriend({luaunit.ToString()}, {otherluaunit.ToString()});", "isFriendly");
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public static bool IsSpellUseable(string spellname)
+            => ParseLuaIntResult($"usable, nomana = IsUsableSpell(\"{spellname}\");if usable then resultUseable = 1 else resultUseable = 0 end;", "resultUseable");
+
+        /// <summary>
+        /// Check if the player's world is loaded
+        /// </summary>
+        /// <returns>true if yes, false if no</returns>
+        public static bool IsWorldLoaded() => BlackMagic.ReadInt(Offsets.worldLoaded) == 1;
+
+        public static void KickNpcsOutOfMammoth() => LuaDoString("for i = 1, 2 do EjectPassengerFromSeat(i) end");
+
+        public static void LootEveryThing()
+        {
+            LuaDoString("abLootCount=GetNumLootItems();for i = abLootCount,1,-1 do LootSlot(i); ConfirmLootSlot(i); end");
+        }
 
         /// <summary>
         /// Execute the given LUA command inside WoW's MainThread
@@ -646,6 +557,36 @@ namespace AmeisenBotCore
             BlackMagic.FreeMemory(argCC); // free our codecaves memory
         }
 
+        public static void MountRandomMount(string landMounts, string flyingMounts = "")
+        {
+            if (landMounts.Length > 0 || flyingMounts.Length > 0)
+            {
+                StringBuilder cmd = new StringBuilder();
+                cmd.Append("/castrandom ");
+                if (flyingMounts.Length > 0)
+                {
+                    cmd.Append($"[flyable] {flyingMounts} ; ");
+                }
+                if (landMounts.Length > 0)
+                {
+                    cmd.Append($"{landMounts} ;");
+                }
+                RunSlashCommand(cmd.ToString());
+            }
+        }
+
+        public static void MoveLeftRight()
+        {
+            if (new Random().Next(0, 2) == 1)
+            {
+                SendKey(new IntPtr(0x51), 60, 380); // the "A" key to go a bit Left TODO: find better method
+            }
+            else
+            {
+                SendKey(new IntPtr(0x45), 60, 380); // the "D" key to go a bit Right TODO: find better method
+            }
+        }
+
         /// <summary>
         /// Move the Player to the given x, y and z coordinates using MemoryWrite to CTM
         /// </summary>
@@ -665,6 +606,20 @@ namespace AmeisenBotCore
         /// </summary>
         /// <returns>the GUID</returns>
         public static ulong ReadPlayerGUID() => BlackMagic.ReadUInt64(Offsets.localPlayerGuid);
+
+        public static RollInfo ReadRollItemName(string id)
+        {
+            RollInfo info = new RollInfo();
+            string cmd = $"rollInfo = \"none|0|0\"; _, abItemName, abItemCount, abItemQuality = GetLootRollItemInfo({id}); rollInfo = abItemName..\"|\"..abItemCount..\"|\"..abItemQuality;";
+            string str = GetLocalizedText(cmd, "rollInfo");
+
+            info.name = str.Split('|')[0];
+            info.count = Utils.TryParseInt(str.Split('|')[1]);
+            info.quality = Utils.TryParseInt(str.Split('|')[2]);
+
+            AmeisenLogger.Instance.Log(LogLevel.DEBUG, $"[RollInfo] Name: {info.name}, Count: {info.count}, Quality: {info.quality}", "AmeisenCore");
+            return info;
+        }
 
         /// <summary>
         /// Get the bot's char's target's GUID
@@ -730,6 +685,8 @@ namespace AmeisenBotCore
         /// </summary>
         public static void ReleaseSpirit() => LuaDoString("RepopMe();");
 
+        public static void RepairAllItems() => LuaDoString("RepairAllItems();");
+
         /// <summary>
         /// Wait until we can recover our corpse and revive our character
         /// </summary>
@@ -745,12 +702,30 @@ namespace AmeisenBotCore
             LuaDoString("RetrieveCorpse();");
         }
 
+        public static void RollOnLoot(int slot, LootRoll lootRoll)
+        {
+            //LuaDoString($"local b = _G[\"GroupLootFrame\"..{slot}].{lootRoll.ToString()} if b:IsVisible() then b:Click() StaticPopup1Button1:Click() end");
+        }
+
         /// <summary>
         /// Run the given slash-commando
         /// </summary>
         /// <param name="slashCommand">Example: /target player</param>
         public static void RunSlashCommand(string slashCommand)
             => LuaDoString($"DEFAULT_CHAT_FRAME.editBox:SetText(\"{slashCommand}\") ChatEdit_SendText(DEFAULT_CHAT_FRAME.editBox, 0)");
+
+        public static void SellAllGrayItems() => LuaDoString("local p,N,n=0 for b=0,4 do for s=1,GetContainerNumSlots(b) do n=GetContainerItemLink(b,s) if n and string.find(n,\"9d9d9d\") then N={GetItemInfo(n)} p=p+N[11] UseContainerItem(b,s) print(\"Sold: \"..n) end end end print(\"Total: \"..GetCoinText(p))");
+
+        /// <summary>
+        /// Set WoW's window position and dimensions by its handle
+        /// </summary>
+        /// <param name="mainWindowHandle">WoW's windowHandle</param>
+        /// <param name="x">x position on screen</param>
+        /// <param name="y">y position on screen</param>
+        /// <param name="width">window width</param>
+        /// <param name="height">window height</param>
+        public static void SetWindowPosition(IntPtr mainWindowHandle, int x, int y, int width, int height)
+            => SafeNativeMethods.MoveWindow(mainWindowHandle, x, y, height, width, true);
 
         /// <summary>
         /// Target a GUID by calling WoW's clientGameUITarget function on our hook
@@ -779,10 +754,40 @@ namespace AmeisenBotCore
             while (!hookJob.IsFinished) { Thread.Sleep(1); }
         }
 
+        public static void TargetLuaUnit(LuaUnit unit) => LuaDoString($"TargetUnit(\"{unit.ToString()}\");");
+
+        public static void TargetNpcByName(string name, bool exactMatch = true) => LuaDoString($"TargetUnit(\"{name}\", {(exactMatch ? "true" : "false")});");
+
+        internal static void EnableAutoBoPConfirm()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            sb.Append("abAutoBoPFrame = CreateFrame(\"Frame\", \"ABot\");");
+            sb.Append("abAutoBoPFrame:RegisterEvent(\"CONFIRM_LOOT_ROLL\");");
+            sb.Append("abAutoBoPFrame:SetScript(\"OnEvent\", function(self,event,...) ");
+            sb.Append("if event == \"CONFIRM_LOOT_ROLL\" then ");
+            sb.Append("RollID = select(1, ...);");
+            sb.Append("roll = select(2, ...);");
+            sb.Append("ConfirmLootRoll( RollID, roll );");
+            sb.Append("end;");
+            sb.Append("end);");
+
+            LuaDoString(sb.ToString());
+        }
+
         /// <summary>
         /// Let the Character Jump by sending a spacebar key to the game
         /// </summary>
         private static void CharacterJump() => SendKey(new IntPtr(0x20));
+
+        private static bool ParseLuaIntResult(string command, string outputVariable)
+        {
+            try
+            {
+                return int.Parse(GetLocalizedText(command, outputVariable)) > 0;
+            }
+            catch { return false; }
+        }
 
         /// <summary>
         /// Hold WoW's main thread, be careful things get dangerous here
@@ -831,16 +836,5 @@ namespace AmeisenBotCore
             BlackMagic.WriteInt(Offsets.ctmAction, (int)action);
             BlackMagic.WriteFloat(Offsets.ctmDistance, distance);
         }
-
-        /// <summary>
-        /// Checks wether you can or can't cast the specific spell right now
-        /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
-        public static bool IsSpellUseable(string spellname)
-            => ParseLuaIntResult($"usable, nomana = IsUsableSpell(\"{spellname}\");if usable then resultUseable = 1 else resultUseable = 0 end;", "resultUseable");
-
-        public static bool IsSpellKnown(int spellId)
-             => ParseLuaIntResult($"abIsKnown = GetSpellInfo({spellId}); if abIsKnown then abIsKnown = 1 else abIsKnown = 0 end;", "abIsKnown");
     }
 }

@@ -2,13 +2,13 @@
 {
     public struct RawSpell
     {
-        public string spellBookName;
-        public int spellbookId;
+        public int castTime;
+        public int costs;
+        public int maxRange;
+        public int minRange;
         public string name;
         public string rank;
-        public int castTime;
-        public int minRange;
-        public int maxRange;
-        public int costs;
+        public int spellbookId;
+        public string spellBookName;
     }
 }

@@ -15,30 +15,6 @@ namespace AmeisenBotFSM
 {
     public class AmeisenStateMachineManager
     {
-        public bool Active { get; private set; }
-        public bool PushedCombat { get; private set; }
-        public AmeisenStateMachine StateMachine { get; private set; }
-        private AmeisenDataHolder AmeisenDataHolder { get; set; }
-        private AmeisenDBManager AmeisenDBManager { get; set; }
-        private AmeisenNavmeshClient AmeisenNavmeshClient { get; set; }
-        private AmeisenCharacterManager AmeisenCharacterManager { get; set; }
-        private IAmeisenCombatPackage CombatPackage { get; set; }
-        private AmeisenMovementEngine AmeisenMovementEngine { get; set; }
-        private Thread MainWorker { get; set; }
-        private Thread StateWatcherWorker { get; set; }
-
-        private Me Me
-        {
-            get { return AmeisenDataHolder.Me; }
-            set { AmeisenDataHolder.Me = value; }
-        }
-
-        private Unit Target
-        {
-            get { return AmeisenDataHolder.Target; }
-            set { AmeisenDataHolder.Target = value; }
-        }
-
         public AmeisenStateMachineManager(
             AmeisenDataHolder ameisenDataHolder,
             AmeisenDBManager ameisenDBManager,
@@ -60,6 +36,10 @@ namespace AmeisenBotFSM
             StateWatcherWorker = new Thread(new ThreadStart(WatchForStateChanges));
             StateMachine = new AmeisenStateMachine(ameisenDataHolder, ameisenDBManager, ameisenMovementEngine, combatPackage, characterManager, ameisenNavmeshClient);
         }
+
+        public bool Active { get; private set; }
+        public bool PushedCombat { get; private set; }
+        public AmeisenStateMachine StateMachine { get; private set; }
 
         /// <summary>
         /// Fire up the FSM
@@ -87,85 +67,32 @@ namespace AmeisenBotFSM
             }
         }
 
-        /// <summary>
-        /// Update the Statemachine, let it do its work
-        /// </summary>
-        private void DoWork()
+        public void UpdateCombatPackage(IAmeisenCombatPackage combatPackage)
         {
-            while (Active)
-            {
-                // Do the Actions
-                StateMachine.Update();
-                Thread.Sleep(AmeisenDataHolder.Settings.stateMachineUpdateMillis);
-            }
+            CombatPackage = combatPackage;
+            StateMachine = new AmeisenStateMachine(AmeisenDataHolder, AmeisenDBManager, AmeisenMovementEngine, combatPackage, AmeisenCharacterManager, AmeisenNavmeshClient);
         }
 
-        /// <summary>
-        /// Change the state of out FSM
-        /// </summary>
-        private void WatchForStateChanges()
+        private AmeisenCharacterManager AmeisenCharacterManager { get; set; }
+        private AmeisenDataHolder AmeisenDataHolder { get; set; }
+        private AmeisenDBManager AmeisenDBManager { get; set; }
+        private AmeisenMovementEngine AmeisenMovementEngine { get; set; }
+        private AmeisenNavmeshClient AmeisenNavmeshClient { get; set; }
+        private IAmeisenCombatPackage CombatPackage { get; set; }
+        private Thread MainWorker { get; set; }
+
+        private Me Me
         {
-            while (Active)
-            {
-                Thread.Sleep(AmeisenDataHolder.Settings.stateMachineStateUpdateMillis);
-
-                if (!AmeisenDataHolder.IsInWorld)
-                {
-                    continue;
-                }
-
-                // Am I in combat
-                if (InCombatCheck())
-                {
-                    continue;
-                }
-
-                // Is there loot waiting for me
-                if (IsLootThere())
-                {
-                    continue;
-                }
-
-                // Am I dead?
-                if (DeadCheck())
-                {
-                    continue;
-                }
-
-                // Do I need to release my spirit
-                if (ReleaseSpiritCheck())
-                {
-                    continue;
-                }
-
-                // Bot stuff check
-                if (BotStuffCheck())
-                {
-                    continue;
-                }
-
-                // Is me supposed to follow
-                if (FollowCheck())
-                {
-                    continue;
-                }
-
-                AmeisenLogger.Instance.Log(LogLevel.VERBOSE, $"FSM: {StateMachine.GetCurrentState()}", this);
-            }
+            get { return AmeisenDataHolder.Me; }
+            set { AmeisenDataHolder.Me = value; }
         }
 
-        private bool IsLootThere()
+        private Thread StateWatcherWorker { get; set; }
+
+        private Unit Target
         {
-            if (AmeisenDataHolder.LootableUnits.Count > 0)
-            {
-                StateMachine.PushAction(BotState.Loot);
-                return true;
-            }
-            else
-            {
-                StateMachine.PopAction(BotState.Loot);
-                return false;
-            }
+            get { return AmeisenDataHolder.Target; }
+            set { AmeisenDataHolder.Target = value; }
         }
 
         private bool BotStuffCheck()
@@ -179,6 +106,37 @@ namespace AmeisenBotFSM
             {
                 StateMachine.PopAction(BotState.BotStuff);
                 return false;
+            }
+        }
+
+        private bool DeadCheck()
+        {
+            if (AmeisenDataHolder.IsAllowedToRevive)
+            {
+                if (Me.IsDead) // || AmeisenCore.IsGhost(LuaUnit.player)
+                {
+                    StateMachine.PushAction(BotState.Dead);
+                    return true;
+                }
+                else
+                {
+                    StateMachine.PopAction(BotState.Dead);
+                    return false;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Update the Statemachine, let it do its work
+        /// </summary>
+        private void DoWork()
+        {
+            while (Active)
+            {
+                // Do the Actions
+                StateMachine.Update();
+                Thread.Sleep(AmeisenDataHolder.Settings.stateMachineUpdateMillis);
             }
         }
 
@@ -238,6 +196,20 @@ namespace AmeisenBotFSM
             return false;
         }
 
+        private bool IsLootThere()
+        {
+            if (AmeisenDataHolder.LootableUnits.Count > 0)
+            {
+                StateMachine.PushAction(BotState.Loot);
+                return true;
+            }
+            else
+            {
+                StateMachine.PopAction(BotState.Loot);
+                return false;
+            }
+        }
+
         private bool ReleaseSpiritCheck()
         {
             if (AmeisenDataHolder.IsAllowedToReleaseSpirit)
@@ -258,28 +230,58 @@ namespace AmeisenBotFSM
             return false;
         }
 
-        private bool DeadCheck()
+        /// <summary>
+        /// Change the state of out FSM
+        /// </summary>
+        private void WatchForStateChanges()
         {
-            if (AmeisenDataHolder.IsAllowedToRevive)
+            while (Active)
             {
-                if (Me.IsDead) // || AmeisenCore.IsGhost(LuaUnit.player)
-                {
-                    StateMachine.PushAction(BotState.Dead);
-                    return true;
-                }
-                else
-                {
-                    StateMachine.PopAction(BotState.Dead);
-                    return false;
-                }
-            }
-            return false;
-        }
+                Thread.Sleep(AmeisenDataHolder.Settings.stateMachineStateUpdateMillis);
 
-        public void UpdateCombatPackage(IAmeisenCombatPackage combatPackage)
-        {
-            CombatPackage = combatPackage;
-            StateMachine = new AmeisenStateMachine(AmeisenDataHolder, AmeisenDBManager, AmeisenMovementEngine, combatPackage, AmeisenCharacterManager, AmeisenNavmeshClient);
+                if (!AmeisenDataHolder.IsInWorld)
+                {
+                    continue;
+                }
+
+                // Am I in combat
+                if (InCombatCheck())
+                {
+                    continue;
+                }
+
+                // Is there loot waiting for me
+                if (IsLootThere())
+                {
+                    continue;
+                }
+
+                // Am I dead?
+                if (DeadCheck())
+                {
+                    continue;
+                }
+
+                // Do I need to release my spirit
+                if (ReleaseSpiritCheck())
+                {
+                    continue;
+                }
+
+                // Bot stuff check
+                if (BotStuffCheck())
+                {
+                    continue;
+                }
+
+                // Is me supposed to follow
+                if (FollowCheck())
+                {
+                    continue;
+                }
+
+                AmeisenLogger.Instance.Log(LogLevel.VERBOSE, $"FSM: {StateMachine.GetCurrentState()}", this);
+            }
         }
     }
 }

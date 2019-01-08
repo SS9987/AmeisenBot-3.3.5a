@@ -15,18 +15,6 @@ namespace AmeisenBotCore
     {
         public bool isHooked = false;
         public bool isInjectionUsed = false;
-        public int JobCount => hookJobs.Count;
-        private const uint ENDSCENE_HOOK_OFFSET = 0x2;
-        private uint codeCave;
-        private uint codeCaveForInjection;
-        private uint codeToExecute;
-        private uint endsceneReturnAddress;
-        private ConcurrentQueue<HookJob> hookJobs;
-        private Thread hookWorker;
-        private byte[] originalEndscene = new byte[] { 0xB8, 0x51, 0xD7, 0xCA, 0x64 };
-        private uint returnAdress;
-        private BlackMagic BlackMagic { get; set; }
-        public bool IsNotInWorld { get; set; }
 
         public AmeisenHook(BlackMagic blackmagic)
         {
@@ -47,6 +35,9 @@ namespace AmeisenBotCore
                 hookWorker.Start();
             }
         }
+
+        public bool IsNotInWorld { get; set; }
+        public int JobCount => hookJobs.Count;
 
         public void AddHookJob(ref HookJob hookJob) => hookJobs.Enqueue(hookJob);
 
@@ -71,6 +62,17 @@ namespace AmeisenBotCore
             isHooked = false;
             hookWorker.Join();
         }
+
+        private const uint ENDSCENE_HOOK_OFFSET = 0x2;
+        private uint codeCave;
+        private uint codeCaveForInjection;
+        private uint codeToExecute;
+        private uint endsceneReturnAddress;
+        private ConcurrentQueue<HookJob> hookJobs;
+        private Thread hookWorker;
+        private byte[] originalEndscene = new byte[] { 0xB8, 0x51, 0xD7, 0xCA, 0x64 };
+        private uint returnAdress;
+        private BlackMagic BlackMagic { get; set; }
 
         private void DoWork()
         {
@@ -276,7 +278,7 @@ namespace AmeisenBotCore
                     $"Crash at InjectAndExecute: {e.ToString()}",
                     this);
 
-                foreach(string s in asm)
+                foreach (string s in asm)
                 {
                     AmeisenLogger.Instance.Log(
                         LogLevel.ERROR,
@@ -302,11 +304,6 @@ namespace AmeisenBotCore
     /// </summary>
     public class HookJob
     {
-        public string[] Asm { get; set; }
-        public bool IsFinished { get; set; }
-        public bool ReadReturnBytes { get; set; }
-        public object ReturnValue { get; set; }
-
         /// <summary>
         /// Build a job to execute on the endscene hook
         /// </summary>
@@ -319,6 +316,11 @@ namespace AmeisenBotCore
             ReadReturnBytes = readReturnBytes;
             ReturnValue = null;
         }
+
+        public string[] Asm { get; set; }
+        public bool IsFinished { get; set; }
+        public bool ReadReturnBytes { get; set; }
+        public object ReturnValue { get; set; }
     }
 
     /// <summary>
@@ -326,8 +328,6 @@ namespace AmeisenBotCore
     /// </summary>
     public class ReturnHookJob : HookJob
     {
-        public HookJob ChainedJob { get; private set; }
-
         /// <summary>
         /// Build a job to execute on the endscene hook
         /// </summary>
@@ -338,5 +338,7 @@ namespace AmeisenBotCore
         /// </param>
         public ReturnHookJob(string[] asm, bool readReturnBytes, HookJob chainedJob)
             : base(asm, readReturnBytes) { ChainedJob = chainedJob; }
+
+        public HookJob ChainedJob { get; private set; }
     }
 }

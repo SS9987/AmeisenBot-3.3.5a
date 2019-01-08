@@ -13,15 +13,6 @@ namespace AmeisenBotFSM.Actions
 {
     internal class ActionDoBotStuff : IAction
     {
-        public Start StartAction { get { return Start; } }
-        public DoThings StartDoThings { get { return DoThings; } }
-        public Exit StartExit { get { return Stop; } }
-        private AmeisenDataHolder AmeisenDataHolder { get; set; }
-        private AmeisenCharacterManager AmeisenCharacterManager { get; set; }
-        private AmeisenDBManager AmeisenDBManager { get; set; }
-        private AmeisenNavmeshClient AmeisenNavmeshClient { get; set; }
-        private IAction ThingTodo { get; set; }
-
         public ActionDoBotStuff(
             AmeisenDataHolder ameisenDataHolder,
             AmeisenDBManager ameisenDBManager,
@@ -33,6 +24,10 @@ namespace AmeisenBotFSM.Actions
             AmeisenCharacterManager = ameisenCharacterManager;
             AmeisenNavmeshClient = ameisenNavmeshClient;
         }
+
+        public Start StartAction { get { return Start; } }
+        public DoThings StartDoThings { get { return DoThings; } }
+        public Exit StartExit { get { return Stop; } }
 
         public void DoThings()
         {
@@ -56,10 +51,11 @@ namespace AmeisenBotFSM.Actions
         {
         }
 
-        private void DoBotStuff(IAction whatToDo)
-        {
-            whatToDo.StartAction?.Invoke();
-        }
+        private AmeisenCharacterManager AmeisenCharacterManager { get; set; }
+        private AmeisenDataHolder AmeisenDataHolder { get; set; }
+        private AmeisenDBManager AmeisenDBManager { get; set; }
+        private AmeisenNavmeshClient AmeisenNavmeshClient { get; set; }
+        private IAction ThingTodo { get; set; }
 
         private IAction DecideWhatToDo()
         {
@@ -74,6 +70,11 @@ namespace AmeisenBotFSM.Actions
 
             // got nothing to do
             return null;
+        }
+
+        private void DoBotStuff(IAction whatToDo)
+        {
+            whatToDo.StartAction?.Invoke();
         }
 
         private bool INeedToCleanMyBags()

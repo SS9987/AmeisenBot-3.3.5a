@@ -60,8 +60,8 @@ namespace AmeisenBotUtilities
             sb.Append($" >> PosZ: {pos.Z}");
             sb.Append($" >> Rotation: {Rotation}");
             sb.Append($" >> Distance: {Distance}");
-            sb.Append($" >> MapID: {MapID}");
-            sb.Append($" >> ZoneID: {ZoneID}");
+            sb.Append($" >> MapID: {MapId}");
+            sb.Append($" >> ZoneID: {ZoneId}");
             sb.Append($" >> Target: {TargetGuid}");
             sb.Append($" >> level: {Level}");
             sb.Append($" >> health: {Health}");

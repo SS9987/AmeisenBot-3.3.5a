@@ -99,7 +99,7 @@
         </Button>
         <Label x:Name="labelWowPath" Content="C:/Wow/WoW.exe" HorizontalAlignment="Left" Margin="10,59,0,0" VerticalAlignment="Top" Width="322">
             <Label.Foreground>
-                <SolidColorBrush Color="{DynamicResource TextColor}"/>
+                <SolidColorBrush Color="{DynamicResource TextColor}" />
             </Label.Foreground>
         </Label>
         <Button x:Name="buttonSelectWowPath" Content="📁" HorizontalAlignment="Left" Margin="349,62,0,0" VerticalAlignment="Top" Width="23" Height="23" Background="{x:Null}" BorderThickness="2" FontWeight="Bold" FontFamily="Arial" IsManipulationEnabled="True" Click="ButtonSelectWowPath_Click"  TabIndex="3">
@@ -112,27 +112,27 @@
         </Button>
         <Label Content="Select a WoW process:" HorizontalAlignment="Left" Margin="4,0,0,0" VerticalAlignment="Top" Width="322">
             <Label.Foreground>
-                <SolidColorBrush Color="{DynamicResource TextColor}"/>
+                <SolidColorBrush Color="{DynamicResource TextColor}" />
             </Label.Foreground>
         </Label>
         <Rectangle HorizontalAlignment="Left" Height="2" Margin="-2,133,-2,0" VerticalAlignment="Top" Width="528">
             <Rectangle.Fill>
-                <SolidColorBrush Color="{DynamicResource AccentColor}"/>
+                <SolidColorBrush Color="{DynamicResource AccentColor}" />
             </Rectangle.Fill>
         </Rectangle>
         <Label Content="Select a saved account (or create a new one below):" HorizontalAlignment="Left" Margin="4,133,0,0" VerticalAlignment="Top" Width="322">
             <Label.Foreground>
-                <SolidColorBrush Color="{DynamicResource TextColor}"/>
+                <SolidColorBrush Color="{DynamicResource TextColor}" />
             </Label.Foreground>
         </Label>
         <Label x:Name="labelWowRealmlist" Content="127.0.0.1" HorizontalAlignment="Left" Margin="10,102,0,0" VerticalAlignment="Top" Width="322">
             <Label.Foreground>
-                <SolidColorBrush Color="{DynamicResource TextColor}"/>
+                <SolidColorBrush Color="{DynamicResource TextColor}" />
             </Label.Foreground>
         </Label>
         <Label x:Name="labelWowRealmlistPath" Content="C:/Wow/Data/enUS/realmlist.wtf" HorizontalAlignment="Left" Margin="10,80,0,0" VerticalAlignment="Top" Width="322">
             <Label.Foreground>
-                <SolidColorBrush Color="{DynamicResource TextColor}"/>
+                <SolidColorBrush Color="{DynamicResource TextColor}" />
             </Label.Foreground>
         </Label>
         <Button x:Name="buttonSelectWowRealmlist" Content="📁" HorizontalAlignment="Left" Margin="349,87,0,0" VerticalAlignment="Top" Width="23" Height="23" Background="{x:Null}" BorderThickness="2" FontWeight="Bold" FontFamily="Arial" IsManipulationEnabled="True" Click="ButtonSelectWowRealmlist_Click"  TabIndex="3">

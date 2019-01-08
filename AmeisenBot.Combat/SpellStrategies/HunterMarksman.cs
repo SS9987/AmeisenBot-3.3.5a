@@ -9,21 +9,6 @@ namespace AmeisenBotCombat.SpellStrategies
 {
     public class HunterMarksman : ICombatClass
     {
-        private List<Spell> Spells { get; set; }
-
-        private bool IsAspectOfTheHawkKnown { get; set; }
-        private bool IsKillShotKnown { get; set; }
-        private bool IsSerpentStingKnown { get; set; }
-        private bool IsChimeraShotKnown { get; set; }
-        private bool IsAimedShotKnown { get; set; }
-        private bool IsArcaneShotKnown { get; set; }
-        private bool IsSteadyShotKnown { get; set; }
-        private bool IsFrostTrapKnown { get; set; }
-        private bool IsFreezingTrapKnown { get; set; }
-        private bool IsDisengageKnown { get; set; }
-        private bool IsTrueshotAuraKnown { get; set; }
-        private bool IsHuntersMarkKnown { get; set; }
-
         public HunterMarksman(List<Spell> spells)
         {
             Spells = spells;
@@ -41,8 +26,6 @@ namespace AmeisenBotCombat.SpellStrategies
             IsTrueshotAuraKnown = Spells.Where(spell => spell.Name == "Trueshot Aura").ToList().Count > 0;
             IsHuntersMarkKnown = Spells.Where(spell => spell.Name == "Hunter's Mark").ToList().Count > 0;
         }
-
-        public void Startup(Me me, Unit target, Unit pet) { }
 
         public Spell DoRoutine(Me me, Unit target, Unit pet)
         {
@@ -137,6 +120,24 @@ namespace AmeisenBotCombat.SpellStrategies
             return null;
         }
 
+        public void Startup(Me me, Unit target, Unit pet)
+        {
+        }
+
+        private bool IsAimedShotKnown { get; set; }
+        private bool IsArcaneShotKnown { get; set; }
+        private bool IsAspectOfTheHawkKnown { get; set; }
+        private bool IsChimeraShotKnown { get; set; }
+        private bool IsDisengageKnown { get; set; }
+        private bool IsFreezingTrapKnown { get; set; }
+        private bool IsFrostTrapKnown { get; set; }
+        private bool IsHuntersMarkKnown { get; set; }
+        private bool IsKillShotKnown { get; set; }
+        private bool IsSerpentStingKnown { get; set; }
+        private bool IsSteadyShotKnown { get; set; }
+        private bool IsTrueshotAuraKnown { get; set; }
+        private List<Spell> Spells { get; set; }
+
         private Spell TryUseSpell(string spellname, Me me)
         {
             Spell spellToUse = Spells.Where(spell => spell.Name == spellname).FirstOrDefault();
@@ -150,6 +151,5 @@ namespace AmeisenBotCombat.SpellStrategies
             }
             return null;
         }
-
     }
 }

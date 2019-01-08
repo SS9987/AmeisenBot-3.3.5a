@@ -9,19 +9,6 @@ namespace AmeisenBotCombat.SpellStrategies
 {
     public class DruidRestoration : ICombatClass
     {
-        private List<Spell> Spells { get; set; }
-
-        private bool IsMarkOfTheWildKnown { get; set; }
-        private bool IsRegrowthKnown { get; set; }
-        private bool IsLifebloomKnown { get; set; }
-        private bool IsWildGrowthKnown { get; set; }
-        private bool IsRejuvenationKnown { get; set; }
-        private bool IsSwiftmendKnown { get; set; }
-        private bool IsTranquiullityKnown { get; set; }
-        private bool IsBarkskinKnown { get; set; }
-        private bool IsNaturesSwiftnessKnown { get; set; }
-        private bool IsInnervateKnown { get; set; }
-
         public DruidRestoration(List<Spell> spells)
         {
             Spells = spells;
@@ -38,11 +25,12 @@ namespace AmeisenBotCombat.SpellStrategies
             IsInnervateKnown = Spells.Where(spell => spell.Name == "Innervate").ToList().Count > 0;
         }
 
-        public void Startup(Me me, Unit target, Unit pet) { }
-
         public Spell DoRoutine(Me me, Unit target, Unit pet)
         {
-            if (me == null || target == null) return null;
+            if (me == null || target == null)
+            {
+                return null;
+            }
 
             List<string> myAuras = AmeisenCore.GetAuras(LuaUnit.player);
             List<string> targetAuras = AmeisenCore.GetAuras(LuaUnit.target);
@@ -113,6 +101,22 @@ namespace AmeisenBotCombat.SpellStrategies
             return null;
         }
 
+        public void Startup(Me me, Unit target, Unit pet)
+        {
+        }
+
+        private bool IsBarkskinKnown { get; set; }
+        private bool IsInnervateKnown { get; set; }
+        private bool IsLifebloomKnown { get; set; }
+        private bool IsMarkOfTheWildKnown { get; set; }
+        private bool IsNaturesSwiftnessKnown { get; set; }
+        private bool IsRegrowthKnown { get; set; }
+        private bool IsRejuvenationKnown { get; set; }
+        private bool IsSwiftmendKnown { get; set; }
+        private bool IsTranquiullityKnown { get; set; }
+        private bool IsWildGrowthKnown { get; set; }
+        private List<Spell> Spells { get; set; }
+
         private Spell TryUseSpell(string spellname, Me me)
         {
             Spell spellToUse = Spells.Where(spell => spell.Name == spellname).FirstOrDefault();
@@ -126,6 +130,5 @@ namespace AmeisenBotCombat.SpellStrategies
             }
             return null;
         }
-
     }
 }

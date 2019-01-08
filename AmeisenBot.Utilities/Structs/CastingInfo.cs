@@ -2,7 +2,7 @@
 {
     public struct CastingInfo
     {
-        public string name;
         public int duration;
+        public string name;
     }
 }

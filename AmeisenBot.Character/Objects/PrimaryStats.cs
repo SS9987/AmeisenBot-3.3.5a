@@ -8,16 +8,6 @@ namespace AmeisenBot.Character.Objects
 {
     public class PrimaryStats
     {
-        public double Armor { get; set; }
-        public double Strenght { get; set; }
-        public double Agility { get; set; }
-        public double Stamina { get; set; }
-        public double Intellect { get; set; }
-        public double Spirit { get; set; }
-        public double Attackpower { get; set; }
-        public double Spellpower { get; set; }
-        public double Mana { get; set; }
-
         /// <summary>
         /// Get the stats for yourself
         /// </summary>
@@ -34,6 +24,16 @@ namespace AmeisenBot.Character.Objects
         {
             UpdateFromItem(item);
         }
+
+        public double Agility { get; set; }
+        public double Armor { get; set; }
+        public double Attackpower { get; set; }
+        public double Intellect { get; set; }
+        public double Mana { get; set; }
+        public double Spellpower { get; set; }
+        public double Spirit { get; set; }
+        public double Stamina { get; set; }
+        public double Strenght { get; set; }
 
         public void UpdateFromItem(Item item)
         {

@@ -7,34 +7,12 @@ using AmeisenBotData;
 using AmeisenBotDB;
 using AmeisenBotUtilities;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 
 namespace AmeisenBotFSM.Actions
 {
     internal class ActionCombat : ActionMoving
     {
-        private AmeisenDataHolder AmeisenDataHolder { get; set; }
-        private IAmeisenCombatPackage CombatPackage { get; set; }
-
-        private Me Me
-        {
-            get { return AmeisenDataHolder.Me; }
-            set { AmeisenDataHolder.Me = value; }
-        }
-
-        private Unit Target
-        {
-            get { return AmeisenDataHolder.Target; }
-            set { AmeisenDataHolder.Target = value; }
-        }
-
-        private Unit Pet
-        {
-            get { return AmeisenDataHolder.Pet; }
-            set { AmeisenDataHolder.Pet = value; }
-        }
-
         public ActionCombat(
             AmeisenDataHolder ameisenDataHolder,
             IAmeisenCombatPackage combatPackage,
@@ -43,30 +21,6 @@ namespace AmeisenBotFSM.Actions
         {
             AmeisenDataHolder = ameisenDataHolder;
             CombatPackage = combatPackage;
-        }
-
-        public override void Start()
-        {
-            // Startup Method
-            if (CombatPackage.SpellStrategy != null)
-            {
-                // Updte me, target and pet
-                Me?.Update();
-                Target?.Update();
-                Pet?.Update();
-
-                CombatPackage.SpellStrategy.Startup(Me, Target, Pet);
-            }
-            WaypointQueue.Clear();
-            base.Start();
-        }
-
-        public override void Stop()
-        {
-            base.Stop();
-            WaypointQueue.Clear();
-            AmeisenCore.RunSlashCommand("/cleartarget");
-            Target = null;
         }
 
         public override void DoThings()
@@ -102,7 +56,6 @@ namespace AmeisenBotFSM.Actions
                     Me?.Update();
                     Target?.Update();
                 }
-
 
                 if (Me.TargetGuid == 0 || Target == null || Target.Guid == 0)
                 {
@@ -153,6 +106,51 @@ namespace AmeisenBotFSM.Actions
             }
         }
 
+        public override void Start()
+        {
+            // Startup Method
+            if (CombatPackage.SpellStrategy != null)
+            {
+                // Updte me, target and pet
+                Me?.Update();
+                Target?.Update();
+                Pet?.Update();
+
+                CombatPackage.SpellStrategy.Startup(Me, Target, Pet);
+            }
+            WaypointQueue.Clear();
+            base.Start();
+        }
+
+        public override void Stop()
+        {
+            base.Stop();
+            WaypointQueue.Clear();
+            AmeisenCore.RunSlashCommand("/cleartarget");
+            Target = null;
+        }
+
+        private AmeisenDataHolder AmeisenDataHolder { get; set; }
+        private IAmeisenCombatPackage CombatPackage { get; set; }
+
+        private Me Me
+        {
+            get { return AmeisenDataHolder.Me; }
+            set { AmeisenDataHolder.Me = value; }
+        }
+
+        private Unit Pet
+        {
+            get { return AmeisenDataHolder.Pet; }
+            set { AmeisenDataHolder.Pet = value; }
+        }
+
+        private Unit Target
+        {
+            get { return AmeisenDataHolder.Target; }
+            set { AmeisenDataHolder.Target = value; }
+        }
+
         private void HandleMovement(Vector3 pos)
         {
             Me.Update();
@@ -165,7 +163,7 @@ namespace AmeisenBotFSM.Actions
 
         private bool IsInLineOfSight(Me me, Unit target)
         {
-            if(target == null)
+            if (target == null)
             {
                 return true;
             }

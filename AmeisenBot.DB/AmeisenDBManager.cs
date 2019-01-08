@@ -6,7 +6,6 @@ using AmeisenBotUtilities.Objects;
 using Dapper;
 using MySql.Data.MySqlClient;
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,13 +17,75 @@ namespace AmeisenBotDB
         public const string TABLE_NAME_NODES = "ameisenbot_map_nodes";
         public const string TABLE_NAME_REMEMBERED_UNITS = "ameisenbot_remembered_units";
         public string DBName = "ameisenbot";
-        private string MysqlConnectionString { get; set; }
-        private AmeisenDataHolder AmeisenDataHolder { get; set; }
 
         public AmeisenDBManager(AmeisenDataHolder ameisenDataHolder)
         {
             AmeisenDataHolder = ameisenDataHolder;
             ameisenDataHolder.IsConnectedToDB = false;
+        }
+
+        public RememberedUnit CheckForRememberedUnit(string unitname, int zoneID, int mapID)
+        {
+            if (AmeisenDataHolder.IsConnectedToDB)
+            {
+                RememberedUnit unitToReturn = null;
+                MySqlConnection sqlConnection = new MySqlConnection(MysqlConnectionString);
+                sqlConnection.Open();
+
+                StringBuilder sqlQuery = new StringBuilder();
+                sqlQuery.Append($"SELECT * FROM {TABLE_NAME_REMEMBERED_UNITS} ");
+                sqlQuery.Append($"WHERE zone_id = {zoneID} AND ");
+                sqlQuery.Append($"map_id = {mapID} AND ");
+                sqlQuery.Append($"name = \"{unitname}\";");
+
+                try
+                {
+                    dynamic rawUnit = sqlConnection.Query(sqlQuery.ToString()).FirstOrDefault();
+                    RememberedUnit rememberedUnit = new RememberedUnit
+                    {
+                        Name = rawUnit.name,
+                        ZoneID = rawUnit.zone_id,
+                        MapID = rawUnit.map_id,
+                        Position = new Vector3(rawUnit.x, rawUnit.y, rawUnit.z),
+                        UnitTraitsString = rawUnit.traits
+                    };
+
+                    rememberedUnit.UnitTraits = JsonConvert.DeserializeObject<List<UnitTrait>>(rememberedUnit.UnitTraitsString);
+                    unitToReturn = rememberedUnit;
+                }
+                catch
+                {
+                    AmeisenLogger.Instance.Log(LogLevel.ERROR, $"Error checking for RememberedUnit: unitName: {unitname}, zoneId: {zoneID}, mapId: {mapID}", this);
+                    unitToReturn = null;
+                }
+                finally { sqlConnection.Close(); }
+                return unitToReturn;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Connect to a MySQL database
+        /// </summary>
+        /// <param name="mysqlConnectionString">mysql connection string</param>
+        /// <returns>true if connected, false if not</returns>
+        public bool ConnectToMySQL(string mysqlConnectionString)
+        {
+            if (!AmeisenDataHolder.IsConnectedToDB)
+            {
+                MySqlConnection sqlConnection = new MySqlConnection(mysqlConnectionString);
+                MysqlConnectionString = mysqlConnectionString;
+                try
+                {
+                    sqlConnection.Open();
+                    AmeisenLogger.Instance.Log(LogLevel.DEBUG, "Connected to MySQL DB", this);
+                    AmeisenDataHolder.IsConnectedToDB = true;
+                    InitDB();
+                    sqlConnection.Close();
+                }
+                catch { AmeisenLogger.Instance.Log(LogLevel.ERROR, $"Connection to MySQL failed... connectionString: {mysqlConnectionString}", this); }
+            }
+            return AmeisenDataHolder.IsConnectedToDB;
         }
 
         public List<RememberedUnit> GetRememberedUnits(UnitTrait unitTrait)
@@ -63,30 +124,6 @@ namespace AmeisenBotDB
                 return unitsToReturn;
             }
             return new List<RememberedUnit>();
-        }
-
-        /// <summary>
-        /// Connect to a MySQL database
-        /// </summary>
-        /// <param name="mysqlConnectionString">mysql connection string</param>
-        /// <returns>true if connected, false if not</returns>
-        public bool ConnectToMySQL(string mysqlConnectionString)
-        {
-            if (!AmeisenDataHolder.IsConnectedToDB)
-            {
-                MySqlConnection sqlConnection = new MySqlConnection(mysqlConnectionString);
-                MysqlConnectionString = mysqlConnectionString;
-                try
-                {
-                    sqlConnection.Open();
-                    AmeisenLogger.Instance.Log(LogLevel.DEBUG, "Connected to MySQL DB", this);
-                    AmeisenDataHolder.IsConnectedToDB = true;
-                    InitDB();
-                    sqlConnection.Close();
-                }
-                catch { AmeisenLogger.Instance.Log(LogLevel.ERROR, $"Connection to MySQL failed... connectionString: {mysqlConnectionString}", this); }
-            }
-            return AmeisenDataHolder.IsConnectedToDB;
         }
 
         /// <summary>
@@ -159,44 +196,7 @@ namespace AmeisenBotDB
             }
         }
 
-        public RememberedUnit CheckForRememberedUnit(string unitname, int zoneID, int mapID)
-        {
-            if (AmeisenDataHolder.IsConnectedToDB)
-            {
-                RememberedUnit unitToReturn = null;
-                MySqlConnection sqlConnection = new MySqlConnection(MysqlConnectionString);
-                sqlConnection.Open();
-
-                StringBuilder sqlQuery = new StringBuilder();
-                sqlQuery.Append($"SELECT * FROM {TABLE_NAME_REMEMBERED_UNITS} ");
-                sqlQuery.Append($"WHERE zone_id = {zoneID} AND ");
-                sqlQuery.Append($"map_id = {mapID} AND ");
-                sqlQuery.Append($"name = \"{unitname}\";");
-
-                try
-                {
-                    dynamic rawUnit = sqlConnection.Query(sqlQuery.ToString()).FirstOrDefault();
-                    RememberedUnit rememberedUnit = new RememberedUnit
-                    {
-                        Name = rawUnit.name,
-                        ZoneID = rawUnit.zone_id,
-                        MapID = rawUnit.map_id,
-                        Position = new Vector3(rawUnit.x, rawUnit.y, rawUnit.z),
-                        UnitTraitsString = rawUnit.traits
-                    };
-
-                    rememberedUnit.UnitTraits = JsonConvert.DeserializeObject<List<UnitTrait>>(rememberedUnit.UnitTraitsString);
-                    unitToReturn = rememberedUnit;
-                }
-                catch
-                {
-                    AmeisenLogger.Instance.Log(LogLevel.ERROR, $"Error checking for RememberedUnit: unitName: {unitname}, zoneId: {zoneID}, mapId: {mapID}", this);
-                    unitToReturn = null;
-                }
-                finally { sqlConnection.Close(); }
-                return unitToReturn;
-            }
-            return null;
-        }
+        private AmeisenDataHolder AmeisenDataHolder { get; set; }
+        private string MysqlConnectionString { get; set; }
     }
 }

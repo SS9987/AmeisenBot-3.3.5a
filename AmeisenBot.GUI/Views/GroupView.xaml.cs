@@ -1,6 +1,5 @@
 ﻿using AmeisenBotUtilities;
 using System.Windows.Controls;
-using System.Windows.Media;
 
 namespace AmeisenBotGUI
 {

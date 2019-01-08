@@ -15,16 +15,6 @@ namespace AmeisenBotFSM.BotStuff
 {
     public class BotStuffRepairEquip : ActionMoving
     {
-        private const int MAMMOTH_SPELL = 61425;
-
-        private AmeisenDataHolder AmeisenDataHolder { get; set; }
-        private AmeisenDBManager AmeisenDBManager { get; set; }
-        private AmeisenCharacterManager AmeisenCharacterManager { get; set; }
-        public bool IGotTheDamnMammoth => AmeisenCore.IsSpellKnown(MAMMOTH_SPELL);
-
-        private Me Me => AmeisenDataHolder.Me;
-        private Unit Target => AmeisenDataHolder.Target;
-        
         public BotStuffRepairEquip(
             AmeisenDataHolder ameisenDataHolder,
             AmeisenDBManager ameisenDBManager,
@@ -37,6 +27,10 @@ namespace AmeisenBotFSM.BotStuff
             AmeisenCharacterManager = ameisenCharacterManager;
         }
 
+        public bool IGotTheDamnMammoth => AmeisenCore.IsSpellKnown(MAMMOTH_SPELL);
+        private Me Me => AmeisenDataHolder.Me;
+        private Unit Target => AmeisenDataHolder.Target;
+
         public override void DoThings()
         {
             if (WaypointQueue.Count > 0)
@@ -48,6 +42,12 @@ namespace AmeisenBotFSM.BotStuff
                 FindClosestRepairNpc();
             }
         }
+
+        private const int MAMMOTH_SPELL = 61425;
+
+        private AmeisenCharacterManager AmeisenCharacterManager { get; set; }
+        private AmeisenDataHolder AmeisenDataHolder { get; set; }
+        private AmeisenDBManager AmeisenDBManager { get; set; }
 
         private void FindClosestRepairNpc()
         {

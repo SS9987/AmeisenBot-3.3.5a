@@ -7,21 +7,21 @@ namespace AmeisenBotUtilities
 {
     public class Me : Player
     {
-        public UnitState CurrentState { get; set; }
-        public int Exp { get; set; }
-        public int MaxExp { get; set; }
-        public WowRace Race { get; set; }
-        public WowClass Class { get; set; }
-        public ulong PartyleaderGuid { get; set; }
-        public List<ulong> PartymemberGuids { get; set; }
-        public uint PlayerBase { get; set; }
-        public ulong PetGuid { get; set; }
-        public int AreaId { get; set; }
-
         public Me(uint baseAddress, BlackMagic blackMagic) : base(baseAddress, blackMagic)
         {
             Update();
         }
+
+        public int AreaId { get; set; }
+        public WowClass Class { get; set; }
+        public UnitState CurrentState { get; set; }
+        public int Exp { get; set; }
+        public int MaxExp { get; set; }
+        public ulong PartyleaderGuid { get; set; }
+        public List<ulong> PartymemberGuids { get; set; }
+        public ulong PetGuid { get; set; }
+        public uint PlayerBase { get; set; }
+        public WowRace Race { get; set; }
 
         public override string ToString()
         {
@@ -37,8 +37,8 @@ namespace AmeisenBotUtilities
             sb.Append($" >> PosZ: {pos.Z}");
             sb.Append($" >> Rotation: {Rotation}");
             sb.Append($" >> Distance: {Distance}");
-            sb.Append($" >> MapID: {MapID}");
-            sb.Append($" >> ZoneID: {ZoneID}");
+            sb.Append($" >> MapID: {MapId}");
+            sb.Append($" >> ZoneID: {ZoneId}");
 
             if (TargetGuid != 0)
             {

@@ -6,15 +6,6 @@ namespace AmeisenBotUtilities
     public class WowObject
     {
         public Vector3 pos;
-        public uint BaseAddress { get; set; }
-        public BlackMagic BlackMagicInstance { get; set; }
-        public uint Descriptor { get; set; }
-        public double Distance { get; set; }
-        public ulong Guid { get; set; }
-        public int MapID { get; set; }
-        public string Name { get; set; }
-        public float Rotation { get; set; }
-        public int ZoneID { get; set; }
 
         public WowObject(uint baseAddress, BlackMagic blackMagic)
         {
@@ -28,6 +19,16 @@ namespace AmeisenBotUtilities
             }
             catch { }
         }
+
+        public uint BaseAddress { get; set; }
+        public BlackMagic BlackMagicInstance { get; set; }
+        public uint Descriptor { get; set; }
+        public double Distance { get; set; }
+        public ulong Guid { get; set; }
+        public int MapId { get; set; }
+        public string Name { get; set; }
+        public float Rotation { get; set; }
+        public int ZoneId { get; set; }
 
         public override string ToString()
         {
@@ -43,8 +44,8 @@ namespace AmeisenBotUtilities
             sb.Append($" >> PosZ: {pos.Z}");
             sb.Append($" >> Rotation: {Rotation}");
             sb.Append($" >> Distance: {Distance}");
-            sb.Append($" >> MapID: {MapID}");
-            sb.Append($" >> ZoneID: {ZoneID}");
+            sb.Append($" >> MapID: {MapId}");
+            sb.Append($" >> ZoneID: {ZoneId}");
 
             return sb.ToString();
         }

@@ -9,20 +9,6 @@ namespace AmeisenBotCombat.SpellStrategies
 {
     public class WarlockAffliction : ICombatClass
     {
-        private List<Spell> Spells { get; set; }
-
-        private bool IsFelArmorKnown { get; set; }
-        private bool IsDemonArmorKnown { get; set; }
-        private bool IsDemonSkinKnown { get; set; }
-        private bool IsShadowBoltKnown { get; set; }
-        private bool IsDrainSoulKnown { get; set; }
-        private bool IsHauntKnown { get; set; }
-        private bool IsUnstableAfflictionKnown { get; set; }
-        private bool IsCorruptionKnown { get; set; }
-        private bool IsLifeTapKnown { get; set; }
-        private bool IsFearKnown { get; set; }
-        private bool IsCurseOfAgonyKnown { get; set; }
-
         public WarlockAffliction(List<Spell> spells)
         {
             Spells = spells;
@@ -39,8 +25,6 @@ namespace AmeisenBotCombat.SpellStrategies
             IsFearKnown = Spells.Where(spell => spell.Name == "Fear").ToList().Count > 0;
             IsCurseOfAgonyKnown = Spells.Where(spell => spell.Name == "Curse of Agony").ToList().Count > 0;
         }
-
-        public void Startup(Me me, Unit target, Unit pet) { }
 
         public Spell DoRoutine(Me me, Unit target, Unit pet)
         {
@@ -154,6 +138,23 @@ namespace AmeisenBotCombat.SpellStrategies
             return null;
         }
 
+        public void Startup(Me me, Unit target, Unit pet)
+        {
+        }
+
+        private bool IsCorruptionKnown { get; set; }
+        private bool IsCurseOfAgonyKnown { get; set; }
+        private bool IsDemonArmorKnown { get; set; }
+        private bool IsDemonSkinKnown { get; set; }
+        private bool IsDrainSoulKnown { get; set; }
+        private bool IsFearKnown { get; set; }
+        private bool IsFelArmorKnown { get; set; }
+        private bool IsHauntKnown { get; set; }
+        private bool IsLifeTapKnown { get; set; }
+        private bool IsShadowBoltKnown { get; set; }
+        private bool IsUnstableAfflictionKnown { get; set; }
+        private List<Spell> Spells { get; set; }
+
         private Spell TryUseSpell(string spellname, Me me)
         {
             Spell spellToUse = Spells.Where(spell => spell.Name == spellname).FirstOrDefault();
@@ -167,6 +168,5 @@ namespace AmeisenBotCombat.SpellStrategies
             }
             return null;
         }
-
     }
 }

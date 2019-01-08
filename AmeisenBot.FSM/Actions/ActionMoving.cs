@@ -6,9 +6,6 @@ using AmeisenBotFSM.Interfaces;
 using AmeisenBotLogger;
 using AmeisenBotUtilities;
 using AmeisenBotUtilities.Structs;
-using AmeisenPathCore;
-using AmeisenPathCore.Objects;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -18,25 +15,6 @@ namespace AmeisenBotFSM.Actions
 {
     public class ActionMoving : IAction
     {
-        public virtual Start StartAction { get { return Start; } }
-        public virtual DoThings StartDoThings { get { return DoThings; } }
-        public virtual Exit StartExit { get { return Stop; } }
-        public Queue<Vector3> WaypointQueue { get; set; }
-        private AmeisenDataHolder AmeisenDataHolder { get; set; }
-        private AmeisenDBManager AmeisenDBManager { get; set; }
-        private AmeisenNavmeshClient AmeisenNavmeshClient { get; set; }
-        private Vector3 LastPosition { get; set; }
-        private double MovedSinceLastTick { get; set; }
-        public Vector3 LastEnqued { get; internal set; }
-
-        private int movementDistance = 3;
-
-        private Me Me
-        {
-            get { return AmeisenDataHolder.Me; }
-            set { AmeisenDataHolder.Me = value; }
-        }
-
         public ActionMoving(AmeisenDataHolder ameisenDataHolder, AmeisenDBManager ameisenDBManager, AmeisenNavmeshClient ameisenNavmeshClient)
         {
             AmeisenDataHolder = ameisenDataHolder;
@@ -46,6 +24,12 @@ namespace AmeisenBotFSM.Actions
             WaypointQueue = new Queue<Vector3>();
             LastPosition = new Vector3(int.MaxValue, int.MaxValue, int.MaxValue);
         }
+
+        public Vector3 LastEnqued { get; internal set; }
+        public virtual Start StartAction { get { return Start; } }
+        public virtual DoThings StartDoThings { get { return DoThings; } }
+        public virtual Exit StartExit { get { return Stop; } }
+        public Queue<Vector3> WaypointQueue { get; set; }
 
         public virtual void DoThings()
         {
@@ -79,6 +63,26 @@ namespace AmeisenBotFSM.Actions
         public virtual void Stop()
         {
         }
+
+        public List<Vector3> UsePathfinding(Vector3 initialPosition, Vector3 targetPosition)
+        {
+            Me.Update();
+            return AmeisenNavmeshClient.RequestPath(new PathRequest(initialPosition, targetPosition, Me.MapId));
+        }
+
+        private int movementDistance = 3;
+        private AmeisenDataHolder AmeisenDataHolder { get; set; }
+        private AmeisenDBManager AmeisenDBManager { get; set; }
+        private AmeisenNavmeshClient AmeisenNavmeshClient { get; set; }
+        private Vector3 LastPosition { get; set; }
+
+        private Me Me
+        {
+            get { return AmeisenDataHolder.Me; }
+            set { AmeisenDataHolder.Me = value; }
+        }
+
+        private double MovedSinceLastTick { get; set; }
 
         /// <summary>
         /// Very basic Obstacle avoidance.
@@ -135,7 +139,7 @@ namespace AmeisenBotFSM.Actions
                     {
                         navmeshPath = UsePathfinding(Me.pos, targetPosition);
 
-                        if(navmeshPath == null || navmeshPath.Count == 0)
+                        if (navmeshPath == null || navmeshPath.Count == 0)
                         {
                             Thread.Sleep(1000);
                             return;
@@ -187,12 +191,6 @@ namespace AmeisenBotFSM.Actions
                 }
             }
             else { }
-        }
-
-        public List<Vector3> UsePathfinding(Vector3 initialPosition, Vector3 targetPosition)
-        {
-            Me.Update();
-            return AmeisenNavmeshClient.RequestPath(new PathRequest(initialPosition, targetPosition, Me.MapID));
         }
     }
 }

@@ -9,14 +9,6 @@ namespace AmeisenBotFSM.Actions
 {
     public class ActionLoot : ActionMoving
     {
-        private AmeisenDataHolder AmeisenDataHolder { get; set; }
-
-        private Me Me
-        {
-            get { return AmeisenDataHolder.Me; }
-            set { AmeisenDataHolder.Me = value; }
-        }
-
         public ActionLoot(
             AmeisenDataHolder ameisenDataHolder,
             AmeisenDBManager ameisenDBManager,
@@ -50,6 +42,14 @@ namespace AmeisenBotFSM.Actions
                 // We should have looted it by now based on the event
                 AmeisenDataHolder.LootableUnits.Dequeue();
             }
+        }
+
+        private AmeisenDataHolder AmeisenDataHolder { get; set; }
+
+        private Me Me
+        {
+            get { return AmeisenDataHolder.Me; }
+            set { AmeisenDataHolder.Me = value; }
         }
     }
 }

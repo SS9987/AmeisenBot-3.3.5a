@@ -10,24 +10,6 @@ namespace AmeisenBotUtilities
 {
     public static class Utils
     {
-        public static string FloatToHex32(float input)
-        {
-            StringBuilder result = new StringBuilder();
-            byte[] bytes = BitConverter.GetBytes(input);
-
-            if (BitConverter.IsLittleEndian)
-            {
-                Array.Reverse(bytes);
-            }
-
-            for (int i = 0; i < bytes.Length; i++)
-            {
-                result.Append(bytes[i].ToString("X2"));
-            }
-
-            return result.ToString();
-        }
-
         /// <summary>
         /// Decode base64 image to BitmapImage
         /// </summary>
@@ -92,13 +74,23 @@ namespace AmeisenBotUtilities
             }
         }
 
-        /// <summary>
-        /// Tries to parse an int, if it fails returns -1
-        /// </summary>
-        /// <param name="intToParse">int to try parse</param>
-        /// <returns>parsed int or -1 if it failed</returns>
-        public static int TryParseInt(string intToParse)
-            => int.TryParse(intToParse, out int value) ? value : -1;
+        public static string FloatToHex32(float input)
+        {
+            StringBuilder result = new StringBuilder();
+            byte[] bytes = BitConverter.GetBytes(input);
+
+            if (BitConverter.IsLittleEndian)
+            {
+                Array.Reverse(bytes);
+            }
+
+            for (int i = 0; i < bytes.Length; i++)
+            {
+                result.Append(bytes[i].ToString("X2"));
+            }
+
+            return result.ToString();
+        }
 
         /// <summary>
         /// Generate a random string with the given size out of the given chars
@@ -128,6 +120,68 @@ namespace AmeisenBotUtilities
             => Math.Sqrt((a.X - b.X) * (a.X - b.X) +
                          (a.Y - b.Y) * (a.Y - b.Y) +
                          (a.Z - b.Z) * (a.Z - b.Z));
+
+        public static float GetFacingAngle(Vector3 myPosition, float myRotation, Vector3 targetPosition)
+        {
+            float angle = (float)Math.Atan2(targetPosition.Y - myPosition.Y, targetPosition.X - myPosition.X);
+
+            if (angle < 0.0f)
+            {
+                angle = angle + (float)Math.PI * 2.0f;
+            }
+            else if (angle > (float)Math.PI * 2)
+            {
+                angle = angle - (float)Math.PI * 2.0f;
+            }
+
+            return angle;
+        }
+
+        /// <summary>
+        /// Compress bytes using GZip
+        /// </summary>
+        /// <param name="bytesToCompress">byte[] to compress using GZip</param>
+        /// <returns>GZip-Compressed byte[]</returns>
+        public static byte[] GZipCompressBytes(byte[] rawInput)
+        {
+            using (MemoryStream memory = new MemoryStream())
+            {
+                using (GZipStream gzip = new GZipStream(memory,
+                    CompressionMode.Compress, true))
+                {
+                    gzip.Write(rawInput, 0, rawInput.Length);
+                }
+                return memory.ToArray();
+            }
+        }
+
+        /// <summary>
+        /// Decompress a GZip-Compressed byte[]
+        /// </summary>
+        /// <param name="compressedBytes">GZip-Compressed byte[]</param>
+        /// <returns>Decompressed byte[]</returns>
+        public static byte[] GZipDecompressBytes(byte[] compressedInput)
+        {
+            using (GZipStream stream = new GZipStream(new MemoryStream(compressedInput), CompressionMode.Decompress))
+            {
+                const int size = 4096;
+                byte[] buffer = new byte[size];
+                using (MemoryStream memory = new MemoryStream())
+                {
+                    int count = 0;
+                    do
+                    {
+                        count = stream.Read(buffer, 0, size);
+                        if (count > 0)
+                        {
+                            memory.Write(buffer, 0, count);
+                        }
+                    }
+                    while (count > 0);
+                    return memory.ToArray();
+                }
+            }
+        }
 
         /// <summary>
         /// Convert an image to byte[]
@@ -195,66 +249,12 @@ namespace AmeisenBotUtilities
             return (f >= (myRotation * minRotation)) && (f <= (myRotation * maxRotation)) ? true : false;
         }
 
-        public static float GetFacingAngle(Vector3 myPosition, float myRotation, Vector3 targetPosition)
-        {
-            float angle = (float)Math.Atan2(targetPosition.Y - myPosition.Y, targetPosition.X - myPosition.X);
-
-            if (angle < 0.0f)
-            {
-                angle = angle + (float)Math.PI * 2.0f;
-            }
-            else if (angle > (float)Math.PI * 2)
-            {
-                angle = angle - (float)Math.PI * 2.0f;
-            }
-
-            return angle;
-        }
-
         /// <summary>
-        /// Compress bytes using GZip
+        /// Tries to parse an int, if it fails returns -1
         /// </summary>
-        /// <param name="bytesToCompress">byte[] to compress using GZip</param>
-        /// <returns>GZip-Compressed byte[]</returns>
-        public static byte[] GZipCompressBytes(byte[] rawInput)
-        {
-            using (MemoryStream memory = new MemoryStream())
-            {
-                using (GZipStream gzip = new GZipStream(memory,
-                    CompressionMode.Compress, true))
-                {
-                    gzip.Write(rawInput, 0, rawInput.Length);
-                }
-                return memory.ToArray();
-            }
-        }
-
-        /// <summary>
-        /// Decompress a GZip-Compressed byte[]
-        /// </summary>
-        /// <param name="compressedBytes">GZip-Compressed byte[]</param>
-        /// <returns>Decompressed byte[]</returns>
-        public static byte[] GZipDecompressBytes(byte[] compressedInput)
-        {
-            using (GZipStream stream = new GZipStream(new MemoryStream(compressedInput), CompressionMode.Decompress))
-            {
-                const int size = 4096;
-                byte[] buffer = new byte[size];
-                using (MemoryStream memory = new MemoryStream())
-                {
-                    int count = 0;
-                    do
-                    {
-                        count = stream.Read(buffer, 0, size);
-                        if (count > 0)
-                        {
-                            memory.Write(buffer, 0, count);
-                        }
-                    }
-                    while (count > 0);
-                    return memory.ToArray();
-                }
-            }
-        }
+        /// <param name="intToParse">int to try parse</param>
+        /// <returns>parsed int or -1 if it failed</returns>
+        public static int TryParseInt(string intToParse)
+            => int.TryParse(intToParse, out int value) ? value : -1;
     }
 }

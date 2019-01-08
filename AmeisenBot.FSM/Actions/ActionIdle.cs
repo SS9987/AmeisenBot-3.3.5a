@@ -8,14 +8,6 @@ namespace AmeisenBotFSM.Actions
 {
     public class ActionIdle : IAction
     {
-        private string[] randomEmoteList;
-
-        public Start StartAction { get { return Start; } }
-        public DoThings StartDoThings { get { return DoThings; } }
-        public Exit StartExit { get { return Stop; } }
-        private long TickCountToExecuteRandomEmote { get; set; }
-        private AmeisenDataHolder AmeisenDataHolder { get; set; }
-
         public ActionIdle(AmeisenDataHolder ameisenDataHolder)
         {
             string[] loadedRandomEmoteList = ameisenDataHolder.Settings.randomEmoteList.Split(',');
@@ -33,6 +25,10 @@ namespace AmeisenBotFSM.Actions
             TickCountToExecuteRandomEmote = Environment.TickCount + new Random().Next(60000, 600000);
         }
 
+        public Start StartAction { get { return Start; } }
+        public DoThings StartDoThings { get { return DoThings; } }
+        public Exit StartExit { get { return Stop; } }
+
         public void DoThings()
         {
             if (AmeisenDataHolder.IsAllowedToDoRandomEmotes)
@@ -48,6 +44,10 @@ namespace AmeisenBotFSM.Actions
         public void Stop()
         {
         }
+
+        private string[] randomEmoteList;
+        private AmeisenDataHolder AmeisenDataHolder { get; set; }
+        private long TickCountToExecuteRandomEmote { get; set; }
 
         private void DoRandomEmote()
         {

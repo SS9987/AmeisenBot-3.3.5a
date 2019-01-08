@@ -9,25 +9,6 @@ namespace AmeisenBotCombat.SpellStrategies
 {
     public class WarriorFury : ICombatClass
     {
-        private List<Spell> Spells { get; set; }
-
-        private bool IsSlamKnown { get; set; }
-        private bool IsBloodthirstKnown { get; set; }
-        private bool IsWhirlwindKnown { get; set; }
-        private bool IsBerserkerRageKnown { get; set; }
-        private bool IsHeroicStrikeKnown { get; set; }
-        private bool IsHeroicThrowKnown { get; set; }
-        private bool IsExecuteKnown { get; set; }
-        private bool IsRecklessnessKnown { get; set; }
-        private bool IsDeathWishKnown { get; set; }
-        private bool IsEnragedRegenerationKnown { get; set; }
-        private bool IsInterceptKnown { get; set; }
-        private bool IsHamstringKnown { get; set; }
-        private bool IsBattleShoutKnown { get; set; }
-        private bool IsBerserkerStanceKnown { get; set; }
-
-        private bool IsInMainCombo { get; set; }
-
         public WarriorFury(List<Spell> spells)
         {
             Spells = spells;
@@ -49,8 +30,6 @@ namespace AmeisenBotCombat.SpellStrategies
 
             IsInMainCombo = false;
         }
-
-        public void Startup(Me me, Unit target, Unit pet) { }
 
         public Spell DoRoutine(Me me, Unit target, Unit pet)
         {
@@ -100,7 +79,8 @@ namespace AmeisenBotCombat.SpellStrategies
                     else if (IsBloodthirstKnown) { spellToUse = TryUseSpell("Bloodthirst", me); }
 
                     return spellToUse;
-                } else if (!IsBerserkerStanceKnown)
+                }
+                else if (!IsBerserkerStanceKnown)
                 {
                     IsInMainCombo = false;
                 }
@@ -181,6 +161,27 @@ namespace AmeisenBotCombat.SpellStrategies
             }
             return null;
         }
+
+        public void Startup(Me me, Unit target, Unit pet)
+        {
+        }
+
+        private bool IsBattleShoutKnown { get; set; }
+        private bool IsBerserkerRageKnown { get; set; }
+        private bool IsBerserkerStanceKnown { get; set; }
+        private bool IsBloodthirstKnown { get; set; }
+        private bool IsDeathWishKnown { get; set; }
+        private bool IsEnragedRegenerationKnown { get; set; }
+        private bool IsExecuteKnown { get; set; }
+        private bool IsHamstringKnown { get; set; }
+        private bool IsHeroicStrikeKnown { get; set; }
+        private bool IsHeroicThrowKnown { get; set; }
+        private bool IsInMainCombo { get; set; }
+        private bool IsInterceptKnown { get; set; }
+        private bool IsRecklessnessKnown { get; set; }
+        private bool IsSlamKnown { get; set; }
+        private bool IsWhirlwindKnown { get; set; }
+        private List<Spell> Spells { get; set; }
 
         private Spell TryUseSpell(string spellname, Me me)
         {

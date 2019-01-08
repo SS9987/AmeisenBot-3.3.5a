@@ -2,7 +2,6 @@
 using AmeisenBotCore;
 using AmeisenBotData;
 using AmeisenBotDB;
-using AmeisenBotLogger;
 using AmeisenBotUtilities;
 using System;
 using System.Collections.Generic;
@@ -13,37 +12,6 @@ namespace AmeisenBotManager
 {
     public class AmeisenObjectManager : IDisposable
     {
-        private Thread objectUpdateThread;
-        private System.Timers.Timer objectUpdateTimer;
-        private System.Timers.Timer nodeDBUpdateTimer;
-        private DateTime timestampObjects;
-        private AmeisenDataHolder AmeisenDataHolder { get; set; }
-        private AmeisenDBManager AmeisenDBManager { get; set; }
-
-        private List<WowObject> ActiveWoWObjects
-        {
-            get { return AmeisenDataHolder.ActiveWoWObjects; }
-            set { AmeisenDataHolder.ActiveWoWObjects = value; }
-        }
-
-        private Me Me
-        {
-            get { return AmeisenDataHolder.Me; }
-            set { AmeisenDataHolder.Me = value; }
-        }
-
-        private Unit Target
-        {
-            get { return AmeisenDataHolder.Target; }
-            set { AmeisenDataHolder.Target = value; }
-        }
-
-        private Unit Pet
-        {
-            get { return AmeisenDataHolder.Pet; }
-            set { AmeisenDataHolder.Pet = value; }
-        }
-
         public AmeisenObjectManager(AmeisenDataHolder ameisenDataHolder, AmeisenDBManager ameisenDBManager)
         {
             AmeisenDataHolder = ameisenDataHolder;
@@ -52,23 +20,10 @@ namespace AmeisenBotManager
             AmeisenDataHolder.Partymembers = CombatUtils.GetPartymembers(Me, ActiveWoWObjects);
         }
 
-        /// <summary>
-        /// Get our WoWObjects in the memory
-        /// </summary>
-        /// <returns>WoWObjects in the memory</returns>
-        public List<WowObject> GetObjects()
+        public void Dispose()
         {
-            AmeisenLogger.Instance.Log(LogLevel.VERBOSE, "Getting Objects", this);
-
-            if (ActiveWoWObjects == null)
-            {
-                RefreshObjectsAsync();
-            }
-
-            // need to do this only for specific objects, saving cpu usage
-            //if (needToRefresh)
-            //RefreshObjectsAsync();
-            return ActiveWoWObjects;
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         /// <summary>
@@ -94,16 +49,7 @@ namespace AmeisenBotManager
         /// </summary>
         public void Start()
         {
-            ActiveWoWObjects = AmeisenCore.GetAllWoWObjects();
-
-            foreach (WowObject t in ActiveWoWObjects)
-            {
-                if (t.GetType() == typeof(Me))
-                {
-                    Me = (Me)t;
-                    break;
-                }
-            }
+            RefreshObjects();
 
             // Timer to update the objects from memory
             objectUpdateTimer = new System.Timers.Timer(AmeisenDataHolder.Settings.dataRefreshRate);
@@ -121,19 +67,42 @@ namespace AmeisenBotManager
             objectUpdateThread.Join();
         }
 
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
         protected virtual void Dispose(bool disposing)
         {
             if (disposing)
             {
                 ((IDisposable)objectUpdateTimer).Dispose();
-                ((IDisposable)nodeDBUpdateTimer).Dispose();
             }
+        }
+
+        private Thread objectUpdateThread;
+        private System.Timers.Timer objectUpdateTimer;
+
+        private List<WowObject> ActiveWoWObjects
+        {
+            get { return AmeisenDataHolder.ActiveWoWObjects; }
+            set { AmeisenDataHolder.ActiveWoWObjects = value; }
+        }
+
+        private AmeisenDataHolder AmeisenDataHolder { get; set; }
+        private AmeisenDBManager AmeisenDBManager { get; set; }
+
+        private Me Me
+        {
+            get { return AmeisenDataHolder.Me; }
+            set { AmeisenDataHolder.Me = value; }
+        }
+
+        private Unit Pet
+        {
+            get { return AmeisenDataHolder.Pet; }
+            set { AmeisenDataHolder.Pet = value; }
+        }
+
+        private Unit Target
+        {
+            get { return AmeisenDataHolder.Target; }
+            set { AmeisenDataHolder.Target = value; }
         }
 
         private void AntiAFK() => AmeisenCore.AntiAFK();
@@ -148,19 +117,20 @@ namespace AmeisenBotManager
 
             foreach (WowObject t in ActiveWoWObjects)
             {
-                if (t == null && t.Guid == 0)
-                {
-                    t.Update();
-                }
+                // update objects that are new
+                if (t == null && t.Guid == 0) { t.Update(); }
 
+                // Get the Me object
                 if (t.GetType() == typeof(Me))
                 {
                     t.Update();
                     Me = (Me)t;
-                    Me.MapID = AmeisenCore.GetMapId();
+                    Me.ZoneId = AmeisenCore.GetZoneId();
+                    Me.MapId = AmeisenCore.GetMapId();
                     continue;
                 }
 
+                // Get our Pet object
                 if (Me != null && t.Guid == Me.PetGuid)
                 {
                     t.Update();
@@ -169,10 +139,17 @@ namespace AmeisenBotManager
                     continue;
                 }
 
+                // Get our Target object
                 if (Me != null && t.Guid == Me.TargetGuid)
                 {
                     t.Update();
-                    if (t.GetType() == typeof(Player))
+
+                    if (t.GetType() == typeof(Me))
+                    {
+                        Target = (Me)t;
+                        continue;
+                    }
+                    else if (t.GetType() == typeof(Player))
                     {
                         t.Distance = Utils.GetDistance(Me.pos, t.pos);
                         Target = (Player)t;
@@ -184,17 +161,14 @@ namespace AmeisenBotManager
                         Target = (Unit)t;
                         continue;
                     }
-                    else if (t.GetType() == typeof(Me))
-                    {
-                        Target = (Me)t;
-                        continue;
-                    }
                 }
             }
 
             // Get Partymembers
-            //AmeisenDataHolder.Partymembers = CombatUtils.GetPartymembers(Me, ActiveWoWObjects);
+            // will be mainly handled by an event but should get refreshed once in a while
+            // AmeisenDataHolder.Partymembers = CombatUtils.GetPartymembers(Me, ActiveWoWObjects);
 
+            // Update Partymembers
             if (AmeisenDataHolder.Partymembers != null)
             {
                 foreach (Unit unit in AmeisenDataHolder.Partymembers)
@@ -205,28 +179,9 @@ namespace AmeisenBotManager
                     }
                 }
             }
-            
 
             // Best place for this :^)
             AntiAFK();
-        }
-
-        /// <summary>
-        /// Refresh our bot's objectlist, you can get the stats by calling GetObjects().
-        ///
-        /// This runs Async.
-        /// </summary>
-        private void RefreshObjectsAsync()
-        {
-            if (AmeisenCore.IsInLoadingScreen())
-            {
-                return;
-            }
-
-            AmeisenLogger.Instance.Log(LogLevel.DEBUG, "Refreshing Objects Async", this);
-            timestampObjects = DateTime.Now;
-
-            new Thread(new ThreadStart(RefreshObjects)).Start();
         }
 
         private void StartTimer() => objectUpdateTimer.Start();

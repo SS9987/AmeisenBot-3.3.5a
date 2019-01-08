@@ -33,10 +33,6 @@ namespace AmeisenBotFSM
     /// </summary>
     public class AmeisenStateMachine
     {
-        private Dictionary<BotState, IAction> StateActionMap { get; set; }
-        private Stack<BotState> StateStack { get; set; }
-        public List<IAction> BotStuffList { get; private set; }
-
         public AmeisenStateMachine(
             AmeisenDataHolder ameisenDataHolder,
             AmeisenDBManager ameisenDBManager,
@@ -62,18 +58,20 @@ namespace AmeisenBotFSM
             };
         }
 
-        public void LoadNewCombatClass(
-            AmeisenDataHolder ameisenDataHolder,
-            IAmeisenCombatPackage combatPackage,
-            AmeisenDBManager ameisenDBManager,
-            AmeisenNavmeshClient ameisenNavmeshClient)
-            => StateActionMap[BotState.Combat] = new ActionCombat(ameisenDataHolder, combatPackage, ameisenDBManager, ameisenNavmeshClient);
+        public List<IAction> BotStuffList { get; private set; }
 
         /// <summary>
         /// Returns our current BotState to see what the bot is doing right now
         /// </summary>
         /// <returns>current BotState</returns>
         public BotState GetCurrentState() => StateStack.Count > 0 ? StateStack.Peek() : BotState.None;
+
+        public void LoadNewCombatClass(
+            AmeisenDataHolder ameisenDataHolder,
+            IAmeisenCombatPackage combatPackage,
+            AmeisenDBManager ameisenDBManager,
+            AmeisenNavmeshClient ameisenNavmeshClient)
+            => StateActionMap[BotState.Combat] = new ActionCombat(ameisenDataHolder, combatPackage, ameisenDBManager, ameisenNavmeshClient);
 
         /// <summary>
         /// Pop the state Stack of the bot, calls the Start() of new State and the Stop() of current State.
@@ -112,7 +110,10 @@ namespace AmeisenBotFSM
         /// Call this to Update the Statemachine and execute actions
         /// </summary>
         public void Update() => GetCurrentStateAction(GetCurrentState())?.StartDoThings.Invoke();
-        
+
+        private Dictionary<BotState, IAction> StateActionMap { get; set; }
+        private Stack<BotState> StateStack { get; set; }
+
         /// <summary>
         /// Map the BotState to an IAction containing Start(), DoThings() and Stop()
         /// </summary>

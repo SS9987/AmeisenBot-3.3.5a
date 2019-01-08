@@ -5,8 +5,6 @@ namespace AmeisenBotUtilities
 {
     public class Corpse : WowObject
     {
-        private ulong Owner { get; set; }
-
         public Corpse(uint baseAddress, BlackMagic blackMagic) : base(baseAddress, blackMagic)
         {
         }
@@ -24,8 +22,8 @@ namespace AmeisenBotUtilities
             sb.Append($" >> PosZ: {pos.Z}");
             sb.Append($" >> Rotation: {Rotation}");
             sb.Append($" >> Distance: {Distance}");
-            sb.Append($" >> MapID: {MapID}");
-            sb.Append($" >> ZoneID: {ZoneID}");
+            sb.Append($" >> MapID: {MapId}");
+            sb.Append($" >> ZoneID: {ZoneId}");
 
             return sb.ToString();
         }
@@ -44,5 +42,7 @@ namespace AmeisenBotUtilities
             }
             catch { }
         }
+
+        private ulong Owner { get; set; }
     }
 }

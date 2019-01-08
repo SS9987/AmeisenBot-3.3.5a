@@ -9,14 +9,6 @@ namespace AmeisenBotCombat.SpellStrategies
 {
     public class RogueCombat : ICombatClass
     {
-        private List<Spell> Spells { get; set; }
-
-        private bool IsSinisterStrikeKnown { get; set; }
-        private bool IsKickKnown { get; set; }
-        private bool IsSliceAndDiceKnown { get; set; }
-        private bool IsRuptureKnown { get;  set; }
-        private bool IsEviscerateKnown { get;  set; }
-
         public RogueCombat(List<Spell> spells)
         {
             Spells = spells;
@@ -28,8 +20,6 @@ namespace AmeisenBotCombat.SpellStrategies
             IsEviscerateKnown = Spells.Where(spell => spell.Name == "Eviscerate").ToList().Count > 0;
         }
 
-        public void Startup(Me me, Unit target, Unit pet) { }
-
         public Spell DoRoutine(Me me, Unit target, Unit pet)
         {
             List<string> myAuras = AmeisenCore.GetAuras(LuaUnit.player);
@@ -37,7 +27,7 @@ namespace AmeisenBotCombat.SpellStrategies
 
             Spell spellToUse = null;
             double targetDistance = Utils.GetDistance(me.pos, target.pos);
-            
+
             // main spell rotation
             if (targetDistance < 3.5)
             {
@@ -46,7 +36,7 @@ namespace AmeisenBotCombat.SpellStrategies
                     spellToUse = TryUseSpell("Kick", me);
                     if (spellToUse != null) { return spellToUse; }
                 }
-                
+
                 // use Sinister Strike
                 if (IsSinisterStrikeKnown)
                 {
@@ -79,6 +69,17 @@ namespace AmeisenBotCombat.SpellStrategies
             return null;
         }
 
+        public void Startup(Me me, Unit target, Unit pet)
+        {
+        }
+
+        private bool IsEviscerateKnown { get; set; }
+        private bool IsKickKnown { get; set; }
+        private bool IsRuptureKnown { get; set; }
+        private bool IsSinisterStrikeKnown { get; set; }
+        private bool IsSliceAndDiceKnown { get; set; }
+        private List<Spell> Spells { get; set; }
+
         private Spell TryUseSpell(string spellname, Me me)
         {
             Spell spellToUse = Spells.Where(spell => spell.Name == spellname).FirstOrDefault();
@@ -92,6 +93,5 @@ namespace AmeisenBotCombat.SpellStrategies
             }
             return null;
         }
-
     }
 }

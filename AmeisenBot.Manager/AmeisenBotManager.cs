@@ -39,40 +39,38 @@ namespace AmeisenBotManager
     /// </summary>
     public class BotManager
     {
-        private readonly string sqlConnectionString =
-                "server={0};port={1};database={2};uid={3};password={4};";
+        /// <summary>
+        /// Create a new AmeisenBotManager to manage the bot's functionality
+        /// </summary>
+        public BotManager()
+        {
+            IsBlackmagicAttached = false;
+            IsEndsceneHooked = false;
 
-        public AmeisenDBManager AmeisenDBManager { get; private set; }
+            AmeisenDataHolder = new AmeisenDataHolder();
+            AmeisenSettings = new AmeisenSettings(AmeisenDataHolder);
+            AmeisenClient = new AmeisenClient(AmeisenDataHolder);
+            AmeisenDBManager = new AmeisenDBManager(AmeisenDataHolder);
+        }
+
         public List<WowObject> ActiveWoWObjects { get { return AmeisenDataHolder.ActiveWoWObjects; } }
 
-        public List<Unit> Partymembers
-        {
-            get { return AmeisenDataHolder.Partymembers; }
-            set { AmeisenDataHolder.Partymembers = value; }
-        }
+        public AmeisenDBManager AmeisenDBManager { get; private set; }
+
+        public MeCharacter Character => AmeisenCharacterManager.Character;
+
+        public IAmeisenCombatPackage CombatPackage { get; private set; }
+
+        public string CurrentCombatClassName => CombatPackage.SpellStrategy == null ? "n/a" : CombatPackage.SpellStrategy.ToString().Split('.').Last();
+
+        public BotState CurrentFSMState => AmeisenStateMachineManager.StateMachine.GetCurrentState();
+
+        public int HookJobsInQueue => AmeisenHook.JobCount;
 
         public bool IsAllowedToAssistParty
         {
             get { return AmeisenDataHolder.IsAllowedToAssistParty; }
             set { AmeisenDataHolder.IsAllowedToAssistParty = value; }
-        }
-
-        public bool IsAllowedToDoRandomEmotes
-        {
-            get { return AmeisenDataHolder.IsAllowedToDoRandomEmotes; }
-            set { AmeisenDataHolder.IsAllowedToDoRandomEmotes = value; }
-        }
-
-        public bool IsSpecA
-        {
-            get { return AmeisenDataHolder.IsAllowedToAttack; }
-            set { AmeisenDataHolder.IsAllowedToAttack = value; }
-        }
-
-        public bool IsAllowedToDoOwnStuff
-        {
-            get { return AmeisenDataHolder.IsAllowedToDoOwnStuff; }
-            set { AmeisenDataHolder.IsAllowedToDoOwnStuff = value; }
         }
 
         public bool IsAllowedToBuff
@@ -81,22 +79,22 @@ namespace AmeisenBotManager
             set { AmeisenDataHolder.IsAllowedToBuff = value; }
         }
 
+        public bool IsAllowedToDoOwnStuff
+        {
+            get { return AmeisenDataHolder.IsAllowedToDoOwnStuff; }
+            set { AmeisenDataHolder.IsAllowedToDoOwnStuff = value; }
+        }
+
+        public bool IsAllowedToDoRandomEmotes
+        {
+            get { return AmeisenDataHolder.IsAllowedToDoRandomEmotes; }
+            set { AmeisenDataHolder.IsAllowedToDoRandomEmotes = value; }
+        }
+
         public bool IsAllowedToFollowParty
         {
             get { return AmeisenDataHolder.IsAllowedToFollowParty; }
             set { AmeisenDataHolder.IsAllowedToFollowParty = value; }
-        }
-
-        public bool IsSpecB
-        {
-            get { return AmeisenDataHolder.IsAllowedToHeal; }
-            set { AmeisenDataHolder.IsAllowedToHeal = value; }
-        }
-
-        public bool IsSpecC
-        {
-            get { return AmeisenDataHolder.IsAllowedToTank; }
-            set { AmeisenDataHolder.IsAllowedToTank = value; }
         }
 
         public bool IsAllowedToReleaseSpirit
@@ -111,6 +109,8 @@ namespace AmeisenBotManager
             set { AmeisenDataHolder.IsAllowedToRevive = value; }
         }
 
+        public bool IsBlackmagicAttached { get; private set; }
+
         public bool IsConnectedToDB
         {
             get { return AmeisenDataHolder.IsConnectedToDB; }
@@ -123,20 +123,40 @@ namespace AmeisenBotManager
             set { AmeisenDataHolder.IsConnectedToServer = value; }
         }
 
-        public bool IsBlackmagicAttached { get; private set; }
         public bool IsEndsceneHooked { get; private set; }
-        public Me Me { get { return AmeisenDataHolder.Me; } }
-        public List<WowExe> RunningWows { get { return AmeisenCore.GetRunningWows(); } }
-        public Settings Settings { get { return AmeisenSettings.Settings; } }
-        public Unit Target { get { return AmeisenDataHolder.Target; } }
-        public Unit Pet { get { return AmeisenDataHolder.Pet; } }
-        public WowExe WowExe { get; private set; }
-        public Process WowProcess { get; private set; }
-        public MeCharacter Character => AmeisenCharacterManager.Character;
-        public int MapID { get { return AmeisenCore.GetMapId(); } }
-        public int ZoneID { get { return AmeisenCore.GetZoneID(); } }
+
+        public bool IsIngame => AmeisenCore.IsWorldLoaded();
+
+        public bool IsLoadingScreenCheckerActive { get; private set; }
+
+        public bool IsRegisteredAtServer => AmeisenClient.IsRegistered;
+
+        public bool IsSpecA
+        {
+            get { return AmeisenDataHolder.IsAllowedToAttack; }
+            set { AmeisenDataHolder.IsAllowedToAttack = value; }
+        }
+
+        public bool IsSpecB
+        {
+            get { return AmeisenDataHolder.IsAllowedToHeal; }
+            set { AmeisenDataHolder.IsAllowedToHeal = value; }
+        }
+
+        public bool IsSpecC
+        {
+            get { return AmeisenDataHolder.IsAllowedToTank; }
+            set { AmeisenDataHolder.IsAllowedToTank = value; }
+        }
+
         public string LoadedConfigName { get { return AmeisenSettings.loadedconfName; } }
-        public int HookJobsInQueue => AmeisenHook.JobCount;
+
+        public Thread LoadingScreenCheckerThread { get; private set; }
+
+        public int MapID { get { return AmeisenCore.GetMapId(); } }
+
+        public Me Me { get { return AmeisenDataHolder.Me; } }
+
         /// <summary>
         /// Returns copper, silver, gold as an array
         /// </summary>
@@ -166,51 +186,40 @@ namespace AmeisenBotManager
             }
         }
 
-        public bool IsIngame
+        public List<Unit> Partymembers
         {
-            get
-            {
-                return AmeisenCore.IsWorldLoaded()
-                   && !AmeisenCore.IsInLoadingScreen(); // TODO: implement this
-            }
+            get { return AmeisenDataHolder.Partymembers; }
+            set { AmeisenDataHolder.Partymembers = value; }
         }
 
-        public bool IsRegisteredAtServer { get { return AmeisenClient.IsRegistered; } }
-        public BotState CurrentFSMState { get { return AmeisenStateMachineManager.StateMachine.GetCurrentState(); } }
-        private AmeisenDataHolder AmeisenDataHolder { get; set; }
-        private AmeisenClient AmeisenClient { get; set; }
-        private AmeisenNavmeshClient AmeisenNavmeshClient { get; set; }
-        private AmeisenHook AmeisenHook { get; set; }
-        private AmeisenObjectManager AmeisenObjectManager { get; set; }
-        private AmeisenSettings AmeisenSettings { get; set; }
-        private AmeisenStateMachineManager AmeisenStateMachineManager { get; set; }
-        private AmeisenMovementEngine AmeisenMovementEngine { get; set; }
-        private BlackMagic Blackmagic { get; set; }
-        private AmeisenEventHook AmeisenEventHook { get; set; }
-        private AmeisenCharacterManager AmeisenCharacterManager { get; set; }
-        public string CurrentCombatClassName => CombatPackage.SpellStrategy == null ? "n/a" : CombatPackage.SpellStrategy.ToString().Split('.').Last(); // only get the classname
-        private Queue<Unit> LootableUnits
-        {
-            get => AmeisenDataHolder.LootableUnits;
-            set => AmeisenDataHolder.LootableUnits = value;
-        }
-        public bool IsLoadingScreenCheckerActive { get; private set; }
-        public Thread LoadingScreenCheckerThread { get; private set; }
-        public IAmeisenCombatPackage CombatPackage { get; private set; }
+        public Unit Pet { get { return AmeisenDataHolder.Pet; } }
+
+        public List<WowExe> RunningWows { get { return AmeisenCore.GetRunningWows(); } }
+
+        public Settings Settings { get { return AmeisenSettings.Settings; } }
+
+        public Unit Target { get { return AmeisenDataHolder.Target; } }
+
+        public WowExe WowExe { get; private set; }
+
+        public Process WowProcess { get; private set; }
+
+        public int ZoneID { get { return AmeisenCore.GetZoneId(); } }
 
         /// <summary>
-        /// Create a new AmeisenBotManager to manage the bot's functionality
+        /// Check if we remember a Unit by its Name, ZoneID and MapID
         /// </summary>
-        public BotManager()
-        {
-            IsBlackmagicAttached = false;
-            IsEndsceneHooked = false;
+        /// <param name="name">name of the npc</param>
+        /// <param name="zoneID">zoneid of the npc</param>
+        /// <param name="mapID">mapid of the npc</param>
+        /// <returns>RememberedUnit with if we remember it, its UnitTraits and position</returns>
+        public RememberedUnit CheckForRememberedUnit(string name, int zoneID, int mapID)
+            => AmeisenDBManager.CheckForRememberedUnit(name, zoneID, mapID);
 
-            AmeisenDataHolder = new AmeisenDataHolder();
-            AmeisenSettings = new AmeisenSettings(AmeisenDataHolder);
-            AmeisenClient = new AmeisenClient(AmeisenDataHolder);
-            AmeisenDBManager = new AmeisenDBManager(AmeisenDataHolder);
-        }
+        /// <summary>
+        /// Equip all better items thats in the bots inventory
+        /// </summary>
+        public void EquipAllBetterItems() => AmeisenCharacterManager.EquipAllBetterItems();
 
         /// <summary>
         /// Load a given CombatClass *.cs file into the CombatManager by compiling it at runtime
@@ -229,6 +238,27 @@ namespace AmeisenBotManager
         /// </summary>
         /// <param name="filename">file to load the Settings from</param>
         public void LoadSettingsFromFile(string filename) => AmeisenSettings.LoadFromFile(filename);
+
+        /// <summary>
+        /// Reload the CombatClass if you changed the role or something alike
+        /// </summary>
+        public void RefreshCombatClass()
+        {
+            CombatPackage = LoadDefaultClassForSpec();
+            AmeisenStateMachineManager.UpdateCombatPackage(CombatPackage);
+        }
+
+        /// <summary>
+        /// Refresh the characters equipment & inventory
+        /// </summary>
+        public void RefreshCurrentItems() => AmeisenCharacterManager.UpdateCharacterAsync();
+
+        /// <summary>
+        /// Add a RememberedUnit to the RememberedUnits Database to remember its position and UnitTraits
+        /// </summary>
+        /// <param name="rememberedUnit">Unit that you want to remember</param>
+        public void RememberUnit(RememberedUnit rememberedUnit)
+            => AmeisenDBManager.RememberUnit(rememberedUnit);
 
         /// <summary>
         /// Save the current Settings to the given file
@@ -387,49 +417,172 @@ namespace AmeisenBotManager
             AmeisenDataHolder.IsInWorld = true;
         }
 
-        private void OnGroupChanged(long timestamp, List<string> args)
+        /// <summary>
+        /// Stops the bots mechanisms, hooks, ...
+        /// </summary>
+        public void StopBot()
         {
-            // Refresh Partymembers
-            AmeisenDataHolder.Partymembers = CombatUtils.GetPartymembers(Me, ActiveWoWObjects);
+            IsLoadingScreenCheckerActive = false;
+            LoadingScreenCheckerThread.Join();
+
+            // Disconnect from Server
+            AmeisenClient.Unregister(
+                Me,
+                IPAddress.Parse(AmeisenSettings.Settings.ameisenServerIp),
+                AmeisenSettings.Settings.ameisenServerPort);
+
+            // Save WoW's window positions
+            SafeNativeMethods.Rect wowRect = AmeisenCore.GetWowDiemsions(WowExe.process.MainWindowHandle);
+            AmeisenSettings.Settings.wowRectT = wowRect.Top;
+            AmeisenSettings.Settings.wowRectB = wowRect.Bottom;
+            AmeisenSettings.Settings.wowRectL = wowRect.Left;
+            AmeisenSettings.Settings.wowRectR = wowRect.Right;
+
+            // Stop object updates
+            AmeisenObjectManager.Stop();
+
+            // Stop the statemachine
+            AmeisenStateMachineManager.Stop();
+
+            // Unhook Events
+            AmeisenEventHook?.Stop();
+
+            // Unhook the EndScene
+            AmeisenHook.DisposeHooking();
+
+            // Detach BlackMagic, causing weird crash right now...
+            //Blackmagic.Close();
+
+            // Stop logging
+            AmeisenLogger.Instance.StopLogging();
+            AmeisenSettings.SaveToFile(AmeisenSettings.loadedconfName);
         }
 
-        private void OnCombatLogEvent(long timestamp, List<string> args)
+        private readonly string sqlConnectionString =
+                                                                                                                                                                                                                                                                                                                                                                                                                        "server={0};port={1};database={2};uid={3};password={4};";
+
+        private AmeisenCharacterManager AmeisenCharacterManager { get; set; }
+        private AmeisenClient AmeisenClient { get; set; }
+        private AmeisenDataHolder AmeisenDataHolder { get; set; }
+        private AmeisenEventHook AmeisenEventHook { get; set; }
+        private AmeisenHook AmeisenHook { get; set; }
+        private AmeisenMovementEngine AmeisenMovementEngine { get; set; }
+        private AmeisenNavmeshClient AmeisenNavmeshClient { get; set; }
+        private AmeisenObjectManager AmeisenObjectManager { get; set; }
+        private AmeisenSettings AmeisenSettings { get; set; }
+        private AmeisenStateMachineManager AmeisenStateMachineManager { get; set; }
+        private BlackMagic Blackmagic { get; set; }
+        // only get the classname
+
+        private Queue<Unit> LootableUnits
         {
-            AmeisenLogger.Instance.Log(
-                LogLevel.DEBUG,
-                $"OnCombatLogEvent args: {JsonConvert.SerializeObject(args)}",
-                this
-            );
+            get => AmeisenDataHolder.LootableUnits;
+            set => AmeisenDataHolder.LootableUnits = value;
         }
 
-        private void OnStartLootRoll(long timestamp, List<string> args)
+        private void CheckForLoot()
         {
-            AmeisenLogger.Instance.Log(
-                LogLevel.DEBUG,
-                $"OnStartLootRoll args: {JsonConvert.SerializeObject(args)}",
-                this
-            );
-
-            string ItemName = AmeisenCore.ReadRollItemName(args[0]).name;
-
-            if (AmeisenCharacterManager.INeedThatItem(ItemName))
+            foreach (WowObject obj in ActiveWoWObjects)
             {
-                AmeisenLogger.Instance.Log(
-                    LogLevel.DEBUG,
-                    $"I could use that item: {ItemName}",
-                    this
-                );
+                if (obj.GetType() == typeof(Player)
+                    || obj.GetType() == typeof(Unit)
+                    || obj.GetType() == typeof(Me))
+                {
+                    if (!((Unit)obj).IsDead)
+                    {
+                        continue; // We cant loot alive targets lel
+                    }
+
+                    obj.Update();
+                    if (((Unit)obj).IsLootable)
+                    {
+                        LootableUnits.Enqueue((Unit)obj);
+                    }
+                    continue;
+                }
             }
         }
 
         /// <summary>
-        /// Reload the CombatClass if you changed the role or something alike
+        /// Compile a CombatClass *.cs file and return its Instance
         /// </summary>
-        public void RefreshCombatClass()
+        /// <param name="combatclassPath">*.cs CombatClass file</param>
+        /// <returns>Instance of the built Class, if its null somethings gone wrong</returns>
+        private IAmeisenCombatPackage CompileAndLoadCombatClass(string combatclassPath)
         {
-            CombatPackage = LoadDefaultClassForSpec();
-            AmeisenStateMachineManager.UpdateCombatPackage(CombatPackage);
+            if (File.Exists(combatclassPath))
+            {
+                try
+                {
+                    return CompileCombatClass(combatclassPath);
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show(e.ToString(), "Compilation error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    AmeisenLogger.Instance.Log(LogLevel.DEBUG, $"Error while compiling CombatClass: {Path.GetFileName(combatclassPath)}", this);
+                    AmeisenLogger.Instance.Log(LogLevel.DEBUG, $"{e.Message}", this);
+                }
+            }
+
+            return null;
         }
+
+        /// <summary>
+        /// Compile a combatclass *.cs file at runtime and load it into the bot
+        /// </summary>
+        /// <param name="combatclassPath">path to the *.cs file</param>
+        /// <returns></returns>
+        private IAmeisenCombatPackage CompileCombatClass(string combatclassPath)
+        {
+            AmeisenLogger.Instance.Log(LogLevel.DEBUG, $"Compiling CombatClass: {Path.GetFileName(combatclassPath)}", this);
+
+            CompilerParameters parameters = new CompilerParameters();
+            // Include dependencies
+            string ownPath = AppDomain.CurrentDomain.BaseDirectory;
+            parameters.ReferencedAssemblies.Add("System.dll");
+            parameters.ReferencedAssemblies.Add(ownPath + "/lib/AmeisenBot.Combat.dll");
+            parameters.ReferencedAssemblies.Add(ownPath + "/lib/AmeisenBot.Utilities.dll");
+            parameters.ReferencedAssemblies.Add(ownPath + "/lib/AmeisenBot.Logger.dll");
+            parameters.ReferencedAssemblies.Add(ownPath + "/lib/AmeisenBot.Data.dll");
+            parameters.GenerateInMemory = true; // generate no file
+            parameters.GenerateExecutable = false; // to output a *.dll not a *.exe
+
+            // compile it
+            CompilerResults results = new CSharpCodeProvider().CompileAssemblyFromSource(parameters, File.ReadAllText(combatclassPath));
+
+            if (results.Errors.HasErrors)
+            {
+                StringBuilder sb = new StringBuilder();
+
+                foreach (CompilerError error in results.Errors)
+                {
+                    sb.AppendLine($"Error ({error.ErrorNumber}): {error.ErrorText}\nLine:{error.Line}");
+                }
+
+                throw new InvalidOperationException(sb.ToString());
+            }
+
+            // Create Instance of CombatClass
+            IAmeisenCombatPackage result = (IAmeisenCombatPackage)results.CompiledAssembly.CreateInstance("AmeisenBotCombat.CombatClass");
+
+            AmeisenLogger.Instance.Log(LogLevel.DEBUG, $"Successfully compiled CombatClass: {Path.GetFileName(combatclassPath)}", this);
+            return result;
+        }
+
+        private bool ConnectToDB() => AmeisenDBManager.ConnectToMySQL(
+                string.Format(sqlConnectionString,
+                AmeisenSettings.Settings.databaseIp,
+                AmeisenSettings.Settings.databasePort,
+                AmeisenSettings.Settings.databaseName,
+                AmeisenSettings.Settings.databaseUsername,
+                AmeisenSettings.Settings.databasePasswort)
+            );
+
+        private bool ConnectToServer() => AmeisenClient.Register(
+                Me,
+                IPAddress.Parse(AmeisenSettings.Settings.ameisenServerIp),
+                AmeisenSettings.Settings.ameisenServerPort
+            );
 
         private IAmeisenCombatPackage LoadDefaultClassForSpec()
         {
@@ -522,105 +675,40 @@ namespace AmeisenBotManager
             }
         }
 
-        private void OnRegenEnabled(long timestamp, List<string> args)
+        private void LoadingScreenChecker()
         {
-            Me.InCombatEvent = false;
-            // CheckForLoot();
-        }
-
-        private void CheckForLoot()
-        {
-            foreach (WowObject obj in ActiveWoWObjects)
+            while (IsLoadingScreenCheckerActive)
             {
-                if (obj.GetType() == typeof(Player)
-                    || obj.GetType() == typeof(Unit)
-                    || obj.GetType() == typeof(Me))
+                if (AmeisenCore.IsInLoadingScreen())
                 {
-                    if (!((Unit)obj).IsDead)
-                    {
-                        continue; // We cant loot alive targets lel
-                    }
-
-                    obj.Update();
-                    if (((Unit)obj).IsLootable)
-                    {
-                        LootableUnits.Enqueue((Unit)obj);
-                    }
-                    continue;
+                    AmeisenDataHolder.IsInWorld = false;
+                    AmeisenEventHook.IsNotInWorld = true;
+                    AmeisenHook.IsNotInWorld = true;
                 }
+                else
+                {
+                    AmeisenDataHolder.IsInWorld = true;
+                    AmeisenHook.IsNotInWorld = false;
+                    AmeisenEventHook.IsNotInWorld = false;
+                }
+
+                Thread.Sleep(250);
             }
         }
 
-        private void OnRegenDisabled(long timestamp, List<string> args)
-            => Me.InCombatEvent = true;
-
-        private void OnNewItem(long timestamp, List<string> args)
+        private void OnCombatLogEvent(long timestamp, List<string> args)
         {
             AmeisenLogger.Instance.Log(
                 LogLevel.DEBUG,
-                $"OnNewItem args: {JsonConvert.SerializeObject(args)}",
+                $"OnCombatLogEvent args: {JsonConvert.SerializeObject(args)}",
                 this
             );
-
-            AmeisenCharacterManager.UpdateCharacter();
-            AmeisenCharacterManager.EquipAllBetterItems();
         }
 
-        /// <summary>
-        /// Equip all better items thats in the bots inventory
-        /// </summary>
-        public void EquipAllBetterItems() => AmeisenCharacterManager.EquipAllBetterItems();
-
-        /// <summary>
-        /// Refresh the characters equipment & inventory
-        /// </summary>
-        public void RefreshCurrentItems() => AmeisenCharacterManager.UpdateCharacterAsync();
-
-        private void OnResurrectRequest(long timestamp, List<string> args)
+        private void OnGroupChanged(long timestamp, List<string> args)
         {
-            AmeisenLogger.Instance.Log(
-                LogLevel.DEBUG,
-                $"OnResurrectRequest args: {JsonConvert.SerializeObject(args)}",
-                this
-            );
-
-            AmeisenCore.AcceptResurrect();
-            AmeisenCore.RunSlashCommand("/click StaticPopup1Button1");
-        }
-
-        private void OnSummonRequest(long timestamp, List<string> args)
-        {
-            AmeisenLogger.Instance.Log(
-                LogLevel.DEBUG,
-                $"OnSummonRequest args: {JsonConvert.SerializeObject(args)}",
-                this
-            );
-
-            AmeisenCore.AcceptSummon();
-            AmeisenCore.RunSlashCommand("/click StaticPopup1Button1");
-        }
-
-        private void OnPartyInvitation(long timestamp, List<string> args)
-        {
-            AmeisenLogger.Instance.Log(
-                LogLevel.DEBUG,
-                $"OnPartyInvitation args: {JsonConvert.SerializeObject(args)}",
-                this
-            );
-
-            AmeisenCore.AcceptGroupInvite();
-            AmeisenCore.RunSlashCommand("/click StaticPopup1Button1");
-        }
-
-        private void OnReadyCheck(long timestamp, List<string> args)
-        {
-            AmeisenLogger.Instance.Log(
-                LogLevel.DEBUG,
-                $"OnReadyCheck args: {JsonConvert.SerializeObject(args)}",
-                this
-            );
-
-            AmeisenCore.ConfirmReadyCheck();
+            // Refresh Partymembers
+            AmeisenDataHolder.Partymembers = CombatUtils.GetPartymembers(Me, ActiveWoWObjects);
         }
 
         private void OnLootBindOnPickup(long timestamp, List<string> args)
@@ -641,6 +729,30 @@ namespace AmeisenBotManager
             );
 
             AmeisenCore.LootEveryThing();
+        }
+
+        private void OnNewItem(long timestamp, List<string> args)
+        {
+            AmeisenLogger.Instance.Log(
+                LogLevel.DEBUG,
+                $"OnNewItem args: {JsonConvert.SerializeObject(args)}",
+                this
+            );
+
+            AmeisenCharacterManager.UpdateCharacter();
+            AmeisenCharacterManager.EquipAllBetterItems();
+        }
+
+        private void OnPartyInvitation(long timestamp, List<string> args)
+        {
+            AmeisenLogger.Instance.Log(
+                LogLevel.DEBUG,
+                $"OnPartyInvitation args: {JsonConvert.SerializeObject(args)}",
+                this
+            );
+
+            AmeisenCore.AcceptGroupInvite();
+            AmeisenCore.RunSlashCommand("/click StaticPopup1Button1");
         }
 
         private void OnPlayerEnteringWorld(long timestamp, List<string> args)
@@ -671,165 +783,68 @@ namespace AmeisenBotManager
             AmeisenEventHook.IsNotInWorld = false;
         }
 
-        private void LoadingScreenChecker()
+        private void OnReadyCheck(long timestamp, List<string> args)
         {
-            while (IsLoadingScreenCheckerActive)
-            {
-                if (AmeisenCore.IsInLoadingScreen())
-                {
-                    AmeisenDataHolder.IsInWorld = false;
-                    AmeisenEventHook.IsNotInWorld = true;
-                    AmeisenHook.IsNotInWorld = true;
-                }
-                else
-                {
-
-                    AmeisenDataHolder.IsInWorld = true;
-                    AmeisenHook.IsNotInWorld = false;
-                    AmeisenEventHook.IsNotInWorld = false;
-                }
-
-                Thread.Sleep(250);
-            }
-        }
-
-        private bool ConnectToServer() => AmeisenClient.Register(
-                Me,
-                IPAddress.Parse(AmeisenSettings.Settings.ameisenServerIp),
-                AmeisenSettings.Settings.ameisenServerPort
+            AmeisenLogger.Instance.Log(
+                LogLevel.DEBUG,
+                $"OnReadyCheck args: {JsonConvert.SerializeObject(args)}",
+                this
             );
 
-        private bool ConnectToDB() => AmeisenDBManager.ConnectToMySQL(
-                string.Format(sqlConnectionString,
-                AmeisenSettings.Settings.databaseIp,
-                AmeisenSettings.Settings.databasePort,
-                AmeisenSettings.Settings.databaseName,
-                AmeisenSettings.Settings.databaseUsername,
-                AmeisenSettings.Settings.databasePasswort)
+            AmeisenCore.ConfirmReadyCheck();
+        }
+
+        private void OnRegenDisabled(long timestamp, List<string> args)
+            => Me.InCombatEvent = true;
+
+        private void OnRegenEnabled(long timestamp, List<string> args)
+        {
+            Me.InCombatEvent = false;
+            // CheckForLoot();
+        }
+
+        private void OnResurrectRequest(long timestamp, List<string> args)
+        {
+            AmeisenLogger.Instance.Log(
+                LogLevel.DEBUG,
+                $"OnResurrectRequest args: {JsonConvert.SerializeObject(args)}",
+                this
             );
 
-        /// <summary>
-        /// Stops the bots mechanisms, hooks, ...
-        /// </summary>
-        public void StopBot()
-        {
-            IsLoadingScreenCheckerActive = false;
-            LoadingScreenCheckerThread.Join();
-
-            // Disconnect from Server
-            AmeisenClient.Unregister(
-                Me,
-                IPAddress.Parse(AmeisenSettings.Settings.ameisenServerIp),
-                AmeisenSettings.Settings.ameisenServerPort);
-
-            // Save WoW's window positions
-            SafeNativeMethods.Rect wowRect = AmeisenCore.GetWowDiemsions(WowExe.process.MainWindowHandle);
-            AmeisenSettings.Settings.wowRectT = wowRect.Top;
-            AmeisenSettings.Settings.wowRectB = wowRect.Bottom;
-            AmeisenSettings.Settings.wowRectL = wowRect.Left;
-            AmeisenSettings.Settings.wowRectR = wowRect.Right;
-
-            // Stop object updates
-            AmeisenObjectManager.Stop();
-
-            // Stop the statemachine
-            AmeisenStateMachineManager.Stop();
-
-            // Unhook Events
-            AmeisenEventHook?.Stop();
-
-            // Unhook the EndScene
-            AmeisenHook.DisposeHooking();
-
-            // Detach BlackMagic, causing weird crash right now...
-            //Blackmagic.Close();
-
-            // Stop logging
-            AmeisenLogger.Instance.StopLogging();
-            AmeisenSettings.SaveToFile(AmeisenSettings.loadedconfName);
+            AmeisenCore.AcceptResurrect();
+            AmeisenCore.RunSlashCommand("/click StaticPopup1Button1");
         }
 
-        /// <summary>
-        /// Add a RememberedUnit to the RememberedUnits Database to remember its position and UnitTraits
-        /// </summary>
-        /// <param name="rememberedUnit">Unit that you want to remember</param>
-        public void RememberUnit(RememberedUnit rememberedUnit)
-            => AmeisenDBManager.RememberUnit(rememberedUnit);
-
-        /// <summary>
-        /// Check if we remember a Unit by its Name, ZoneID and MapID
-        /// </summary>
-        /// <param name="name">name of the npc</param>
-        /// <param name="zoneID">zoneid of the npc</param>
-        /// <param name="mapID">mapid of the npc</param>
-        /// <returns>RememberedUnit with if we remember it, its UnitTraits and position</returns>
-        public RememberedUnit CheckForRememberedUnit(string name, int zoneID, int mapID)
-            => AmeisenDBManager.CheckForRememberedUnit(name, zoneID, mapID);
-
-        /// <summary>
-        /// Compile a CombatClass *.cs file and return its Instance
-        /// </summary>
-        /// <param name="combatclassPath">*.cs CombatClass file</param>
-        /// <returns>Instance of the built Class, if its null somethings gone wrong</returns>
-        private IAmeisenCombatPackage CompileAndLoadCombatClass(string combatclassPath)
+        private void OnStartLootRoll(long timestamp, List<string> args)
         {
-            if (File.Exists(combatclassPath))
-            {
-                try
-                {
-                    return CompileCombatClass(combatclassPath);
-                }
-                catch (Exception e)
-                {
-                    MessageBox.Show(e.ToString(), "Compilation error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    AmeisenLogger.Instance.Log(LogLevel.DEBUG, $"Error while compiling CombatClass: {Path.GetFileName(combatclassPath)}", this);
-                    AmeisenLogger.Instance.Log(LogLevel.DEBUG, $"{e.Message}", this);
-                }
-            }
+            AmeisenLogger.Instance.Log(
+                LogLevel.DEBUG,
+                $"OnStartLootRoll args: {JsonConvert.SerializeObject(args)}",
+                this
+            );
 
-            return null;
+            string ItemName = AmeisenCore.ReadRollItemName(args[0]).name;
+
+            if (AmeisenCharacterManager.INeedThatItem(ItemName))
+            {
+                AmeisenLogger.Instance.Log(
+                    LogLevel.DEBUG,
+                    $"I could use that item: {ItemName}",
+                    this
+                );
+            }
         }
 
-        /// <summary>
-        /// Compile a combatclass *.cs file at runtime and load it into the bot
-        /// </summary>
-        /// <param name="combatclassPath">path to the *.cs file</param>
-        /// <returns></returns>
-        private IAmeisenCombatPackage CompileCombatClass(string combatclassPath)
+        private void OnSummonRequest(long timestamp, List<string> args)
         {
-            AmeisenLogger.Instance.Log(LogLevel.DEBUG, $"Compiling CombatClass: {Path.GetFileName(combatclassPath)}", this);
+            AmeisenLogger.Instance.Log(
+                LogLevel.DEBUG,
+                $"OnSummonRequest args: {JsonConvert.SerializeObject(args)}",
+                this
+            );
 
-            CompilerParameters parameters = new CompilerParameters();
-            // Include dependencies
-            string ownPath = AppDomain.CurrentDomain.BaseDirectory;
-            parameters.ReferencedAssemblies.Add("System.dll");
-            parameters.ReferencedAssemblies.Add(ownPath + "/lib/AmeisenBot.Combat.dll");
-            parameters.ReferencedAssemblies.Add(ownPath + "/lib/AmeisenBot.Utilities.dll");
-            parameters.ReferencedAssemblies.Add(ownPath + "/lib/AmeisenBot.Logger.dll");
-            parameters.ReferencedAssemblies.Add(ownPath + "/lib/AmeisenBot.Data.dll");
-            parameters.GenerateInMemory = true; // generate no file
-            parameters.GenerateExecutable = false; // to output a *.dll not a *.exe
-
-            // compile it
-            CompilerResults results = new CSharpCodeProvider().CompileAssemblyFromSource(parameters, File.ReadAllText(combatclassPath));
-
-            if (results.Errors.HasErrors)
-            {
-                StringBuilder sb = new StringBuilder();
-
-                foreach (CompilerError error in results.Errors)
-                {
-                    sb.AppendLine($"Error ({error.ErrorNumber}): {error.ErrorText}\nLine:{error.Line}");
-                }
-
-                throw new InvalidOperationException(sb.ToString());
-            }
-
-            // Create Instance of CombatClass
-            IAmeisenCombatPackage result = (IAmeisenCombatPackage)results.CompiledAssembly.CreateInstance("AmeisenBotCombat.CombatClass");
-
-            AmeisenLogger.Instance.Log(LogLevel.DEBUG, $"Successfully compiled CombatClass: {Path.GetFileName(combatclassPath)}", this);
-            return result;
+            AmeisenCore.AcceptSummon();
+            AmeisenCore.RunSlashCommand("/click StaticPopup1Button1");
         }
     }
 }
