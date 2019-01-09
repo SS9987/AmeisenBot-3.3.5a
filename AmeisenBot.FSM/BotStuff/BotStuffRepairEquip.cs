@@ -114,11 +114,11 @@ namespace AmeisenBotFSM.BotStuff
         {
             if (mammoth)
             {
-                AmeisenCore.TargetNpcByName("Gnimo");
+                AmeisenCore.TargetUnitByName("Gnimo");
             }
             else
             {
-                AmeisenCore.TargetNpcByName(unit.Name);
+                AmeisenCore.TargetUnitByName(unit.Name);
             }
 
             if (Target != null)

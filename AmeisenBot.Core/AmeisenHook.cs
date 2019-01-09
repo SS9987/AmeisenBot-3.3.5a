@@ -23,6 +23,7 @@ namespace AmeisenBotCore
             hookJobs = new ConcurrentQueue<HookJob>();
             hookWorker = new Thread(new ThreadStart(DoWork));
 
+            // wait for the world to be loaded
             while (!AmeisenCore.IsWorldLoaded())
             {
                 Thread.Sleep(200);
@@ -39,9 +40,26 @@ namespace AmeisenBotCore
         public bool IsNotInWorld { get; set; }
         public int JobCount => hookJobs.Count;
 
-        public void AddHookJob(ref HookJob hookJob) => hookJobs.Enqueue(hookJob);
+        /// <summary>
+        /// Execute asm on the hook, if the hook finished executing the job
+        /// it will set the IsFinished property to true, that's why you supply
+        /// the job as a reference.
+        /// </summary>
+        /// <param name="hookJob"></param>
+        public void AddHookJob(ref HookJob hookJob) 
+            => hookJobs.Enqueue(hookJob);
 
-        public void AddHookJob(ref ReturnHookJob hookJob) => hookJobs.Enqueue(hookJob);
+        /// <summary>
+        /// Execute asm on the hook, if the hook finished executing the job
+        /// it will set the IsFinished property to true, that's why you supply
+        /// the job as a reference.
+        /// 
+        /// You can supply a ReturnHookJob to read a variable directly after
+        /// you executed something else.
+        /// </summary>
+        /// <param name="hookJob"></param>
+        public void AddHookJob(ref ReturnHookJob hookJob) 
+            => hookJobs.Enqueue(hookJob);
 
         public void DisposeHooking()
         {
@@ -78,6 +96,8 @@ namespace AmeisenBotCore
         {
             while (isHooked)
             {
+                // do not do anything while we are in a loadingscreen
+                // WoW doesn't like that and will crash
                 if (AmeisenCore.IsInLoadingScreen())
                 {
                     Thread.Sleep(50);
@@ -135,22 +155,29 @@ namespace AmeisenBotCore
                     if (BlackMagic.ReadByte(endscene) != 0xE9)
                     {
                         // first thing thats 5 bytes big is here
+                        // we are going to replace this 5 bytes with
+                        // our JMP instruction (JMP (1 byte) + Address (4 byte))
                         endscene += ENDSCENE_HOOK_OFFSET;
 
-                        // return after the jump wer'e going to inject
+                        // the address that we will return to after 
+                        // the jump wer'e going to inject
                         endsceneReturnAddress = endscene + 0x5;
 
                         // read our original EndScene
                         //originalEndscene = BlackMagic.ReadBytes(endscene, 5);
 
+                        // integer to check if there is code waiting to be executed
                         codeToExecute = BlackMagic.AllocateMemory(4);
                         BlackMagic.WriteInt(codeToExecute, 0);
 
+                        // integer to save the address of the return value
                         returnAdress = BlackMagic.AllocateMemory(4);
                         BlackMagic.WriteInt(returnAdress, 0);
 
+                        // codecave to check if we need to execute something
                         codeCave = BlackMagic.AllocateMemory(64);
-                        codeCaveForInjection = BlackMagic.AllocateMemory(128);
+                        // codecave for the code we wa't to execute
+                        codeCaveForInjection = BlackMagic.AllocateMemory(256);
 
                         AmeisenLogger.Instance.Log(LogLevel.DEBUG, $"EndScene at: 0x{endscene.ToString("X")}", this);
                         AmeisenLogger.Instance.Log(LogLevel.DEBUG, $"EndScene returning at: 0x{(endsceneReturnAddress).ToString("X")}", this);
@@ -183,21 +210,37 @@ namespace AmeisenBotCore
                         BlackMagic.Asm.AddLine("POPAD");
                         BlackMagic.Asm.AddLine("POPFD");
 
+                        // needed to determine the position where the original
+                        // asm is going to be placed
                         int asmLenght = BlackMagic.Asm.Assemble().Length;
+
+                        // inject the instructions into our codecave
                         BlackMagic.Asm.Inject(codeCave);
+                        // ---------------------------------------------------
+                        // End of the code that checks if there is asm to be
+                        // executed on our hook
+                        // ---------------------------------------------------
+
+                        // Prepare to replace the instructions inside WoW
                         BlackMagic.Asm.Clear();
 
                         // do the original EndScene stuff after we restored the registers
+                        // and insert it after our code
                         BlackMagic.WriteBytes(codeCave + (uint)asmLenght, originalEndscene);
 
-                        // return to original function
+                        // return to original function after we're done with our stuff
                         BlackMagic.Asm.AddLine($"JMP {(endsceneReturnAddress)}");
                         BlackMagic.Asm.Inject((codeCave + (uint)asmLenght) + 5);
                         BlackMagic.Asm.Clear();
+                        // ---------------------------------------------------
+                        // End of doing the original stuff and returning to
+                        // the original instruction
+                        // ---------------------------------------------------
 
-                        // modify original EndScene function to start the hook
+                        // modify original EndScene instructions to start the hook
                         BlackMagic.Asm.AddLine($"JMP {(codeCave)}");
                         BlackMagic.Asm.Inject(endscene);
+                        // we should've hooked WoW now
                     }
                     isHooked = true;
                 }
@@ -205,6 +248,13 @@ namespace AmeisenBotCore
             }
         }
 
+        /// <summary>
+        /// Inject assembly code on our hook
+        /// </summary>
+        /// <param name="asm">assembly to execute</param>
+        /// <param name="readReturnBytes">should the return bytes get read</param>
+        /// <param name="successful">if the reading of return bytes was successful</param>
+        /// <returns></returns>
         private byte[] InjectAndExecute(string[] asm, bool readReturnBytes, out bool successful)
         {
             List<byte> returnBytes = new List<byte>();
@@ -219,15 +269,17 @@ namespace AmeisenBotCore
 
                 isInjectionUsed = true;
 
-                // inject the given ASM
+                // preparing to inject the given ASM
                 BlackMagic.Asm.Clear();
+                // add all lines
                 foreach (string s in asm)
                 {
                     BlackMagic.Asm.AddLine(s);
                 }
 
-                // there is code to be executed
+                // now there is code to be executed
                 BlackMagic.WriteInt(codeToExecute, 1);
+                // inject it
                 BlackMagic.Asm.Inject(codeCaveForInjection);
 
                 // we don't need this atm
@@ -237,10 +289,10 @@ namespace AmeisenBotCore
                 // wait for the code to be executed
                 while (BlackMagic.ReadInt(codeToExecute) > 0)
                 {
-                    Thread.Sleep(5);
+                    Thread.Sleep(1);
                 }
 
-                // if we want to read the return value, do it
+                // if we want to read the return value do it otherwise we're done
                 if (readReturnBytes)
                 {
                     byte buffer = new byte();
@@ -269,7 +321,7 @@ namespace AmeisenBotCore
             }
             catch (Exception e)
             {
-                // there is code to be executed
+                // now there is no more code to be executed
                 BlackMagic.WriteInt(codeToExecute, 0);
                 successful = false;
 
@@ -292,9 +344,10 @@ namespace AmeisenBotCore
                     this);
             }
 
+            // now we can use the hook again
             isInjectionUsed = false;
             successful = true;
-            Thread.Sleep(50);
+
             return returnBytes.ToArray();
         }
     }

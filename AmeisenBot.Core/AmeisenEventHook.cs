@@ -22,6 +22,13 @@ namespace AmeisenBotCore
 
         public bool IsNotInWorld { get; set; }
 
+        /// <summary>
+        /// Start to receive events to our event table
+        /// and start the event reader that will fire 
+        /// events if they apper in our event table.
+        /// 
+        /// Events will get read every 1000 ms by now.
+        /// </summary>
         public void Init()
         {
             StringBuilder luaStuff = new StringBuilder();
@@ -37,6 +44,7 @@ namespace AmeisenBotCore
 
             IsActive = true;
             EventReader.Start();
+            // if we equip an item confirm the dialog
             AmeisenCore.EnableAutoBoPConfirm();
         }
 
@@ -51,12 +59,21 @@ namespace AmeisenBotCore
             }
         }
 
+        /// <summary>
+        /// Subscribe to an event
+        /// </summary>
+        /// <param name="eventName">event name</param>
+        /// <param name="onEventFired">method to fire when the event appered in WoW</param>
         public void Subscribe(string eventName, OnEventFired onEventFired)
         {
             AmeisenCore.LuaDoString($"abFrame:RegisterEvent(\"{eventName}\");");
             EventDictionary.Add(eventName, onEventFired);
         }
 
+        /// <summary>
+        /// Unsubscribe from an event
+        /// </summary>
+        /// <param name="eventName">event name</param>
         public void Unsubscribe(string eventName)
         {
             AmeisenCore.LuaDoString($"abFrame:UnregisterEvent(\"{eventName}\");");
@@ -83,6 +100,7 @@ namespace AmeisenBotCore
                 List<RawEvent> rawEvents = new List<RawEvent>();
                 try
                 {
+                    // parse the events from JSON
                     List<RawEvent> finalEvents = new List<RawEvent>();
                     rawEvents = JsonConvert.DeserializeObject<List<RawEvent>>(eventJson);
 
@@ -94,6 +112,7 @@ namespace AmeisenBotCore
                         }
                     }
 
+                    // Fire the events
                     AmeisenLogger.Instance.Log(LogLevel.VERBOSE, $"Parsed {finalEvents.Count} events", this);
                     if (finalEvents.Count > 0)
                     {
