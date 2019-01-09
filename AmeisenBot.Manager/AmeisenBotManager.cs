@@ -458,8 +458,7 @@ namespace AmeisenBotManager
             AmeisenSettings.SaveToFile(AmeisenSettings.loadedconfName);
         }
 
-        private readonly string sqlConnectionString =
-                                                                                                                                                                                                                                                                                                                                                                                                                        "server={0};port={1};database={2};uid={3};password={4};";
+        private readonly string sqlConnectionString = "server={0};port={1};database={2};uid={3};password={4};";
 
         private AmeisenCharacterManager AmeisenCharacterManager { get; set; }
         private AmeisenClient AmeisenClient { get; set; }
@@ -472,7 +471,6 @@ namespace AmeisenBotManager
         private AmeisenSettings AmeisenSettings { get; set; }
         private AmeisenStateMachineManager AmeisenStateMachineManager { get; set; }
         private BlackMagic Blackmagic { get; set; }
-        // only get the classname
 
         private Queue<Unit> LootableUnits
         {
