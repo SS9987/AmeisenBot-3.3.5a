@@ -1,1 +1,4 @@
 site_name: AmeisenBot Docs
+nav:
+- 'index.rst'
+- 'AmeisenCore.rst'
