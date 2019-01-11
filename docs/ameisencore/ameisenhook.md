@@ -2,7 +2,7 @@
 
 This is the class that manages the hookig of WoW's D3D9 Endscene function. We will hook it to execute functions on WoW's main thread. This funtion is called after every frame, so if we're at a framerate of 60 we have 60 executions per second which is enough for what it is beeing used for at the moment.
 
-<br>
+* * *
 
 ## Preperation
 
@@ -23,7 +23,7 @@ uint pScene = BlackMagic.ReadUInt(pEnd);
 uint endscene = BlackMagic.ReadUInt(pScene + Offsets.endScene);
 ```
 
-<br>
+* * *
 
 ### Using the found offset
 
@@ -48,7 +48,7 @@ So far so good, we know where to apply our hook but how do we do it, what are we
 * If there is something, execute it otherwise do nothing
 * After that return to the original like nothing happened
 
-<br>
+* * *
 
 ### Codecaves
 
@@ -81,7 +81,7 @@ BlackMagic.WriteInt(returnAdress, 0);
 
 We're finished with our preperational stuff.
 
-<br>
+* * *
 
 ## Assembly instructions
 

@@ -1,107 +1,132 @@
 <!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  
+  <link rel="shortcut icon" href="../../img/favicon.ico">
+  <title>AmeisenHook - AmeisenBot Docs</title>
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link rel="stylesheet" href="../../css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../css/theme_extra.css" type="text/css" />
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+  
+  <script>
+    // Current page data
+    var mkdocs_page_name = "AmeisenHook";
+    var mkdocs_page_input_path = "ameisencore\\AmeisenHook.md";
+    var mkdocs_page_url = null;
+  </script>
+  
+  <script src="../../js/jquery-2.1.1.min.js" defer></script>
+  <script src="../../js/modernizr-2.8.3.min.js" defer></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/c#.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/nasm.min.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script> 
+  
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+      <div class="wy-side-nav-search">
+        <a href="../.." class="icon icon-home"> AmeisenBot Docs</a>
+        <div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+	<ul class="current">
+	  
+          
+            <li class="toctree-l1">
+		
+    <a class="" href="../..">AmeisenBot</a>
+	    </li>
+          
+            <li class="toctree-l1">
+		
+    <span class="caption-text">AmeisenBot.Core.md</span>
+    <ul class="subnav">
+                <li class="">
+                    
+    <a class="" href="../AmeisenCore/">AmeisenCore</a>
+                </li>
+                <li class=" current">
+                    
+    <a class="current" href="./">AmeisenHook</a>
+    <ul class="subnav">
+            
+    <li class="toctree-l3"><a href="#ameisenhook">AmeisenHook</a></li>
+    
+        <ul>
         
+            <li><a class="toctree-l4" href="#preperation">Preperation</a></li>
         
+            <li><a class="toctree-l4" href="#assembly-instructions">Assembly instructions</a></li>
         
-        <link rel="shortcut icon" href="../../img/favicon.ico">
-        <title>AmeisenHook - AmeisenBot Docs</title>
-        <link href="../../css/bootstrap-custom.min.css" rel="stylesheet">
-        <link href="../../css/font-awesome.min.css" rel="stylesheet">
-        <link href="../../css/base.css" rel="stylesheet">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
-        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-        <!--[if lt IE 9]>
-            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-        <![endif]-->
+        </ul>
+    
 
-        <script src="../../js/jquery-1.10.2.min.js" defer></script>
-        <script src="../../js/bootstrap-3.0.3.min.js" defer></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
-        <script>hljs.initHighlightingOnLoad();</script> 
-    </head>
-
-    <body>
-
-        <div class="navbar navbar-default navbar-fixed-top" role="navigation">
-            <div class="container">
-
-                <!-- Collapsed navigation -->
-                <div class="navbar-header">
-                    <!-- Expander button -->
-                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <a class="navbar-brand" href="../..">AmeisenBot Docs</a>
-                </div>
-
-                <!-- Expanded navigation -->
-                <div class="navbar-collapse collapse">
-                        <!-- Main navigation -->
-                        <ul class="nav navbar-nav">
-                            <li >
-                                <a href="../..">AmeisenBot</a>
-                            </li>
-                            <li class="dropdown active">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">AmeisenBot.Core <b class="caret"></b></a>
-                                <ul class="dropdown-menu">
-                                    
-<li >
-    <a href="../ameisencore/">AmeisenCore</a>
-</li>
-                                    
-<li class="active">
-    <a href="./">AmeisenHook</a>
-</li>
-                                    
-<li >
-    <a href="../ameiseneventhook/">Ameiseneventhook</a>
-</li>
-                                </ul>
-                            </li>
-                        </ul>
-
-                    <ul class="nav navbar-nav navbar-right">
-                        <li>
-                            <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
-                                <i class="fa fa-search"></i> Search
-                            </a>
-                        </li>
-                            <li >
-                                <a rel="next" href="../ameisencore/">
-                                    <i class="fa fa-arrow-left"></i> Previous
-                                </a>
-                            </li>
-                            <li >
-                                <a rel="prev" href="../ameiseneventhook/">
-                                    Next <i class="fa fa-arrow-right"></i>
-                                </a>
-                            </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-        <div class="container">
-                <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
-    <ul class="nav bs-sidenav">
-        <li class="main active"><a href="#ameisenhook">AmeisenHook</a></li>
-            <li><a href="#preperation">Preperation</a></li>
-            <li><a href="#assembly-instructions">Assembly instructions</a></li>
     </ul>
-</div></div>
-                <div class="col-md-9" role="main">
+                </li>
+                <li class="">
+                    
+    <a class="" href="../AmeisenEventHook/">AmeisenEventHook</a>
+                </li>
+    </ul>
+	    </li>
+          
+        </ul>
+      </div>
+      &nbsp;
+    </nav>
 
-<h1 id="ameisenhook">AmeisenHook</h1>
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+        <a href="../..">AmeisenBot Docs</a>
+      </nav>
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../..">Docs</a> &raquo;</li>
+    
+      
+        
+          <li>AmeisenBot.Core.md &raquo;</li>
+        
+      
+    
+    <li>AmeisenHook</li>
+    <li class="wy-breadcrumbs-aside">
+      
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main">
+            <div class="section">
+              
+                <h1 id="ameisenhook">AmeisenHook</h1>
 <p>This is the class that manages the hookig of WoW's D3D9 Endscene function. We will hook it to execute functions on WoW's main thread. This funtion is called after every frame, so if we're at a framerate of 60 we have 60 executions per second which is enough for what it is beeing used for at the moment.</p>
-<p><br></p>
+<hr />
 <h2 id="preperation">Preperation</h2>
 <h3 id="getting-the-endscene-address">Getting the endscene address</h3>
 <p>First we need to know where to apply our memory-modification (where the endscene is located).</p>
@@ -116,7 +141,7 @@ uint pScene = BlackMagic.ReadUInt(pEnd);
 uint endscene = BlackMagic.ReadUInt(pScene + Offsets.endScene);
 </code></pre>
 
-<p><br></p>
+<hr />
 <h3 id="using-the-found-offset">Using the found offset</h3>
 <p>Now that we know where our functions is located we need to search for the first thing with a size of 5 bytes. Why 5 bytes, thats because we're going to place a JMP instruction at this place and as we know a JMP plus Address to jump to are 1 + 4 bytes on a 32Bit system.</p>
 <p>So lets do it, our memory at the endscene address should look like this:</p>
@@ -134,7 +159,7 @@ uint endscene += ENDSCENE_OFFSET;
 <li>If there is something, execute it otherwise do nothing</li>
 <li>After that return to the original like nothing happened</li>
 </ul>
-<p><br></p>
+<hr />
 <h3 id="codecaves">Codecaves</h3>
 <p>Enough thinking, lets get down to business. First we need a place to store our Instrctions in the memory of WoW. </p>
 <pre><code class="C#">uint codeCave = BlackMagic.AllocateMemory(64);
@@ -155,7 +180,7 @@ BlackMagic.WriteInt(returnAdress, 0);
 <p><strong>codeToExecute</strong>: will hold 1 or 0 whether there is or isn't anything to execute</p>
 <p><strong>returnAdress</strong>: will be a pointer to the data returned by the function we called</p>
 <p>We're finished with our preperational stuff.</p>
-<p><br></p>
+<hr />
 <h2 id="assembly-instructions">Assembly instructions</h2>
 <h3 id="check-for-instructions-to-execute">Check for instructions to execute</h3>
 <p>By now we've got everything prepared for our hook, so let's crawl through some Assembly.</p>
@@ -286,83 +311,53 @@ BlackMagic.Asm.Inject(endscene);
 </code></pre>
 
 <p>Congratulations, you hooked WoW's EndScene and it doesn't do anything. But don't worry the hardest part is done, we just need to inject the code we wan't to execute to the <em>codeCaveForInjection</em> and set codeToExecute to 1.</p>
-<p><em>to be continued...</em></p></div>
-        </div>
-
-        <footer class="col-md-12">
-            <hr>
-            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
-        </footer>
-        <script>
-            var base_url = "../..",
-                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
-        </script>
-        <script src="../../js/base.js" defer></script>
-        <script src="../../search/main.js" defer></script>
-
-        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title" id="exampleModalLabel">Search</h4>
+<p><em>to be continued...</em></p>
+              
             </div>
-            <div class="modal-body">
-                <p>
-                    From here you can search these documents. Enter
-                    your search terms below.
-                </p>
-                <form role="form">
-                    <div class="form-group">
-                        <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
-                    </div>
-                </form>
-                <div id="mkdocs-search-results"></div>
-            </div>
-            <div class="modal-footer">
-            </div>
-        </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../AmeisenEventHook/" class="btn btn-neutral float-right" title="AmeisenEventHook">Next <span class="icon icon-circle-arrow-right"></span></a>
+      
+      
+        <a href="../AmeisenCore/" class="btn btn-neutral" title="AmeisenCore"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+      
     </div>
-</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="Keyboard Shortcuts Modal" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                <h4 class="modal-title" id="exampleModalLabel">Keyboard Shortcuts</h4>
-            </div>
-            <div class="modal-body">
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th style="width: 20%;">Keys</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td class="help shortcut"><kbd>?</kbd></td>
-                    <td>Open this help</td>
-                  </tr>
-                  <tr>
-                    <td class="next shortcut"><kbd>n</kbd></td>
-                    <td>Next page</td>
-                  </tr>
-                  <tr>
-                    <td class="prev shortcut"><kbd>p</kbd></td>
-                    <td>Previous page</td>
-                  </tr>
-                  <tr>
-                    <td class="search shortcut"><kbd>s</kbd></td>
-                    <td>Search</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <div class="modal-footer">
-            </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+    
+  </div>
+
+  Built with <a href="http://www.mkdocs.org">MkDocs</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+      
         </div>
-    </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" style="cursor: pointer">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      
+      
+        <span><a href="../AmeisenCore/" style="color: #fcfcfc;">&laquo; Previous</a></span>
+      
+      
+        <span style="margin-left: 15px"><a href="../AmeisenEventHook/" style="color: #fcfcfc">Next &raquo;</a></span>
+      
+    </span>
 </div>
+    <script>var base_url = '../..';</script>
+    <script src="../../js/theme.js" defer></script>
+      <script src="../../search/main.js" defer></script>
 
-    </body>
+</body>
 </html>
