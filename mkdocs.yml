@@ -1,4 +1,8 @@
 site_name: AmeisenBot Docs
+docs_dir: docs
 nav:
-- 'index.rst'
-- 'AmeisenCore.rst'
+- 'index.md'
+- 'AmeisenBot.Core':
+  - 'ameisencore/ameisencore.md'
+  - 'ameisencore/ameisenhook.md'
+  - 'ameisencore/ameiseneventhook.md'

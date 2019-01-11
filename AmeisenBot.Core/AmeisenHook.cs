@@ -132,7 +132,7 @@ namespace AmeisenBotCore
             uint pDevice = BlackMagic.ReadUInt(Offsets.devicePtr1);
             uint pEnd = BlackMagic.ReadUInt(pDevice + Offsets.devicePtr2);
             uint pScene = BlackMagic.ReadUInt(pEnd);
-            return BlackMagic.ReadUInt(pScene + Offsets.endScene); ;
+            return BlackMagic.ReadUInt(pScene + Offsets.endScene);
         }
 
         private void Hook()

@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="../../img/favicon.ico">
+        <title>AmeisenHook - AmeisenBot Docs</title>
+        <link href="../../css/bootstrap-custom.min.css" rel="stylesheet">
+        <link href="../../css/font-awesome.min.css" rel="stylesheet">
+        <link href="../../css/base.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+
+        <script src="../../js/jquery-1.10.2.min.js" defer></script>
+        <script src="../../js/bootstrap-3.0.3.min.js" defer></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+        <script>hljs.initHighlightingOnLoad();</script> 
+    </head>
+
+    <body>
+
+        <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+            <div class="container">
+
+                <!-- Collapsed navigation -->
+                <div class="navbar-header">
+                    <!-- Expander button -->
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="../..">AmeisenBot Docs</a>
+                </div>
+
+                <!-- Expanded navigation -->
+                <div class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li >
+                                <a href="../..">AmeisenBot</a>
+                            </li>
+                            <li class="dropdown active">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">AmeisenBot.Core <b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    
+<li >
+    <a href="../ameisencore/">AmeisenCore</a>
+</li>
+                                    
+<li class="active">
+    <a href="./">AmeisenHook</a>
+</li>
+                                    
+<li >
+    <a href="../ameiseneventhook/">Ameiseneventhook</a>
+</li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav navbar-right">
+                        <li>
+                            <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                            <li >
+                                <a rel="next" href="../ameisencore/">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li >
+                                <a rel="prev" href="../ameiseneventhook/">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+                <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+        <li class="main active"><a href="#ameisenhook">AmeisenHook</a></li>
+            <li><a href="#preperation">Preperation</a></li>
+            <li><a href="#assembly-instructions">Assembly instructions</a></li>
+    </ul>
+</div></div>
+                <div class="col-md-9" role="main">
+
+<h1 id="ameisenhook">AmeisenHook</h1>
+<p>This is the class that manages the hookig of WoW's D3D9 Endscene function. We will hook it to execute functions on WoW's main thread. This funtion is called after every frame, so if we're at a framerate of 60 we have 60 executions per second which is enough for what it is beeing used for at the moment.</p>
+<p><br></p>
+<h2 id="preperation">Preperation</h2>
+<h3 id="getting-the-endscene-address">Getting the endscene address</h3>
+<p>First we need to know where to apply our memory-modification (where the endscene is located).</p>
+<p>Example code with 3.3.5a offsets:</p>
+<pre><code class="C#">public readonly uint devicePtr1 = 0xC5DF88;
+public readonly uint devicePtr2 = 0x397C;
+public readonly uint endScene = 0xA8;
+
+uint pDevice = BlackMagic.ReadUInt(Offsets.devicePtr1);
+uint pEnd = BlackMagic.ReadUInt(pDevice + Offsets.devicePtr2);
+uint pScene = BlackMagic.ReadUInt(pEnd);
+uint endscene = BlackMagic.ReadUInt(pScene + Offsets.endScene);
+</code></pre>
+
+<p><br></p>
+<h3 id="using-the-found-offset">Using the found offset</h3>
+<p>Now that we know where our functions is located we need to search for the first thing with a size of 5 bytes. Why 5 bytes, thats because we're going to place a JMP instruction at this place and as we know a JMP plus Address to jump to are 1 + 4 bytes on a 32Bit system.</p>
+<p>So lets do it, our memory at the endscene address should look like this:</p>
+<p><em>to be added...</em></p>
+<p>As you might see there is something that's 5 bytes big, but it's offsetted by 0x2. That's no problem for us, we will just add that on top of our endscene</p>
+<pre><code class="C#">public const uint ENDSCENE_OFFSET = 0x2;
+
+uint endscene += ENDSCENE_OFFSET;
+</code></pre>
+
+<p>So far so good, we know where to apply our hook but how do we do it, what are we going to do?</p>
+<ul>
+<li>Jump from endscene function to our own instructions</li>
+<li>Check if there is anything to execute</li>
+<li>If there is something, execute it otherwise do nothing</li>
+<li>After that return to the original like nothing happened</li>
+</ul>
+<p><br></p>
+<h3 id="codecaves">Codecaves</h3>
+<p>Enough thinking, lets get down to business. First we need a place to store our Instrctions in the memory of WoW. </p>
+<pre><code class="C#">uint codeCave = BlackMagic.AllocateMemory(64);
+uint codeCaveForInjection = BlackMagic.AllocateMemory(256);
+</code></pre>
+
+<p><strong>codeCave</strong>: will be the place where we check if there are instructions to run.</p>
+<p><strong>codeCaveForInjection</strong>: will be the place where we place our instructions that we want to execute</p>
+<p><br></p>
+<p>So far so good but how will we know that the code was executed? And what about return values? Don't worry its simple, just reserve two integers in WoW's memory.</p>
+<pre><code class="C#">uint codeToExecute = BlackMagic.AllocateMemory(4);                        
+uint returnAdress = BlackMagic.AllocateMemory(4);
+
+BlackMagic.WriteInt(codeToExecute, 0);
+BlackMagic.WriteInt(returnAdress, 0);
+</code></pre>
+
+<p><strong>codeToExecute</strong>: will hold 1 or 0 whether there is or isn't anything to execute</p>
+<p><strong>returnAdress</strong>: will be a pointer to the data returned by the function we called</p>
+<p>We're finished with our preperational stuff.</p>
+<p><br></p>
+<h2 id="assembly-instructions">Assembly instructions</h2>
+<h3 id="check-for-instructions-to-execute">Check for instructions to execute</h3>
+<p>By now we've got everything prepared for our hook, so let's crawl through some Assembly.</p>
+<p>Step one, the code that checks for instructions to be executed, we don't want to change anything that WoW can continue to work after we've done our stuff. Thats a problem because we will change something, there's no way of not doing that. So what wre we going to do about that? <em>PUSHFD</em>, <em>POPFD</em>, <em>PUSHAD</em> &amp; <em>POPAD</em>, that are the instructions we need.</p>
+<p><strong>Simplified explanation</strong>:</p>
+<p><em>PUSHFD</em> &amp; <em>PUSHAD</em> will save our registers</p>
+<p><em>POPFD</em> &amp; <em>POPAD</em> will restore our registers</p>
+<pre><code class="nasm">PUSHFD
+PUSHAD
+
+// our instructions will end up here
+
+POPAD
+POPFD
+</code></pre>
+
+<p><br></p>
+<p>Now we're able to start the implementation of the "check for instructions" part.</p>
+<p><strong>There are 9 steps to do that i've broke down into 3x3:</strong></p>
+<ol>
+<li>Load the value of codeToExecute into EBX</li>
+<li>Compare EBX (the value of codeToExecute) to 1</li>
+<li>If there is no code jump to @out (we will declare it later)</li>
+</ol>
+<p><strong>{(codeToExecute)}</strong>: replace that with you <em>codeToExecute</em> variable</p>
+<pre><code class="nasm">MOV EBX, [{(codeToExecute)}]
+TEST EBX, 1
+JE @out
+</code></pre>
+
+<p><br></p>
+<ol>
+<li>Load the instructions position into EDX</li>
+<li>Execute our custom instructions</li>
+<li>Set the value of our <em>returnAdress</em> to the value of EAX
+    -&gt; at this point EAX contains our return-value pointer and we want to save that for later</li>
+</ol>
+<p><strong>{(codeCaveForInjection)}</strong>: replace that with you <em>codeCaveForInjection</em> variable</p>
+<p><strong>{(returnAdress)}</strong>: replace that with you <em>returnAdress</em> variable</p>
+<pre><code class="nasm">MOV EDX, {(codeCaveForInjection)}
+CALL EDX
+MOV [{(returnAdress)}], EAX
+</code></pre>
+
+<p><br></p>
+<ol>
+<li>Declare our @out anker that we will jump to if there is nothing to execute</li>
+<li>Set EDX to 0</li>
+<li>set the value of <em>codeToExecute</em> to EDX (0) to signal that we are done</li>
+</ol>
+<p><strong>{(codeToExecute)}</strong>: replace that with you <em>codeToExecute</em> variable</p>
+<pre><code class="nasm">@out:
+MOV EDX, 0
+MOV [{(codeToExecute)}], EDX
+</code></pre>
+
+<p><br></p>
+<p>Your finished code should now look something like this:</p>
+<pre><code class="nasm">PUSHFD
+PUSHAD
+
+MOV EBX, [{(codeToExecute)}]
+TEST EBX, 1
+JE @out
+MOV EDX, {(codeCaveForInjection)}
+CALL EDX
+MOV [{(returnAdress)}], EAX
+@out:
+MOV EDX, 0
+MOV [{(codeToExecute)}], EDX
+
+POPAD
+POPFD
+</code></pre>
+
+<p><br></p>
+<p>These Instructions will be placed in the first <em>codeCave</em> that we've allocated, you can inject it using Blackmagic like this:</p>
+<pre><code class="C#">BlackMagic.Asm.Clear();
+
+foreach (string s in asm)
+{
+    BlackMagic.Asm.AddLine(s);
+}
+
+int asmLenght = BlackMagic.Asm.Assemble().Length;
+BlackMagic.Asm.Inject(codeCave);
+</code></pre>
+
+<p><br></p>
+<p>If you've done all of this there're only two things left to be done:</p>
+<ol>
+<li>Execute the original endscene stuff</li>
+<li>Return to the original function</li>
+</ol>
+<pre><code class="C#">BlackMagic.WriteBytes(codeCave + (uint)asmLenght, originalEndscene);
+
+BlackMagic.Asm.Clear();
+BlackMagic.Asm.AddLine($&quot;JMP {(endsceneReturnAddress)}&quot;);
+BlackMagic.Asm.Inject((codeCave + (uint)asmLenght) + 5);
+</code></pre>
+
+<p><br></p>
+<p>First we are going to place the original EndScene instructions below our injected ones. You should  be able to read the original bytes like this:</p>
+<pre><code class="C#">byte[] originalEndscene = BlackMagic.ReadBytes(endscene, 5);
+</code></pre>
+
+<p>or use mine (they might not work for you, first method is safer)</p>
+<pre><code class="C#">byte[] originalEndscene = new byte[] { 0xB8, 0x51, 0xD7, 0xCA, 0x64 };
+</code></pre>
+
+<p><br></p>
+<p>After this we want to return to the place where we came from:</p>
+<pre><code class="nasm">JMP {(endsceneReturnAddress)}
+</code></pre>
+
+<pre><code class="C#">uint endsceneReturnAddress = endscene + 5;
+</code></pre>
+
+<p>Now we will return after the instruction that we will replace in a moment to finally hook WoW's EndScene. </p>
+<p><br></p>
+<p>Let's replace the original instructions with the one that jumps to our codeCave.</p>
+<pre><code class="nasm">JMP {(codeCave)}
+</code></pre>
+
+<pre><code class="C#">BlackMagic.Asm.Clear();
+BlackMagic.Asm.AddLine($&quot;JMP {(codeCave)}&quot;);
+BlackMagic.Asm.Inject(endscene);
+</code></pre>
+
+<p>Congratulations, you hooked WoW's EndScene and it doesn't do anything. But don't worry the hardest part is done, we just need to inject the code we wan't to execute to the <em>codeCaveForInjection</em> and set codeToExecute to 1.</p>
+<p><em>to be continued...</em></p></div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script>
+            var base_url = "../..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../../js/base.js" defer></script>
+        <script src="../../search/main.js" defer></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Search</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    From here you can search these documents. Enter
+                    your search terms below.
+                </p>
+                <form role="form">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="Keyboard Shortcuts Modal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Keyboard Shortcuts</h4>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>
