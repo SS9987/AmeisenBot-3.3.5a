@@ -249,6 +249,71 @@ BlackMagic.Asm.AddLine($"JMP {(codeCave)}");
 BlackMagic.Asm.Inject(endscene);
 ```
 
-Congratulations, you hooked WoW's EndScene and it doesn't do anything. But don't worry the hardest part is done, we just need to inject the code we wan't to execute to the *codeCaveForInjection* and set codeToExecute to 1.
+Congratulations, you hooked WoW's EndScene and it doesn't do anything. But don't worry the hardest part is done, we just need to inject the code we wan't to execute to the *codeCaveForInjection* and set *codeToExecute* to 1.
+
+* * *
+
+### Executing your stuff
+
+To execute your stuff just inject it to the *codeCaveForInjection* and set *codeToExecute* to 1. Remember that you should not inject new code while there is code beeing executed.
+
+```C#
+while (BlackMagic.ReadInt(codeToExecute) > 0)
+{
+    Thread.Sleep(1);
+}
+
+BlackMagic.Asm.Clear();
+foreach (string s in asm)
+{
+    BlackMagic.Asm.AddLine(s);
+}
+
+BlackMagic.Asm.Inject(codeCaveForInjection);
+BlackMagic.WriteInt(codeToExecute, 1);
+```
+
+<br>
+
+After you've done that you could for example wait for the stuff-execution to finish and then read the returnAddress for a result.
+
+```C#
+while (BlackMagic.ReadInt(codeToExecute) > 0)
+{
+    Thread.Sleep(1);
+}
+```
+
+* * *
+
+### Reading the returnAddress
+
+Reading the returnAddress content is pretty easy.
+
+```C#
+List<byte> returnBytes = new List<byte>();
+byte buffer = new byte();
+
+try
+{
+    uint dwAddress = BlackMagic.ReadUInt(returnAdress);
+    buffer = BlackMagic.ReadByte(dwAddress);
+
+    while (buffer != 0)
+    {
+        returnBytes.Add(buffer);
+        dwAddress = dwAddress + 1;
+        buffer = BlackMagic.ReadByte(dwAddress);
+    }
+}
+catch (Exception e)
+{
+    AmeisenLogger.Instance.Log(
+        LogLevel.ERROR,
+        $"Crash at reading returnAddress: {e.ToString()}",
+        this
+    );
+}
+```
 
 *to be continued...*

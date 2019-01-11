@@ -27,6 +27,7 @@
   <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/c#.min.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/nasm.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/lua.min.js"></script>
   <script>hljs.initHighlightingOnLoad();</script> 
   
 </head>
@@ -57,7 +58,7 @@
           
             <li class="toctree-l1">
 		
-    <span class="caption-text">AmeisenBot.Core.md</span>
+    <span class="caption-text">AmeisenBot.Core</span>
     <ul class="subnav">
                 <li class="">
                     
@@ -72,6 +73,15 @@
     <a class="current" href="./">AmeisenEventHook</a>
     <ul class="subnav">
             
+    <li class="toctree-l3"><a href="#ameiseneventhook">AmeisenEventHook</a></li>
+    
+        <ul>
+        
+            <li><a class="toctree-l4" href="#how-does-it-work">How does it work</a></li>
+        
+        </ul>
+    
+
     </ul>
                 </li>
     </ul>
@@ -99,7 +109,7 @@
     
       
         
-          <li>AmeisenBot.Core.md &raquo;</li>
+          <li>AmeisenBot.Core &raquo;</li>
         
       
     
@@ -113,7 +123,53 @@
           <div role="main">
             <div class="section">
               
-                
+                <h1 id="ameiseneventhook">AmeisenEventHook</h1>
+<p>This class captures events from WoW via Lua, makes it output a json, parses it and fires methods that you registered.</p>
+<hr />
+<h2 id="how-does-it-work">How does it work</h2>
+<p>First it will create a Frame in WoW that will listen for events and inserts them into a table. That table will later be parsed and converted into a JSON.</p>
+<pre><code class="Lua">abFrame = CreateFrame(&quot;FRAME&quot;, &quot;AbotEventFrame&quot;)
+abEventTable = {}
+
+function abEventHandler(self, event, ...)
+    table.insert(abEventTable, {time(), event, {...}}) 
+end
+
+if abFrame:GetScript(&quot;OnEvent&quot;) == nil then
+    abFrame:SetScript(&quot;OnEvent&quot;, abEventHandler) 
+end
+</code></pre>
+
+<p><br></p>
+<p>The table will be converted to JSON with a piece of Lua code, after this code has been executed you're able to read the <em>abEventJson</em> via <em>GetLocalizedText</em> or whatever you want with it.</p>
+<pre><code class="Lua">abEventJson='['
+
+for a,b in pairs(abEventTable)do
+    abEventJson=abEventJson..'{'
+    for c,d in pairs(b)do 
+        if type(d)==&quot;table&quot;then 
+            abEventJson=abEventJson..'&quot;args&quot;: ['
+            for e,f in pairs(d)do 
+                abEventJson=abEventJson..'&quot;'..f..'&quot;'
+                if e&lt;=table.getn(d)then 
+                    abEventJson=abEventJson..','
+                end 
+            end
+            abEventJson=abEventJson..']}'
+            if a&lt;table.getn(abEventTable)then
+                abEventJson=abEventJson..','
+            end 
+        else if type(d)==&quot;string&quot;then 
+            abEventJson=abEventJson..'&quot;event&quot;: &quot;'..d..'&quot;,'
+        else 
+            abEventJson=abEventJson..'&quot;time&quot;: &quot;'..d..'&quot;,'
+        end
+    end 
+end
+
+abEventJson=abEventJson..']'
+abEventTable={}
+</code></pre>
               
             </div>
           </div>

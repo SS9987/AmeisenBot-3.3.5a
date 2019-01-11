@@ -6,9 +6,10 @@ theme:
     hljs_languages:
         - c#
         - nasm
+        - lua
 nav:
 - 'index.md'
-- 'AmeisenBot.Core.md':
+- 'AmeisenBot.Core':
   - 'ameisencore/AmeisenCore.md'
   - 'ameisencore/AmeisenHook.md'
   - 'ameisencore/AmeisenEventHook.md'
