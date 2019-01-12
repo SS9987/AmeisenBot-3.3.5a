@@ -31,7 +31,14 @@ Now that we know where our functions is located we need to search for the first 
 
 So lets do it, our memory at the endscene address should look like this:
 
-*to be added...*
+```nasm
+PUSH 18 // 2 bytes
+MOV EAX, 64CAD751 // 5 bytes, this we're going to replace
+CALL 676EBDB9 // here we will return after our stuff is done
+MOV EDI, DWORD PTR SS:[EBP+8]
+MOV EBX, EDI
+...
+```
 
 As you might see there is something that's 5 bytes big, but it's offsetted by 0x2. That's no problem for us, we will just add that on top of our endscene
 
