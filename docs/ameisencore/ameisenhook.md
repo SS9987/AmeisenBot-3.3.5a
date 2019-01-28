@@ -113,8 +113,8 @@ Now we're able to start the implementation of the "check for instructions" part.
 
 **There are 9 steps to do that i've broke down into 3x3:**
 
-1. Load the value of codeToExecute into EBX
-2. Compare EBX (the value of codeToExecute) to 1
+1. Load the value of *codeToExecute* into EBX
+2. Compare EBX (the value of *codeToExecute*) to 1
 3. If there is no code jump to @out (we will declare it later)
 
 **{(codeToExecute)}**: replace that with you *codeToExecute* variable

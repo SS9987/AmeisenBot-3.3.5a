@@ -13,3 +13,5 @@ nav:
   - 'ameisencore/AmeisenCore.md'
   - 'ameisencore/AmeisenHook.md'
   - 'ameisencore/AmeisenEventHook.md'
+- 'AmeisenBot.Utilities':
+  - 'ameisenutils/WowObjects/WowObject.md'
