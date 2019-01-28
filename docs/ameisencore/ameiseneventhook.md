@@ -28,29 +28,37 @@ The table will be converted to JSON with a piece of Lua code, after this code ha
 ```Lua
 abEventJson='['
 
-for a,b in pairs(abEventTable)do
+for a,b in pairs(abEventTable)do 
     abEventJson=abEventJson..'{'
     for c,d in pairs(b)do 
         if type(d)=="table"then 
-            abEventJson=abEventJson..'"args": ['
+            abEventJson=abEventJson..'\"args\": ['
             for e,f in pairs(d)do 
-                abEventJson=abEventJson..'"'..f..'"'
+                abEventJson=abEventJson..'\"'..f..'\"'
                 if e<=table.getn(d)then 
                     abEventJson=abEventJson..','
                 end 
-            end
+            end;
             abEventJson=abEventJson..']}'
-            if a<table.getn(abEventTable)then
+            if a<table.getn(abEventTable)then 
                 abEventJson=abEventJson..','
             end 
-        else if type(d)=="string"then 
-            abEventJson=abEventJson..'"event": "'..d..'",'
         else 
-            abEventJson=abEventJson..'"time": "'..d..'",'
-        end
+            if type(d)=="string"then 
+                abEventJson=abEventJson..'\"event\": \"'..d..'\",'
+            else 
+                abEventJson=abEventJson..'\"time\": \"'..d..'\",'
+            end 
+        end 
     end 
 end
 
 abEventJson=abEventJson..']'
 abEventTable={}
+```
+
+```C#
+abFrame:RegisterEvent("eventName")
+
+abFrame:UnregisterEvent("eventName")
 ```
