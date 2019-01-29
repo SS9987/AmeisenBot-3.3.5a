@@ -412,9 +412,7 @@ namespace AmeisenBotManager
 
             // Limit fps
             AmeisenCore.RunSlashCommand($"/console maxfps {Settings.maxFpsForeground}");
-            AmeisenCore.RunSlashCommand($"/console maxfpsbk {Settings.maxFpsBackground}");
-
-            AmeisenDataHolder.IsInWorld = true;
+            AmeisenCore.RunSlashCommand($"/console maxfpsbk {Settings.maxFpsBackground}");            
         }
 
         /// <summary>
@@ -679,15 +677,11 @@ namespace AmeisenBotManager
             {
                 if (AmeisenCore.IsInLoadingScreen())
                 {
-                    AmeisenDataHolder.IsInWorld = false;
-                    AmeisenEventHook.IsNotInWorld = true;
                     AmeisenHook.IsNotInWorld = true;
                 }
                 else
                 {
-                    AmeisenDataHolder.IsInWorld = true;
                     AmeisenHook.IsNotInWorld = false;
-                    AmeisenEventHook.IsNotInWorld = false;
                 }
 
                 Thread.Sleep(250);
@@ -755,30 +749,11 @@ namespace AmeisenBotManager
 
         private void OnPlayerEnteringWorld(long timestamp, List<string> args)
         {
-            AmeisenDataHolder.IsInWorld = false;
-            AmeisenEventHook.IsNotInWorld = true;
-            AmeisenHook.IsNotInWorld = true;
-
             AmeisenLogger.Instance.Log(
                 LogLevel.DEBUG,
                 $"OnPlayerEnteringWorld args: {JsonConvert.SerializeObject(args)}",
                 this
             );
-
-            int tries = 0;
-            while (!AmeisenCore.IsWorldLoaded())
-            {
-                Thread.Sleep(200);
-                tries++;
-                if (tries == 10)
-                {
-                    break;
-                }
-            }
-
-            AmeisenDataHolder.IsInWorld = true;
-            AmeisenHook.IsNotInWorld = false;
-            AmeisenEventHook.IsNotInWorld = false;
         }
 
         private void OnReadyCheck(long timestamp, List<string> args)

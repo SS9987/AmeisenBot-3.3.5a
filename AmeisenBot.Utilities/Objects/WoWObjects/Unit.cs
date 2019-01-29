@@ -140,7 +140,7 @@ namespace AmeisenBotUtilities
 
             try
             {
-                RuneEnergy = BlackMagicInstance.ReadInt(BaseAddress + 0x19D4 / 10);
+                RuneEnergy = BlackMagicInstance.ReadInt(BaseAddress + 0x19D4) / 10;
                 MaxRuneEnergy = 100;
             }
             catch { }

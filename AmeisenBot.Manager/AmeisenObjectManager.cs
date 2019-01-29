@@ -111,7 +111,7 @@ namespace AmeisenBotManager
 
         private void RefreshObjects()
         {
-            if (!AmeisenDataHolder.IsInWorld) { return; }
+            if (AmeisenCore.IsInLoadingScreen()) { return; }
 
             ActiveWoWObjects = AmeisenCore.GetAllWoWObjects();
 

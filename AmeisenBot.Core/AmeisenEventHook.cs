@@ -20,8 +20,6 @@ namespace AmeisenBotCore
 
         public bool IsActive { get; private set; }
 
-        public bool IsNotInWorld { get; set; }
-
         /// <summary>
         /// Start to receive events to our event table
         /// and start the event reader that will fire 
@@ -39,10 +37,9 @@ namespace AmeisenBotCore
             luaStuff.Append("if abFrame:GetScript(\"OnEvent\") == nil then ");
             luaStuff.Append("abFrame:SetScript(\"OnEvent\", abEventHandler) end");
             AmeisenCore.LuaDoString(luaStuff.ToString());
-
-            IsNotInWorld = false;
-
+            
             IsActive = true;
+
             EventReader.Start();
             // if we equip an item confirm the dialog
             AmeisenCore.EnableAutoBoPConfirm();
@@ -80,7 +77,7 @@ namespace AmeisenBotCore
             EventDictionary.Remove(eventName);
         }
 
-        private Dictionary<string, OnEventFired> EventDictionary { get; set; }
+        public Dictionary<string, OnEventFired> EventDictionary { get; private set; }
         private Thread EventReader { get; set; }
 
         private void ReadEvents()

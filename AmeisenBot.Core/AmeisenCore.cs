@@ -698,10 +698,7 @@ namespace AmeisenBotCore
         public static void MovePlayerToXYZ(Vector3 pos, InteractionType action, double distance = 1.5)
         {
             AmeisenLogger.Instance.Log(LogLevel.VERBOSE, $"Moving to: X [{pos.X}] Y [{pos.Y}] Z [{pos.Z}]", "AmeisenCore");
-            //if (AmeisenManager.Instance.Me().pos.x != pos.x && AmeisenManager.Instance.Me().pos.y != pos.y && AmeisenManager.Instance.Me().pos.z != pos.z)
-            //{
             WriteXYZToMemory(pos, action, (float)distance);
-            //}
         }
 
         /// <summary>

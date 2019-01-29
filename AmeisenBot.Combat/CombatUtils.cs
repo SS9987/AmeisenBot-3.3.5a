@@ -26,14 +26,14 @@ namespace AmeisenBotCombat
                     u.Update();
 
                     Unit targetToAttack = (Unit)GetWoWObjectFromGUID(u.TargetGuid, activeWowObjects);
-                    if (targetToAttack == null)
+                    if (IsUnitValid(targetToAttack))
                     {
                         continue;
                     }
 
                     targetToAttack.Update();
 
-                    // check if the target is a valid object
+                    // check if the target is an invalid object
                     if (activeWowObjects.FindAll(o => o.Guid == targetToAttack.Guid).Count == 0)
                     {
                         continue;
@@ -42,6 +42,7 @@ namespace AmeisenBotCombat
                     AmeisenCore.TargetGUID(targetToAttack.Guid);
                     me.Update();
 
+                    // if we can attack the target, do it
                     if (CanAttack(LuaUnit.target))
                     {
                         return targetToAttack;
@@ -52,7 +53,7 @@ namespace AmeisenBotCombat
         }
 
         public static void AttackTarget()
-                    => AmeisenCore.RunSlashCommand("/startattack");
+            => AmeisenCore.RunSlashCommand("/startattack");
 
         /// <summary>
         /// Check the LuaUnit for its attacked to you
@@ -81,7 +82,7 @@ namespace AmeisenBotCombat
         public static void CastSpellByName(Me me, Unit target, string spellname, bool onMyself, bool waitOnCastToFinish = true)
         {
             SpellInfo spellInfo = GetSpellInfo(spellname);
-            if (target != null && target.Guid != 0)
+            if (IsUnitValid(target))
             {
                 if (!IsFacingMelee(me, target))
                 {
@@ -95,6 +96,7 @@ namespace AmeisenBotCombat
             {
                 int sleeptime = spellInfo.castTime - 100;
                 Thread.Sleep(sleeptime > 0 ? sleeptime : 0);
+
                 FaceUnit(me, target);
                 Thread.Sleep(100);
 
@@ -112,7 +114,7 @@ namespace AmeisenBotCombat
         /// <param name="unit">unit to turn to</param>
         public static void FaceUnit(Me me, Unit unit)
         {
-            if (unit != null)
+            if (IsUnitValid(unit))
             {
                 /*unit.Update();
                 AmeisenCore.MovePlayerToXYZ(
@@ -121,6 +123,11 @@ namespace AmeisenBotCombat
                     0);*/
                 AmeisenCore.FaceUnit(me, unit);
             }
+        }
+
+        public static bool IsUnitValid(Unit unit)
+        {
+            return unit != null || unit.Guid != 0;
         }
 
         /// <summary>
@@ -210,7 +217,8 @@ namespace AmeisenBotCombat
         }
 
         public static double GetSpellCooldown(string spellName)
-                    => double.Parse(AmeisenCore.GetLocalizedText($"start,duration,enabled = GetSpellCooldown(\"{spellName}\");cdLeft = (start + duration - GetTime()) * 1000;", "cdLeft"));
+            => double.Parse(
+                AmeisenCore.GetLocalizedText($"start,duration,enabled = GetSpellCooldown(\"{spellName}\");cdLeft = (start + duration - GetTime()) * 1000;", "cdLeft"));
 
         /// <summary>
         /// Get the spellinfo of a spell that contains casttime
@@ -338,7 +346,8 @@ namespace AmeisenBotCombat
         public static void MoveInRange(Me me, Unit unitToAttack, double distance)
         {
             int count = 0;
-            while (Utils.GetDistance(me.pos, unitToAttack.pos) > distance && count < 5)
+            while (Utils.GetDistance(me.pos, unitToAttack.pos) > distance 
+                   && count < 5)
             {
                 AmeisenCore.MovePlayerToXYZ(
                         unitToAttack.pos,
@@ -372,7 +381,7 @@ namespace AmeisenBotCombat
             => AmeisenCore.TargetLuaUnit(unit);
 
         public static void TargetNearestEnemy()
-                                                                                                                            => AmeisenCore.LuaDoString("TargetNearestEnemy();");
+            => AmeisenCore.LuaDoString("TargetNearestEnemy();");
 
         /// <summary>
         /// Target a target that needs healing from your party
@@ -384,7 +393,11 @@ namespace AmeisenBotCombat
         {
             // Get the one with the lowest hp and target him/her
             List<Unit> units = GetPartymembers(me, activeWowObjects);
-            units.Add(me);
+            if (!units.Contains(me))
+            {
+                units.Add(me);
+            }
+
             if (units.Count > 0)
             {
                 List<Unit> unitsSorted =

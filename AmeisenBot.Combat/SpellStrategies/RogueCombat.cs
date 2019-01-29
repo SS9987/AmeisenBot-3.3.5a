@@ -22,6 +22,12 @@ namespace AmeisenBotCombat.SpellStrategies
 
         public Spell DoRoutine(Me me, Unit target, Unit pet)
         {
+            if (CombatUtils.IsUnitValid(me)
+                && CombatUtils.IsUnitValid(target))
+            {
+                return null;
+            }
+
             List<string> myAuras = AmeisenCore.GetAuras(LuaUnit.player);
             List<string> targetAuras = AmeisenCore.GetAuras(LuaUnit.target);
 

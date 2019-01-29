@@ -239,7 +239,7 @@ namespace AmeisenBotFSM
             {
                 Thread.Sleep(AmeisenDataHolder.Settings.stateMachineStateUpdateMillis);
 
-                if (!AmeisenDataHolder.IsInWorld)
+                if (AmeisenCore.IsInLoadingScreen())
                 {
                     continue;
                 }

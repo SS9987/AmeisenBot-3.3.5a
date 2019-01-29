@@ -48,7 +48,7 @@ namespace AmeisenBotFSM.Actions
                 // clear all friendly targets
                 AmeisenCore.ClearTargetIfItIsFriendly();
 
-                if (Me.TargetGuid == 0 || Target == null || Target.Guid == 0)
+                if (Me.TargetGuid == 0 || CombatUtils.IsUnitValid(Target))
                 {
                     CombatUtils.AssistParty(Me, AmeisenDataHolder.ActiveWoWObjects, AmeisenDataHolder.Partymembers);
                     // clear all friendly targets again
@@ -57,13 +57,13 @@ namespace AmeisenBotFSM.Actions
                     Target?.Update();
                 }
 
-                if (Me.TargetGuid == 0 || Target == null || Target.Guid == 0)
+                if (Me.TargetGuid == 0 || CombatUtils.IsUnitValid(Target))
                 {
                     CombatUtils.TargetNearestEnemy();
                     Me?.Update();
                     Target?.Update();
 
-                    if (Me.TargetGuid == 0 || Target == null || Target.Guid == 0)
+                    if (Me.TargetGuid == 0 || CombatUtils.IsUnitValid(Target))
                     {
                         // by now we should have a target
                         return;
@@ -83,6 +83,7 @@ namespace AmeisenBotFSM.Actions
                 Spell spellToUse = CombatPackage.SpellStrategy.DoRoutine(Me, Target, Pet);
                 if (spellToUse != null)
                 {
+                    // try to get in line of sight
                     while (!IsInLineOfSight(Me, Target))
                     {
                         HandleMovement(Target.pos);
@@ -179,6 +180,7 @@ namespace AmeisenBotFSM.Actions
             {
                 return true;
             }
+
             return false;
         }
     }

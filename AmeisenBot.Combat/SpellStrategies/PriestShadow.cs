@@ -26,7 +26,8 @@ namespace AmeisenBotCombat.SpellStrategies
 
         public Spell DoRoutine(Me me, Unit target, Unit pet)
         {
-            if (me == null || target == null)
+            if (CombatUtils.IsUnitValid(me)
+                && CombatUtils.IsUnitValid(target))
             {
                 return null;
             }
