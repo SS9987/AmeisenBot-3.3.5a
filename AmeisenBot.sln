@@ -15,7 +15,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AmeisenBot.Data", "AmeisenB
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AmeisenBot.Utilities", "AmeisenBot.Utilities\AmeisenBot.Utilities.csproj", "{5369E077-2DC4-4DE5-9020-2C7DDB41686F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AmeisenBot.DB", "AmeisenBot.DB\AmeisenBot.DB.csproj", "{9B3F7A78-0A9B-492A-8299-9C86D2E297ED}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AmeisenBot.Persistence", "AmeisenBot.DB\AmeisenBot.Persistence.csproj", "{9B3F7A78-0A9B-492A-8299-9C86D2E297ED}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AmeisenBot.FSM", "AmeisenBot.FSM\AmeisenBot.FSM.csproj", "{C93B8F0C-8CFA-45F6-9B2C-43B72E1CFE0F}"
 EndProject

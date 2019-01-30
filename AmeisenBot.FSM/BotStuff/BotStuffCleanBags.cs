@@ -2,7 +2,7 @@
 using AmeisenBot.Clients;
 using AmeisenBotCore;
 using AmeisenBotData;
-using AmeisenBotDB;
+using AmeisenBotPersistence;
 using AmeisenBotFSM.Actions;
 using AmeisenBotLogger;
 using AmeisenBotUtilities;

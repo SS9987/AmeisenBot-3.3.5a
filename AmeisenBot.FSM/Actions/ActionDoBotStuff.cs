@@ -3,7 +3,7 @@ using AmeisenBot.Character.Enums;
 using AmeisenBot.Character.Objects;
 using AmeisenBot.Clients;
 using AmeisenBotData;
-using AmeisenBotDB;
+using AmeisenBotPersistence;
 using AmeisenBotFSM.BotStuff;
 using AmeisenBotFSM.Interfaces;
 using System.Threading;

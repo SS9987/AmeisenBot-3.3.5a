@@ -2,7 +2,7 @@
 using AmeisenBot.Clients;
 using AmeisenBotCombat.Interfaces;
 using AmeisenBotData;
-using AmeisenBotDB;
+using AmeisenBotPersistence;
 using AmeisenBotFSM.Actions;
 using AmeisenBotFSM.BotStuff;
 using AmeisenBotFSM.Enums;

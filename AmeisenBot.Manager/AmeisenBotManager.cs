@@ -8,7 +8,7 @@ using AmeisenBotCombat.MovementStrategies;
 using AmeisenBotCombat.SpellStrategies;
 using AmeisenBotCore;
 using AmeisenBotData;
-using AmeisenBotDB;
+using AmeisenBotPersistence;
 using AmeisenBotFSM;
 using AmeisenBotFSM.Enums;
 using AmeisenBotLogger;

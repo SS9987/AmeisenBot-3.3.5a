@@ -67,5 +67,6 @@
         public double wowRectL = 0;
         public double wowRectR = 0;
         public double wowRectT = 0;
+        public string relationshipsPath = "";
     }
 }

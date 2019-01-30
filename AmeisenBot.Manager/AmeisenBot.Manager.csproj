@@ -84,9 +84,9 @@
       <Project>{4b6ab536-af35-4970-89fb-b45bc495f8be}</Project>
       <Name>AmeisenBot.Data</Name>
     </ProjectReference>
-    <ProjectReference Include="..\AmeisenBot.DB\AmeisenBot.DB.csproj">
+    <ProjectReference Include="..\AmeisenBot.DB\AmeisenBot.Persistence.csproj">
       <Project>{9B3F7A78-0A9B-492A-8299-9C86D2E297ED}</Project>
-      <Name>AmeisenBot.DB</Name>
+      <Name>AmeisenBot.Persistence</Name>
     </ProjectReference>
     <ProjectReference Include="..\AmeisenBot.FSM\AmeisenBot.FSM.csproj">
       <Project>{c93b8f0c-8cfa-45f6-9b2c-43b72e1cfe0f}</Project>

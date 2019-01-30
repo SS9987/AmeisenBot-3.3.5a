@@ -48,6 +48,7 @@ namespace AmeisenBotGUI
                 AmeisenMap.SizeY = (int)mapImage.ActualWidth;
             }
 
+            AmeisenMap.ActiveUnits = BotManager.ActiveWoWObjects;
             mapImage.Source = AmeisenMap.GenerateBitmap(BotManager.Me);
         }
 

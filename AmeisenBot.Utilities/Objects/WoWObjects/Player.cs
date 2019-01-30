@@ -1,10 +1,13 @@
-﻿using Magic;
+﻿using AmeisenBotUtilities.Enums;
+using Magic;
 using System.Text;
 
 namespace AmeisenBotUtilities
 {
     public class Player : Unit
     {
+        public Relation Relation { get; set; }
+
         public Player(uint baseAddress, BlackMagic blackMagic) : base(baseAddress, blackMagic)
         {
         }

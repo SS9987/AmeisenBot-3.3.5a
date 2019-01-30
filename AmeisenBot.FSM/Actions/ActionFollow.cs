@@ -1,6 +1,6 @@
 ﻿using AmeisenBot.Clients;
 using AmeisenBotData;
-using AmeisenBotDB;
+using AmeisenBotPersistence;
 using AmeisenBotUtilities;
 using AmeisenMovement;
 using AmeisenMovement.Structs;
