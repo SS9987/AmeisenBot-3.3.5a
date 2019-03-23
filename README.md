@@ -1,3 +1,5 @@
+# Revamped Version -> https://github.com/Jnnshschl/AmeisenBotRevamped
+
 # AmeisenBot - WoW 3.3.5a Bot 
 
 A bot written in (at this time) C# only for World of Warcraft WotLK (3.3.5a 12340) (the best WoW :P).
